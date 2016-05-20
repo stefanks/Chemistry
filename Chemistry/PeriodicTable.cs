@@ -46,7 +46,8 @@ namespace Chemistry
         {
             return _elements[element][atomicNumber];
         }
-        
+
+        // Returns true if the periodic table contains an element with the specified elementSymbol; otherwise, false
         public static bool TryGetElement(string elementSymbol, out Element element)
         {
             return _elements.TryGetValue(elementSymbol, out element);
