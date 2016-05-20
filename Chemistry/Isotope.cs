@@ -1,7 +1,7 @@
 ﻿// Copyright 2012, 2013, 2014 Derek J. Bailey
 // Modified work copyright 2016 Stefan Solntsev
 // 
-// This file (ChemicalFormula.cs) is part of Chemistry Library.
+// This file (Isotope.cs) is part of Chemistry Library.
 // 
 // Chemistry Library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published
