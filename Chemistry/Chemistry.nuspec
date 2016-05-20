@@ -7,10 +7,10 @@
     <authors>$author$</authors>
     <owners>$author$</owners>
     <licenseUrl>http://www.gnu.org/licenses/lgpl-3.0.txt</licenseUrl>
-    <projectUrl></projectUrl>
+    <projectUrl>https://github.com/stefanks/Chemistry</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Fix a release</releaseNotes>
+    <releaseNotes>Add urls</releaseNotes>
     <copyright>Copyright 2016</copyright>
     <tags>Chemistry</tags>
   </metadata>

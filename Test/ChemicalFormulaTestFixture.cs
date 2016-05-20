@@ -60,13 +60,28 @@ namespace Test
             PeriodicTable.Add(elementFe.AtomicSymbol, elementFe);
             elementFe.AddIsotope(56, 55.93493633, 0.91754);
 
-            var elementBr = new Element("Br", 35 ,79.904 );
+            var elementBr = new Element("Br", 35, 79.904);
             PeriodicTable.Add(elementBr.AtomicSymbol, elementBr);
             elementBr.AddIsotope(79, 78.9183376, 0.5069);
 
             var elementCa = new Element("Ca", 20, 40.078);
             PeriodicTable.Add(elementCa.AtomicSymbol, elementCa);
             elementCa.AddIsotope(40, 39.962590863, 0.96941);
+
+            var elementS = new Element("S", 16, 32.0675);
+            PeriodicTable.Add(elementS.AtomicSymbol, elementS);
+            elementS.AddIsotope(32, 31.9720711744, 0.9499);
+            elementS.AddIsotope(33, 32.9714589098, 0.0075);
+            elementS.AddIsotope(34, 33.967867004, 0.0425);
+            elementS.AddIsotope(36, 35.96708071, 0.0001);
+            
+            var elementSe = new Element("Se", 34, 78.971);
+            PeriodicTable.Add(elementSe.AtomicSymbol, elementSe);
+            elementSe.AddIsotope(74, 73.922475934, 0.0089);
+            
+            var elementAl = new Element("Al", 13, 26.9815385);
+            PeriodicTable.Add(elementAl.AtomicSymbol, elementAl);
+            elementAl.AddIsotope(27, 26.98153853, 1);
         }
 
         [Test]
