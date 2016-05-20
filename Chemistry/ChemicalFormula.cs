@@ -538,19 +538,15 @@ namespace Chemistry
 
         public bool Equals(ChemicalFormula other)
         {
-            Console.WriteLine(this);
-            Console.WriteLine(other);
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
             foreach(var kk in other.isotopes)
             {
-                Console.WriteLine("Considering isotope" + kk);
                 if (!isotopes.ContainsKey(kk.Key) || isotopes[kk.Key] != kk.Value)
                     return false;
             }
             foreach (var kk in other.elements)
             {
-                Console.WriteLine("Considering element" + kk);
                 if (!elements.ContainsKey(kk.Key) || elements[kk.Key] != kk.Value)
                     return false;
             }
@@ -574,9 +570,6 @@ namespace Chemistry
         /// <param name="formula">the Chemical Formula to parse</param>
         private void ParseFormulaAndAddElements(string formula)
         {
-            Console.WriteLine("Trying to parse formula " + formula);
-            Console.WriteLine();
-            Console.WriteLine("---" + formula+ "---");
 
             if (string.IsNullOrEmpty(formula))
                 return;
@@ -591,10 +584,8 @@ namespace Chemistry
                 string chemsym = match.Groups[1].Value; // Group 1: Chemical Symbol
 
                 Element element;
-                Console.WriteLine("Trying to get element "+ chemsym);
                 if (PeriodicTable.TryGetElement(chemsym, out element))
                 {
-                    Console.WriteLine("element: " + element);
                     //Isotope isotope = element.PrincipalIsotope; // Start with the most abundant (principal) isotope
 
                     int sign = match.Groups[3].Success ? // Group 3 (optional): Negative Sign
