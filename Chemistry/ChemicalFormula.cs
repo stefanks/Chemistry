@@ -688,6 +688,7 @@ namespace Chemistry
 
             ChemicalFormula newFormula = new ChemicalFormula(left);
             newFormula.Add(right);
+            newFormula.MonoisotopicMass = left.MonoisotopicMass + right.MonoisotopicMass;
             return newFormula;
         }
 
@@ -721,14 +722,14 @@ namespace Chemistry
 
         #endregion Statics
 
-        #region IChemicalFormula
+        #region IHasChemicalFormula
 
         ChemicalFormula IHasChemicalFormula.thisChemicalFormula
         {
             get { return this; }
         }
 
-        #endregion IChemicalFormula
+        #endregion IHasChemicalFormula
 
         /// <summary>
         /// Produces the Hill Notation of the chemical formula
