@@ -29,7 +29,7 @@ namespace Chemistry
         /// <summary>
         /// The chemical formula of this object
         /// </summary>
-        ChemicalFormula ChemicalFormula { get; }
+        ChemicalFormula thisChemicalFormula { get; }
     }
 
     public static class ChemicalFormulaExtensions
@@ -51,7 +51,7 @@ namespace Chemistry
             {
                 if (useHydrogenCarbonRatio)
                 {
-                    double ratio = formula.ChemicalFormula.GetCarbonHydrogenRatio();
+                    double ratio = formula.thisChemicalFormula.GetCarbonHydrogenRatio();
 
                     if (ratio < 0.5 || ratio > 2.0)
                         continue;

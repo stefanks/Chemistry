@@ -95,7 +95,7 @@ namespace Chemistry
         /// </summary>
         /// <param name="item">The item of which a new chemical formula will be made from</param>
         public ChemicalFormula(IChemicalFormula item)
-            : this(item.ChemicalFormula)
+            : this(item.thisChemicalFormula)
         {
         }
 
@@ -214,7 +214,7 @@ namespace Chemistry
         {
             if (item == null)
                 return;
-            Add(item.ChemicalFormula);
+            Add(item.thisChemicalFormula);
         }
 
         /// <summary>
@@ -296,7 +296,7 @@ namespace Chemistry
         {
             if (item == null)
                 return;
-            Remove(item.ChemicalFormula);
+            Remove(item.thisChemicalFormula);
         }
 
         /// <summary>
@@ -560,9 +560,7 @@ namespace Chemistry
 
 
         #region Private Methods
-
-
-
+        
         /// <summary>
         /// Parses a string representation of chemical formula and adds the elements
         /// to this chemical formula
@@ -725,7 +723,7 @@ namespace Chemistry
 
         #region IChemicalFormula
 
-        ChemicalFormula IChemicalFormula.ChemicalFormula
+        ChemicalFormula IChemicalFormula.thisChemicalFormula
         {
             get { return this; }
         }
@@ -797,7 +795,6 @@ namespace Chemistry
             otherParts.Sort();
             return s+string.Join(delimiter, otherParts);
         }
-
-
+        
     }
 }

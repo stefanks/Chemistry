@@ -66,7 +66,7 @@ namespace Chemistry
 
         public void CalculateDistribuition(IChemicalFormula obj, out double[] masses, out double[] intensities, Normalization normalization = Normalization.Sum)
         {
-             CalculateDistribuition(obj.ChemicalFormula, out masses, out intensities, normalization);
+             CalculateDistribuition(obj.thisChemicalFormula, out masses, out intensities, normalization);
         }
 
         public void CalculateDistribuition(ChemicalFormula formula, out double[] masses, out double[] intensities, Normalization normalization = Normalization.Sum)
