@@ -27,7 +27,7 @@ namespace Chemistry
     /// A chemical / molecule consisting of multiple atoms.
     /// <remarks>This class is mutable</remarks>
     /// </summary>
-    public sealed class ChemicalFormula : IEquatable<ChemicalFormula>, IChemicalFormula
+    public sealed class ChemicalFormula : IEquatable<ChemicalFormula>, IHasChemicalFormula
     {
         /// <summary>
         /// A regular expression for matching chemical formulas such as: C2C{13}3H5NO5
@@ -94,7 +94,7 @@ namespace Chemistry
         /// Create an chemical formula from an item that contains a chemical formula
         /// </summary>
         /// <param name="item">The item of which a new chemical formula will be made from</param>
-        public ChemicalFormula(IChemicalFormula item)
+        public ChemicalFormula(IHasChemicalFormula item)
             : this(item.thisChemicalFormula)
         {
         }
@@ -210,7 +210,7 @@ namespace Chemistry
         /// Add a chemical formula containing object to this chemical formula
         /// </summary>
         /// <param name="item">The object that contains a chemical formula</param>
-        public void Add(IChemicalFormula item)
+        public void Add(IHasChemicalFormula item)
         {
             if (item == null)
                 return;
@@ -292,7 +292,7 @@ namespace Chemistry
         /// Remove a chemical formula containing object from this chemical formula
         /// </summary>
         /// <param name="item">The object that contains a chemical formula</param>
-        public void Remove(IChemicalFormula item)
+        public void Remove(IHasChemicalFormula item)
         {
             if (item == null)
                 return;
@@ -642,7 +642,7 @@ namespace Chemistry
             return ValidateFormulaRegex.IsMatch(chemicalFormula);
         }
 
-        public static ChemicalFormula operator -(ChemicalFormula left, IChemicalFormula right)
+        public static ChemicalFormula operator -(ChemicalFormula left, IHasChemicalFormula right)
         {
             if (left == null)
             {
@@ -677,7 +677,7 @@ namespace Chemistry
             return formula * count;
         }
 
-        public static ChemicalFormula operator +(ChemicalFormula left, IChemicalFormula right)
+        public static ChemicalFormula operator +(ChemicalFormula left, IHasChemicalFormula right)
         {
             if (left == null)
             {
@@ -691,10 +691,10 @@ namespace Chemistry
             return newFormula;
         }
 
-        public static ChemicalFormula Combine(IEnumerable<IChemicalFormula> formulas)
+        public static ChemicalFormula Combine(IEnumerable<IHasChemicalFormula> formulas)
         {
             ChemicalFormula returnFormula = new ChemicalFormula();
-            foreach (IChemicalFormula iformula in formulas)
+            foreach (IHasChemicalFormula iformula in formulas)
                 returnFormula.Add(iformula);
             return returnFormula;
         }
@@ -723,7 +723,7 @@ namespace Chemistry
 
         #region IChemicalFormula
 
-        ChemicalFormula IChemicalFormula.thisChemicalFormula
+        ChemicalFormula IHasChemicalFormula.thisChemicalFormula
         {
             get { return this; }
         }

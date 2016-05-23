@@ -28,7 +28,7 @@ namespace Test
         private static readonly ChemicalFormula NullChemicalFormula = null;
         private static readonly Element NullElement = null;
         private static readonly Isotope NullIsotope = null;
-        private static readonly IChemicalFormula NullIChemicalFormula = null;
+        private static readonly IHasChemicalFormula NullIChemicalFormula = null;
 
         [OneTimeSetUp]
         public void SetUp()
@@ -124,7 +124,7 @@ namespace Test
         public void AddIChemicalFormulaToFormula()
         {
             ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
-            IChemicalFormula formulaB = new ChemicalFormula("H2O");
+            IHasChemicalFormula formulaB = new ChemicalFormula("H2O");
             ChemicalFormula formulaC = new ChemicalFormula("C2H5NO2");
 
             formulaA.Add(formulaB);

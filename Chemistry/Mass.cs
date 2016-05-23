@@ -20,14 +20,14 @@ using System;
 
 namespace Chemistry
 {
-    public struct Mass : IMass, IComparable<Mass>, IEquatable<Mass>
+    public struct Mass : IHasMass, IComparable<Mass>, IEquatable<Mass>
     {
         /// <summary>
         /// The mass of all the isotopes (in unified atomic mass units)
         /// </summary>
         public double MonoisotopicMass { get; private set; }
 
-        public Mass(IMass item)
+        public Mass(IHasMass item)
             : this(item.MonoisotopicMass)
         {
         }
@@ -75,9 +75,7 @@ namespace Chemistry
         {
             return !(a.Equals(b));
         }
-
-
-
+        
 
         public override int GetHashCode()
         {
@@ -86,12 +84,12 @@ namespace Chemistry
 
         #region Static Methods
 
-        public static Mass operator +(Mass left, IMass right)
+        public static Mass operator +(Mass left, IHasMass right)
         {
             return new Mass(left.MonoisotopicMass + right.MonoisotopicMass);
         }
 
-        public static Mass operator -(Mass left, IMass right)
+        public static Mass operator -(Mass left, IHasMass right)
         {
             return new Mass(left.MonoisotopicMass - right.MonoisotopicMass);
         }

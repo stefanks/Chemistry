@@ -1,36 +1,6 @@
-﻿// Copyright 2012, 2013, 2014 Derek J. Bailey
-// Modified work copyright 2016 Stefan Solntsev
-// 
-// This file (IMass.cs) is part of Chemistry Library.
-// 
-// Chemistry Library is free software: you can redistribute it and/or modify it
-// under the terms of the GNU Lesser General Public License as published
-// by the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// Chemistry Library is distributed in the hope that it will be useful, but WITHOUT
-// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-// FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public
-// License for more details.
-// 
-// You should have received a copy of the GNU Lesser General Public
-// License along with Chemistry Library. If not, see <http://www.gnu.org/licenses/>.
-
-using System;
-
+﻿using System;
 namespace Chemistry
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public interface IMass
-    {
-        /// <summary>
-        /// The monoisotopic mass of this object
-        /// </summary>
-        double MonoisotopicMass { get; }
-    }
-
     public static class MassExtensions
     {
         /// <summary>
@@ -45,7 +15,7 @@ namespace Chemistry
         /// <param name="charge"></param>
         /// <param name="c13Isotope"></param>
         /// <returns></returns>
-        public static double ToMz(this IMass mass, int charge)
+        public static double ToMz(this IHasMass mass, int charge)
         {
             return Mass.MzFromMass(mass.MonoisotopicMass, charge);
         }
@@ -56,12 +26,12 @@ namespace Chemistry
         /// <param name="mz"></param>
         /// <param name="charge"></param>
         /// <returns></returns>
-        public static double ToMass(this IMass mz, int charge)
+        public static double ToMass(this IHasMass mz, int charge)
         {
             return Mass.MassFromMz(mz.MonoisotopicMass, charge);
         }
 
-        public static bool MassEquals(this double mass1, IMass mass2, double epsilon = MassEqualityEpsilon)
+        public static bool MassEquals(this double mass1, IHasMass mass2, double epsilon = MassEqualityEpsilon)
         {
             if (mass2 == null)
                 return false;
@@ -73,21 +43,21 @@ namespace Chemistry
             return Math.Abs(mass1 - mass2) < epsilon;
         }
 
-        public static bool MassEquals(this IMass mass1, double mass2, double epsilon = MassEqualityEpsilon)
+        public static bool MassEquals(this IHasMass mass1, double mass2, double epsilon = MassEqualityEpsilon)
         {
             if (mass1 == null)
                 return false;
             return Math.Abs(mass1.MonoisotopicMass - mass2) < epsilon;
         }
 
-        public static bool MassEquals(this IMass mass1, IMass mass2, double epsilon = MassEqualityEpsilon)
+        public static bool MassEquals(this IHasMass mass1, IHasMass mass2, double epsilon = MassEqualityEpsilon)
         {
             if (mass1 == null || mass2 == null)
                 return false;
             return Math.Abs(mass1.MonoisotopicMass - mass2.MonoisotopicMass) < epsilon;
         }
 
-        public static int Compare(this IMass mass1, IMass mass2, double epsilon = MassEqualityEpsilon)
+        public static int Compare(this IHasMass mass1, IHasMass mass2, double epsilon = MassEqualityEpsilon)
         {
             double difference = mass1.MonoisotopicMass - mass2.MonoisotopicMass;
             if (difference < -epsilon)

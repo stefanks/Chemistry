@@ -64,11 +64,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChemicalFormula.cs" />
+    <Compile Include="ChemicalFormulaExtensions.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="IChemicalFormula.cs" />
-    <Compile Include="IMass.cs" />
+    <Compile Include="Interfaces\IHasChemicalFormula.cs" />
+    <Compile Include="Interfaces\IHasMass.cs" />
     <Compile Include="IsotopicDistribution.cs" />
     <Compile Include="Mass.cs" />
+    <Compile Include="MassExtensions.cs" />
     <Compile Include="PeriodicTable.cs" />
     <Compile Include="Element.cs" />
     <Compile Include="Isotope.cs" />
