@@ -683,8 +683,9 @@ namespace Chemistry
             {
                 if (right == null)
                     return null;
-                return new ChemicalFormula(right);
             }
+            if (right == null)
+                return new ChemicalFormula(left);
 
             ChemicalFormula newFormula = new ChemicalFormula(left);
             newFormula.Add(right);
