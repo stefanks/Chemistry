@@ -930,5 +930,14 @@ namespace Test
 
             Assert.IsFalse(formulaB.IsSuperSetOf(formulaA));
         }
+
+
+        [Test]
+        public void ChemicalForulaMyTest()
+        {
+            ChemicalFormula formula = new ChemicalFormula();
+            formula.Add(new ChemicalFormula("C3H5NO"));
+            Assert.AreEqual(PeriodicTable.GetElement("C").PrincipalIsotope.AtomicMass * 3 + PeriodicTable.GetElement("H").PrincipalIsotope.AtomicMass * 5 + PeriodicTable.GetElement("N").PrincipalIsotope.AtomicMass + PeriodicTable.GetElement("O").PrincipalIsotope.AtomicMass,formula.MonoisotopicMass);
+        }
     }
 }

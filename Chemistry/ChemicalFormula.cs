@@ -226,12 +226,12 @@ namespace Chemistry
             if (formula == null)
                 return;
 
-            foreach (var e in formula.GetElements())
+            foreach (var e in formula.GetElements()) {
                 Add(e.Key, e.Value);
-                foreach (var i in formula.GetIsotopes())
+            }
+            foreach (var i in formula.GetIsotopes()) {
                 Add(i.Key, i.Value);
-
-            MonoisotopicMass += formula.MonoisotopicMass;
+            }
         }
 
         /// <summary>
