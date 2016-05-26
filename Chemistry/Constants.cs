@@ -33,7 +33,6 @@ namespace Chemistry
         /// atomic units (u)
         /// </summary>
         public const double Electron = .000548579909070;
-
         /// <summary>
         /// The mass of the subatomic particle with a single elementary charge in atomic
         /// units (u)

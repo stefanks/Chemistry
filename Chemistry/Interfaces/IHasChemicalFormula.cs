@@ -1,7 +1,7 @@
 ﻿// Copyright 2012, 2013, 2014 Derek J. Bailey
 // Modified work copyright 2016 Stefan Solntsev
 // 
-// This file (IChemicalFormula.cs) is part of Chemistry Library.
+// This file (IHasChemicalFormula.cs) is part of Chemistry Library.
 // 
 // Chemistry Library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published
@@ -16,8 +16,6 @@
 // You should have received a copy of the GNU Lesser General Public
 // License along with Chemistry Library. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
 
 namespace Chemistry
 {
