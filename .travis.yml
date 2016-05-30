@@ -4,5 +4,6 @@ install:
   - nuget restore Chemistry.sln
   - nuget install NUnit.Console -OutputDirectory testrunner
 script:
-  - xbuild Chemistry.sln 
+  - xbuild /p:Configuration=Debug Chemistry.sln 
   - mono ./testrunner/NUnit.ConsoleRunner.*/tools/nunit3-console.exe ./Test/bin/Debug/Test.dll
+  - xbuild /p:Configuration=Release Chemistry.sln 
