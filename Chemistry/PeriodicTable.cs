@@ -37,14 +37,14 @@ namespace Chemistry
             return _elements.Count;
         }
 
-        public static Element GetElement(string element)
+        public static Element GetElement(string atomicSymbol)
         {
-            return _elements[element];
+            return _elements[atomicSymbol];
         }
 
-        public static Isotope GetIsotope(string element, int atomicNumber)
+        public static Isotope GetIsotope(string atomicSymbol, int atomicNumber)
         {
-            return _elements[element][atomicNumber];
+            return _elements[atomicSymbol][atomicNumber];
         }
 
         // Returns true if the periodic table contains an element with the specified elementSymbol; otherwise, false
