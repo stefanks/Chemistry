@@ -462,7 +462,7 @@ namespace Chemistry
 
             double ave1 = 0; //todo
             double ave2 = 0; //todo
-            double ave3 = (int)(ave2 + 0.5);
+            //double ave3 = (int)(ave2 + 0.5);
             double sigma1 = Math.Sqrt(0); // todo
             double simga2 = Math.Sqrt(0); // todo;
             double ratio = sigma1 / simga2;
@@ -553,7 +553,7 @@ namespace Chemistry
                 }
             }
 
-            double np = tID.Sum(t => t.Probablity);
+            //double np = tID.Sum(t => t.Probablity);
             for (int i = 0; i < tID.Count; i++)
             {
                 if (tID[i].Power > 0)
