@@ -75,7 +75,6 @@
     <Compile Include="Interfaces\IHasChemicalFormula.cs" />
     <Compile Include="Interfaces\IHasMass.cs" />
     <Compile Include="IsotopicDistribution.cs" />
-    <Compile Include="Mass.cs" />
     <Compile Include="MassExtensions.cs" />
     <Compile Include="PeriodicTable.cs" />
     <Compile Include="Element.cs" />

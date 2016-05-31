@@ -31,10 +31,20 @@ namespace Chemistry
         /// </summary>
         /// <param name="mass"></param>
         /// <param name="charge"></param>
+        /// <param name="c13Isotope"></param>
         /// <returns></returns>
         public static double ToMz(this IHasMass mass, int charge)
         {
-            return Mass.MzFromMass(mass.MonoisotopicMass, charge);
+            if (charge == 0)
+                throw new DivideByZeroException("Charge cannot be zero");
+            return mass.MonoisotopicMass / Math.Abs(charge) + Math.Sign(charge) * Constants.Proton;
+        }
+
+        public static double ToMass(this double mz, int charge)
+        {
+            if (charge == 0)
+                throw new DivideByZeroException("Charge cannot be zero");
+            return Math.Abs(charge) * mz - charge * Constants.Proton;
         }
 
         public static bool MassEquals(this double mass1, IHasMass mass2, double epsilon = MassEqualityEpsilon)
