@@ -21,161 +21,68 @@ using System;
 
 namespace Test
 {
+    internal class ObjectWithMass1000 : IHasMass
+    {
+        public double MonoisotopicMass
+        {
+            get
+            {
+                return 1000;
+            }
+        }
+    }
+
+
     [TestFixture]
     public class MassTestFixture
     {
-        [Test]
-        public void DefaultMassMonoisotopic()
-        {
-            Mass m = new Mass();
-
-            Assert.AreEqual(0.0, m.MonoisotopicMass);
-        }
-
-        [Test]
-        public void MonoisotopicOnlyMassInConstructor()
-        {
-            Mass m = new Mass(524.342);
-
-            Assert.AreEqual(524.342, m.MonoisotopicMass);
-        }
-
-        [Test]
-        public void MonoisotopicMassInConstructor()
-        {
-            Mass m = new Mass(524.342);
-
-            Assert.AreEqual(524.342, m.MonoisotopicMass);
-        }
-
-        [Test]
-        public void MassEquality()
-        {
-            Mass m1 = new Mass(524.342);
-            Mass m2 = new Mass(524.342);
-
-            Assert.AreEqual(m1, m2);
-        }
-
-        [Test]
-        public void MassRefInequality()
-        {
-            Mass m1 = new Mass(524.342);
-            Mass m2 = new Mass(524.342);
-
-            Assert.AreNotSame(m1, m2);
-        }
-
-        [Test]
-        public void MassMonoisotopicInequality()
-        {
-            Mass m1 = new Mass(524.342);
-            Mass m2 = new Mass(524.343);
-
-            Assert.AreNotEqual(m1, m2);
-        }
-
-        [Test]
-        public void MassBothInequality()
-        {
-            Mass m1 = new Mass(524.342);
-            Mass m2 = new Mass(524.343);
-
-            Assert.AreNotEqual(m1, m2);
-        }
-
-        [Test]
-        public void ConstructorIMass()
-        {
-            IHasMass m = new Mass(524.342);
-            Mass m2 = new Mass(m);
-
-            Assert.AreEqual(m, m2);
-        }
-
-        [Test]
-        public void ConstructorIMassRefInequality()
-        {
-            IHasMass m = new Mass(524.342);
-            Mass m2 = new Mass(m);
-
-            Assert.AreNotSame(m, m2);
-        }
 
         [Test]
         public void MassToMzPositiveCharge()
         {
-            double mz = Mass.MzFromMass(1000, 2);
+            ObjectWithMass1000 a = new ObjectWithMass1000();
+            double mz = a.ToMz(2);
             Assert.AreEqual(501.00727646687898, mz);
         }
 
         [Test]
         public void MassToMzNegativeCharge()
         {
-            double mz = Mass.MzFromMass(1000, -2);
+            ObjectWithMass1000 a = new ObjectWithMass1000();
+            double mz = a.ToMz(-2);
             Assert.AreEqual(498.99272353312102, mz);
         }
 
         [Test]
         public void MassToMzZeroCharge()
         {
-            var ex = Assert.Throws<DivideByZeroException>(() => Mass.MzFromMass(1000, 0));
+            ObjectWithMass1000 a = new ObjectWithMass1000();
+            var ex = Assert.Throws<DivideByZeroException>(() => a.ToMz(0));
             Assert.That(ex.Message, Is.EqualTo("Charge cannot be zero"));
         }
 
         [Test]
         public void MzToMassPostitiveCharge()
         {
-            double mass = Mass.MassFromMz(524.3, 2);
-            Assert.AreEqual(1046.5854470662418, mass);
+
+            double a = 524.3;
+            Assert.AreEqual(1046.5854470662418, a.ToMass(2));
         }
 
         [Test]
         public void MzToMassNegativeCharge()
         {
-            double mass = Mass.MassFromMz(524.3, -2);
-            Assert.AreEqual(1050.614552933758, mass);
+            double a = 524.3;
+            Assert.AreEqual(1050.614552933758, a.ToMass(-2));
         }
 
         [Test]
         public void MzTomassZeroCharge()
         {
-            var ex = Assert.Throws<DivideByZeroException>(() => Mass.MassFromMz(524.3, 0));
+            double a = 524.3;
+            var ex = Assert.Throws<DivideByZeroException>(() => a.ToMass(0));
             Assert.That(ex.Message, Is.EqualTo("Charge cannot be zero"));
         }
-
-        [Test]
-        public void MassIsIMass()
-        {
-            Mass m1 = new Mass(524.342);
-
-            Assert.IsInstanceOf<IHasMass>(m1);
-        }
-
-        [Test]
-        public void MassObjectToMzPositiveCharge()
-        {
-            Mass m1 = new Mass(1000);
-            double mz = m1.ToMz(2);
-
-            Assert.AreEqual(501.00727646687898, mz);
-        }
-
-        [Test]
-        public void MassObjectToMzNegativeCharge()
-        {
-            Mass m1 = new Mass(1000);
-            double mz = m1.ToMz(-2);
-
-            Assert.AreEqual(498.99272353312102, mz);
-        }
-
-        [Test]
-        public void MassObjectToMzZeroCharge()
-        {
-            Mass m1 = new Mass(1000);
-            var ex = Assert.Throws<DivideByZeroException>(() => m1.ToMz(0));
-            Assert.AreEqual(ex.Message, "Charge cannot be zero");
-        }
+        
     }
 }

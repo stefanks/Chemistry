@@ -35,18 +35,16 @@ namespace Chemistry
         /// <returns></returns>
         public static double ToMz(this IHasMass mass, int charge)
         {
-            return Mass.MzFromMass(mass.MonoisotopicMass, charge);
+            if (charge == 0)
+                throw new DivideByZeroException("Charge cannot be zero");
+            return mass.MonoisotopicMass / Math.Abs(charge) + Math.Sign(charge) * Constants.Proton;
         }
 
-        /// <summary>
-        /// Converts the object that has a m/z into a mass value based on the charge state
-        /// </summary>
-        /// <param name="mz"></param>
-        /// <param name="charge"></param>
-        /// <returns></returns>
-        public static double ToMass(this IHasMass mz, int charge)
+        public static double ToMass(this double mz, int charge)
         {
-            return Mass.MassFromMz(mz.MonoisotopicMass, charge);
+            if (charge == 0)
+                throw new DivideByZeroException("Charge cannot be zero");
+            return Math.Abs(charge) * mz - charge * Constants.Proton;
         }
 
         public static bool MassEquals(this double mass1, IHasMass mass2, double epsilon = MassEqualityEpsilon)
