@@ -70,7 +70,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChemicalFormula.cs" />
-    <Compile Include="ChemicalFormulaExtensions.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Interfaces\IHasChemicalFormula.cs" />
     <Compile Include="Interfaces\IHasMass.cs" />
