@@ -25,14 +25,7 @@ namespace Chemistry
         /// The mass difference tolerance for having identical masses
         /// </summary>
         public const double MassEqualityEpsilon = 1e-10;
-
-        /// <summary>
-        /// Converts the object that has a mass into a m/z value based on the charge state
-        /// </summary>
-        /// <param name="mass"></param>
-        /// <param name="charge"></param>
-        /// <param name="c13Isotope"></param>
-        /// <returns></returns>
+        
         public static double ToMz(this IHasMass mass, int charge)
         {
             if (charge == 0)
@@ -73,7 +66,7 @@ namespace Chemistry
             return Math.Abs(mass1.MonoisotopicMass - mass2.MonoisotopicMass) < epsilon;
         }
 
-        public static int Compare(this IHasMass mass1, IHasMass mass2, double epsilon = MassEqualityEpsilon)
+        public static int CompareMass(this IHasMass mass1, IHasMass mass2, double epsilon = MassEqualityEpsilon)
         {
             double difference = mass1.MonoisotopicMass - mass2.MonoisotopicMass;
             if (difference < -epsilon)
