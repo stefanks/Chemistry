@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU Lesser General Public
 // License along with Chemistry Library. If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using System.Collections.Generic;
 
 namespace Chemistry
@@ -23,13 +24,13 @@ namespace Chemistry
     public static class PeriodicTable
     {
         /// <summary>
-        /// The internal dictionary housing all the elements, keyed by their unique atomic symbol
+        /// The internal dictionary housing elements, keyed by their unique atomic symbol
         /// </summary>
-        private static readonly Dictionary<string, Element> _elements = new Dictionary<string, Element>();
+        private static Dictionary<string, Element> _elements = new Dictionary<string, Element>();
 
-        public static void Add(string atomicSymbol, Element element)
+        public static void Add(Element element)
         {
-            _elements.Add(atomicSymbol, element);
+            _elements.Add(element.AtomicSymbol, element);
         }
 
         public static int Count()
@@ -39,18 +40,11 @@ namespace Chemistry
 
         public static Element GetElement(string atomicSymbol)
         {
-            return _elements[atomicSymbol];
-        }
-
-        public static Isotope GetIsotope(string atomicSymbol, int atomicNumber)
-        {
-            return _elements[atomicSymbol][atomicNumber];
-        }
-
-        // Returns true if the periodic table contains an element with the specified elementSymbol; otherwise, false
-        public static bool TryGetElement(string elementSymbol, out Element element)
-        {
-            return _elements.TryGetValue(elementSymbol, out element);
+            Element element;
+            if (_elements.TryGetValue(atomicSymbol, out element))
+                return element;
+            else
+                throw new ArgumentException(string.Format("The atomic Symbol '{0}' does not exist in the Periodic Table", atomicSymbol));
         }
     }
 }

@@ -45,15 +45,6 @@ namespace Chemistry
         /// </summary>
         private static readonly Regex ValidateFormulaRegex = new Regex("^(" + FormulaRegex + ")+$", RegexOptions.Compiled);
 
-        /// <summary>
-        /// Determines if the chemical formula hill notation string is stored or calculated each time it is called.
-        /// True means the notation is stored as a string in the chemical formula (quicker, but more memory)
-        /// False means the notation is not stored as a string in the chemical formula (slower, no used memory)
-        /// Changing this value will not automatically delete the interned notations of formulas.
-        /// The default value is true.
-        /// </summary>
-        public static bool InternChemicalFormulaStrings = true;
-
         // Only gets elements which are not known if they are isotopes or not!!!
         internal Dictionary<Element, int> GetElements()
         {
@@ -61,21 +52,11 @@ namespace Chemistry
         }
 
         /// <summary>
-        /// The default empty chemicalFormula
-        /// </summary>
-        public static readonly ChemicalFormula Empty = new ChemicalFormula();
-
-
-        /// <summary>
-        /// Main data store, the isotopes.
-        /// <remarks>Acts as a dictionary where each isotope's UniqueID
-        /// is the key (index) of this array. The array is front loaded to provide the most
-        /// common elements first (C H N O P) to reduce memory footprint and provide quick
-        /// addition/subtraction of formulas.</remarks>
+        /// Main data stores, the isotopes and elements
         /// </summary>
         private Dictionary<Isotope, int> isotopes;
         private Dictionary<Element, int> elements;
-        
+
         #region Constructors
 
 
@@ -83,10 +64,8 @@ namespace Chemistry
         /// Create an chemical formula from the given string representation
         /// </summary>
         /// <param name="chemicalFormula">The string representation of the chemical formula</param>
-        public ChemicalFormula(string chemicalFormula)
+        public ChemicalFormula(string chemicalFormula) : this()
         {
-            isotopes = new Dictionary<Isotope, int>();
-            elements = new Dictionary<Element, int>();
             ParseFormulaAndAddElements(chemicalFormula);
         }
 
@@ -103,7 +82,7 @@ namespace Chemistry
         /// Create a copy of a chemical formula from another chemical formula
         /// </summary>
         /// <param name="other">The chemical formula to copy</param>
-        public ChemicalFormula(ChemicalFormula other):this()
+        public ChemicalFormula(ChemicalFormula other) : this()
         {
             if (other != null)
             {
@@ -179,6 +158,7 @@ namespace Chemistry
             }
         }
 
+
         /// <summary>
         /// Gets the string representation (Hill Notation) of this chemical formula
         /// </summary>
@@ -226,10 +206,12 @@ namespace Chemistry
             if (formula == null)
                 return;
 
-            foreach (var e in formula.GetElements()) {
+            foreach (var e in formula.GetElements())
+            {
                 Add(e.Key, e.Value);
             }
-            foreach (var i in formula.GetIsotopes()) {
+            foreach (var i in formula.GetIsotopes())
+            {
                 Add(i.Key, i.Value);
             }
         }
@@ -349,7 +331,7 @@ namespace Chemistry
         {
             if (isotope == null)
                 return 0;
-            int count= isotopes[isotope];
+            int count = isotopes[isotope];
             Add(isotope, -count);
             return count;
         }
@@ -377,7 +359,7 @@ namespace Chemistry
                 return 0;
             int count = elements[element];
             Add(element, -count);
-            
+
             foreach (var k in isotopes.Where(b => b.Key.Element == element).ToList())
             {
                 isotopes.Remove(k.Key);
@@ -451,7 +433,7 @@ namespace Chemistry
         /// <returns></returns>
         public bool IsSuperSetOf(ChemicalFormula formula)
         {
-            foreach(var aa in formula.elements)
+            foreach (var aa in formula.elements)
             {
                 if (!elements.ContainsKey(aa.Key) || aa.Value > elements[aa.Key])
                     return false;
@@ -540,7 +522,7 @@ namespace Chemistry
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            foreach(var kk in other.isotopes)
+            foreach (var kk in other.isotopes)
             {
                 if (!isotopes.ContainsKey(kk.Key) || isotopes[kk.Key] != kk.Value)
                     return false;
@@ -552,7 +534,7 @@ namespace Chemistry
             }
             return true;
         }
-       
+
         public override string ToString()
         {
             return Formula;
@@ -560,7 +542,7 @@ namespace Chemistry
 
 
         #region Private Methods
-        
+
         /// <summary>
         /// Parses a string representation of chemical formula and adds the elements
         /// to this chemical formula
@@ -581,31 +563,24 @@ namespace Chemistry
             {
                 string chemsym = match.Groups[1].Value; // Group 1: Chemical Symbol
 
-                Element element;
-                if (PeriodicTable.TryGetElement(chemsym, out element))
+                Element element = PeriodicTable.GetElement(chemsym);
+                //Isotope isotope = element.PrincipalIsotope; // Start with the most abundant (principal) isotope
+
+                int sign = match.Groups[3].Success ? // Group 3 (optional): Negative Sign
+                    -1 :
+                    1;
+
+                int numofelem = match.Groups[4].Success ? // Group 4 (optional): Number of Elements
+                    int.Parse(match.Groups[4].Value) :
+                    1;
+
+                if (match.Groups[2].Success) // Group 2 (optional): Isotope Mass Number
                 {
-                    //Isotope isotope = element.PrincipalIsotope; // Start with the most abundant (principal) isotope
-
-                    int sign = match.Groups[3].Success ? // Group 3 (optional): Negative Sign
-                        -1 :
-                        1;
-
-                    int numofelem = match.Groups[4].Success ? // Group 4 (optional): Number of Elements
-                        int.Parse(match.Groups[4].Value) :
-                        1;
-
-                    if (match.Groups[2].Success) // Group 2 (optional): Isotope Mass Number
-                    {
-                        Add(element[int.Parse(match.Groups[2].Value)], sign * numofelem);
-                    }
-                    else
-                    {
-                        Add(element, numofelem * sign);
-                    }
+                    Add(element[int.Parse(match.Groups[2].Value)], sign * numofelem);
                 }
                 else
                 {
-                    throw new ArgumentException(string.Format("The chemical Symbol '{0}' does not exist in the Periodic Table", chemsym));
+                    Add(element, numofelem * sign);
                 }
             }
         }
@@ -662,7 +637,7 @@ namespace Chemistry
                 return new ChemicalFormula();
             if (formula == null)
                 return null;
-            
+
             ChemicalFormula newFormula = new ChemicalFormula();
             foreach (var kk in formula.isotopes)
                 newFormula.Add(kk.Key, kk.Value * count);
@@ -736,19 +711,20 @@ namespace Chemistry
         /// <summary>
         /// Produces the Hill Notation of the chemical formula
         /// </summary>
-        public string GetHillNotation(string delimiter = "")
+        private string GetHillNotation(string delimiter = "")
         {
-            string s= "";
+            string s = "";
 
             // Find carbon
-            if (elements.ContainsKey(PeriodicTable.GetElement("C"))) {
+            if (elements.ContainsKey(PeriodicTable.GetElement("C")))
+            {
                 s += "C";
                 s += (elements[PeriodicTable.GetElement("C")] == 1 ? "" : "" + elements[PeriodicTable.GetElement("C")]);
                 s += delimiter;
             }
 
             // Find carbon isotopes
-            foreach(var i in PeriodicTable.GetElement("C").Isotopes)
+            foreach (var i in PeriodicTable.GetElement("C").Isotopes)
             {
                 if (isotopes.ContainsKey(i.Value))
                 {
@@ -780,24 +756,24 @@ namespace Chemistry
                     s += delimiter;
                 }
             }
-            
+
             List<string> otherParts = new List<string>();
 
-            foreach(var i in elements)
+            foreach (var i in elements)
             {
                 if (i.Key != PeriodicTable.GetElement("C") && i.Key != PeriodicTable.GetElement("H"))
-                    otherParts.Add(i.Key.AtomicSymbol + (i.Value==1 ? "": ""+i.Value));
+                    otherParts.Add(i.Key.AtomicSymbol + (i.Value == 1 ? "" : "" + i.Value));
             }
 
             foreach (var i in isotopes)
             {
                 if (i.Key.Element != PeriodicTable.GetElement("C") && i.Key.Element != PeriodicTable.GetElement("H"))
-                    otherParts.Add(i.Key.AtomicSymbol +"{"+i.Key.MassNumber+"}"+ (i.Value == 1 ? "" : "" + i.Value));
+                    otherParts.Add(i.Key.AtomicSymbol + "{" + i.Key.MassNumber + "}" + (i.Value == 1 ? "" : "" + i.Value));
             }
 
             otherParts.Sort();
-            return s+string.Join(delimiter, otherParts);
+            return s + string.Join(delimiter, otherParts);
         }
-        
+
     }
 }
