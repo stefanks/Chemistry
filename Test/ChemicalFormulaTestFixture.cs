@@ -18,6 +18,7 @@
 
 using Chemistry;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 
 namespace Test
@@ -34,53 +35,53 @@ namespace Test
         public void SetUp()
         {
             var elementH = new Element("H", 1, 1.007975);
-            PeriodicTable.Add(elementH.AtomicSymbol, elementH);
+            PeriodicTable.Add(elementH);
             elementH.AddIsotope(1, 1.00782503223, 0.999885);
             elementH.AddIsotope(2, 2.01410177812, 0.000115);
 
             var elementC = new Element("C", 6, 12.0106);
-            PeriodicTable.Add(elementC.AtomicSymbol, elementC);
+            PeriodicTable.Add(elementC);
             elementC.AddIsotope(12, 12, 0.9893);
             elementC.AddIsotope(13, 13.00335483507, 0.0107);
 
 
             var elementN = new Element("N", 7, 14.006855);
-            PeriodicTable.Add(elementN.AtomicSymbol, elementN);
+            PeriodicTable.Add(elementN);
             elementN.AddIsotope(14, 14.00307400443, 0.99636);
             elementN.AddIsotope(15, 15.00010889888, 0.00364);
 
 
             var elementO = new Element("O", 8, 15.9994);
-            PeriodicTable.Add(elementO.AtomicSymbol, elementO);
+            PeriodicTable.Add(elementO);
             elementO.AddIsotope(16, 15.99491461957, 0.99757);
             elementO.AddIsotope(17, 16.99913175650, 0.00038);
             elementO.AddIsotope(18, 17.99915961286, 0.00205);
 
             var elementFe = new Element("Fe", 26, 55.845);
-            PeriodicTable.Add(elementFe.AtomicSymbol, elementFe);
+            PeriodicTable.Add(elementFe);
             elementFe.AddIsotope(56, 55.93493633, 0.91754);
 
             var elementBr = new Element("Br", 35, 79.904);
-            PeriodicTable.Add(elementBr.AtomicSymbol, elementBr);
+            PeriodicTable.Add(elementBr);
             elementBr.AddIsotope(79, 78.9183376, 0.5069);
 
             var elementCa = new Element("Ca", 20, 40.078);
-            PeriodicTable.Add(elementCa.AtomicSymbol, elementCa);
+            PeriodicTable.Add(elementCa);
             elementCa.AddIsotope(40, 39.962590863, 0.96941);
 
             var elementS = new Element("S", 16, 32.0675);
-            PeriodicTable.Add(elementS.AtomicSymbol, elementS);
+            PeriodicTable.Add(elementS);
             elementS.AddIsotope(32, 31.9720711744, 0.9499);
             elementS.AddIsotope(33, 32.9714589098, 0.0075);
             elementS.AddIsotope(34, 33.967867004, 0.0425);
             elementS.AddIsotope(36, 35.96708071, 0.0001);
             
             var elementSe = new Element("Se", 34, 78.971);
-            PeriodicTable.Add(elementSe.AtomicSymbol, elementSe);
+            PeriodicTable.Add(elementSe);
             elementSe.AddIsotope(74, 73.922475934, 0.0089);
             
             var elementAl = new Element("Al", 13, 26.9815385);
-            PeriodicTable.Add(elementAl.AtomicSymbol, elementAl);
+            PeriodicTable.Add(elementAl);
             elementAl.AddIsotope(27, 26.98153853, 1);
         }
 
@@ -191,9 +192,8 @@ namespace Test
         {
             ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
 
-
-            Assert.That(() => formulaA.Add("Faa", 1),
-                        Throws.TypeOf<KeyNotFoundException>());
+            Assert.Throws<ArgumentException>(() => { formulaA.Add("Faa", 1); }, "The atomic Symbol 'Faa' does not exist in the Periodic Table");
+            
         }
 
         [Test]
@@ -206,6 +206,13 @@ namespace Test
 
             Assert.AreEqual(formulaA, formulaB);
         }
+
+        [Test]
+        public void InexistingElement()
+        {
+            Assert.Throws<ArgumentException>(() => { var formulaA = new ChemicalFormula("Q"); }, "The atomic Symbol 'Q' does not exist in the Periodic Table");
+        }
+
 
         [Test]
         public void AddNullIsotopeToFormula()
@@ -282,7 +289,7 @@ namespace Test
         {
             ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
             formulaA.Clear();
-            Assert.AreEqual(formulaA, ChemicalFormula.Empty);
+            Assert.AreEqual(formulaA, new ChemicalFormula());
         }
 
         [Test]
@@ -290,7 +297,7 @@ namespace Test
         {
             ChemicalFormula formulaA = new ChemicalFormula("");
 
-            Assert.AreEqual(formulaA, ChemicalFormula.Empty);
+            Assert.AreEqual(formulaA, new ChemicalFormula());
         }
 
         [Test]
@@ -298,7 +305,7 @@ namespace Test
         {
             ChemicalFormula formulaA = new ChemicalFormula(string.Empty);
 
-            Assert.AreEqual(formulaA, ChemicalFormula.Empty);
+            Assert.AreEqual(formulaA, new ChemicalFormula());
         }
 
         [Test]
@@ -306,7 +313,7 @@ namespace Test
         {
             ChemicalFormula formulaA = new ChemicalFormula();
 
-            Assert.AreEqual(formulaA, ChemicalFormula.Empty);
+            Assert.AreEqual(formulaA, new ChemicalFormula());
         }
 
         [Test]
@@ -323,7 +330,7 @@ namespace Test
         {
             ChemicalFormula formulaA = new ChemicalFormula(NullChemicalFormula);
 
-            Assert.AreEqual(formulaA, ChemicalFormula.Empty);
+            Assert.AreEqual(formulaA, new ChemicalFormula());
         }
 
         [Test]
@@ -338,37 +345,37 @@ namespace Test
         [Test]
         public void EmptyMonoisotopicMassIsZero()
         {
-            Assert.AreEqual(0.0, ChemicalFormula.Empty.MonoisotopicMass);
+            Assert.AreEqual(0.0, new ChemicalFormula().MonoisotopicMass);
         }
 
         [Test]
         public void EmptyAverageMassIsZero()
         {
-            Assert.AreEqual(0.0, ChemicalFormula.Empty.AverageMass);
+            Assert.AreEqual(0.0, new ChemicalFormula().AverageMass);
         }
 
         [Test]
         public void EmptyStringIsBlank()
         {
-            Assert.IsEmpty(ChemicalFormula.Empty.Formula);
+            Assert.IsEmpty(new ChemicalFormula().Formula);
         }
 
         [Test]
         public void EmptyAtomCountIsZero()
         {
-            Assert.AreEqual(0, ChemicalFormula.Empty.AtomCount);
+            Assert.AreEqual(0, new ChemicalFormula().AtomCount);
         }
 
         [Test]
         public void EmptyElementCountIsZero()
         {
-            Assert.AreEqual(0, ChemicalFormula.Empty.NumberOfUniqueElementsByAtomicNumber);
+            Assert.AreEqual(0, new ChemicalFormula().NumberOfUniqueElementsByAtomicNumber);
         }
 
         [Test]
         public void EmptyIsotopeCountIsZero()
         {
-            Assert.AreEqual(0, ChemicalFormula.Empty.NumberOfUniqueIsotopes);
+            Assert.AreEqual(0, new ChemicalFormula().NumberOfUniqueIsotopes);
         }
 
         [Test]
@@ -575,7 +582,7 @@ namespace Test
         [Test]
         public void InvalidChemicalElement()
         {
-            Assert.Throws<KeyNotFoundException>(() => { Element e = PeriodicTable.GetElement("Faa"); });
+            Assert.Throws<ArgumentException>(() => { Element e = PeriodicTable.GetElement("Faa"); }, "The atomic Symbol 'Faa' does not exist in the Periodic Table");
         }
 
         [Test]
@@ -603,7 +610,7 @@ namespace Test
         [Test]
         public void NumberOfAtomsOfEmptyFormula()
         {
-            Assert.AreEqual(0, ChemicalFormula.Empty.AtomCount);
+            Assert.AreEqual(0, new ChemicalFormula().AtomCount);
         }
 
         [Test]
@@ -725,7 +732,7 @@ namespace Test
             ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
             ChemicalFormula formulaB = new ChemicalFormula("C2H3NO");
 
-            formulaA.Remove(ChemicalFormula.Empty);
+            formulaA.Remove(new ChemicalFormula());
 
             Assert.AreEqual(formulaA, formulaB);
         }
@@ -837,7 +844,7 @@ namespace Test
             ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
             ChemicalFormula formulaB = new ChemicalFormula("C2H3NO");
 
-            formulaA.Remove(PeriodicTable.GetIsotope("H", 1), 0);
+            formulaA.Remove(PeriodicTable.GetElement("H")[1], 0);
 
             Assert.AreEqual(formulaA, formulaB);
         }
@@ -862,7 +869,7 @@ namespace Test
         [Test]
         public void UniqueElementsOfEmptyFormula()
         {
-            Assert.AreEqual(0, ChemicalFormula.Empty.NumberOfUniqueElementsByAtomicNumber);
+            Assert.AreEqual(0, new ChemicalFormula().NumberOfUniqueElementsByAtomicNumber);
         }
 
         [Test]
@@ -884,7 +891,7 @@ namespace Test
         [Test]
         public void UniqueIsotopesOfEmptyFormula()
         {
-            Assert.AreEqual(0, ChemicalFormula.Empty.NumberOfUniqueIsotopes);
+            Assert.AreEqual(0, new ChemicalFormula().NumberOfUniqueIsotopes);
         }
 
         [Test]
