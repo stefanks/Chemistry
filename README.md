@@ -1,6 +1,6 @@
 This is a library for basic chemistry objects. Includes the periodic table, elements and their isotopes, and chemical formulas.
 
-[![Build Status](https://travis-ci.org/stefanks/Chemistry.svg?branch=master)](https://travis-ci.org/stefanks/Chemistry) [![Build status](https://ci.appveyor.com/api/projects/status/d8dxfnj8lv7p4bhu/branch/master?svg=true)](https://ci.appveyor.com/project/stefanks/chemistry/branch/master)
+[![Build Status](https://travis-ci.org/stefanks/Chemistry.svg?branch=master)](https://travis-ci.org/stefanks/Chemistry) [![Build status](https://ci.appveyor.com/api/projects/status/d8dxfnj8lv7p4bhu/branch/master?svg=true)](https://ci.appveyor.com/project/stefanks/chemistry/branch/master)[![Coverage Status](https://coveralls.io/repos/github/stefanks/Chemistry/badge.svg?branch=master)](https://coveralls.io/github/stefanks/Chemistry?branch=master)
 
 Releases are here: https://www.nuget.org/packages/Chemistry/
 
