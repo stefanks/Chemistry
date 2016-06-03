@@ -32,12 +32,7 @@ namespace Chemistry
         {
             _elements.Add(element.AtomicSymbol, element);
         }
-
-        public static int Count()
-        {
-            return _elements.Count;
-        }
-
+        
         public static Element GetElement(string atomicSymbol)
         {
             Element element;

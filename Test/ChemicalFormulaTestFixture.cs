@@ -108,6 +108,13 @@ namespace Test
         }
 
         [Test]
+        public void CheckToStringOfElements()
+        {
+            Element n = PeriodicTable.GetElement("N");
+            Assert.AreEqual(""+n, "N");
+        }
+
+        [Test]
         public void AddFormulaToFormula()
         {
             ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");

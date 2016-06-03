@@ -77,24 +77,15 @@ namespace Chemistry
         /// The most abundant (principal) isotope of this element
         /// </summary>
         public Isotope PrincipalIsotope { get; private set; }
-
+        
         /// <summary>
-        /// The number of isotopes that were specified for the element
+        /// Returns the atomic symbol
         /// </summary>
-        public int IsotopeCount
-        {
-            get { return Isotopes.Count; }
-        }
-
-        /// <summary>
-        /// Returns a textual representation of this element in the following format: Hydrogen (H) Helium (He)
-        /// </summary>
-        /// <returns>The name and atomic symbol</returns>
+        /// <returns>The atomic symbol</returns>
         public override string ToString()
         {
             return AtomicSymbol;
         }
-
 
         /// <summary>
         /// Add an isotope to this element
