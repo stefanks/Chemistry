@@ -47,8 +47,8 @@ namespace Test
 
             var elementN = new Element("N", 7, 14.006855);
             PeriodicTable.Add(elementN);
-            elementN.AddIsotope(14, 14.00307400443, 0.99636);
             elementN.AddIsotope(15, 15.00010889888, 0.00364);
+            elementN.AddIsotope(14, 14.00307400443, 0.99636);
 
 
             var elementO = new Element("O", 8, 15.9994);
@@ -83,6 +83,15 @@ namespace Test
             var elementAl = new Element("Al", 13, 26.9815385);
             PeriodicTable.Add(elementAl);
             elementAl.AddIsotope(27, 26.98153853, 1);
+        }
+
+        [Test]
+        public void AddIsotopeWithExistingMassNumber()
+        {
+            Element al = PeriodicTable.GetElement("Al");
+            Assert.Throws<ArgumentException>(() => {
+                al.AddIsotope(27, 28, 1); }, "Isotope with mass number " + 28 + " already exists");
+
         }
 
         [Test]
