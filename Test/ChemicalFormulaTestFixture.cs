@@ -20,6 +20,7 @@ using Chemistry;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Test
 {
@@ -513,9 +514,9 @@ namespace Test
         [Test]
         public void ImplicitAddFormula()
         {
-            ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
-            ChemicalFormula formulaB = new ChemicalFormula("H2O");
-            ChemicalFormula formulaC = new ChemicalFormula("C2H5NO2");
+            ChemicalFormula formulaA = new ChemicalFormula("C{12}2H3NO{16}");
+            ChemicalFormula formulaB = new ChemicalFormula("H2O{16}");
+            ChemicalFormula formulaC = new ChemicalFormula("C{12}2H5NO{16}2");
 
             ChemicalFormula formulaD = formulaA + formulaB;
 
@@ -919,6 +920,15 @@ namespace Test
         }
 
         [Test]
+        public void TestReplaceIsotopes()
+        {
+            ChemicalFormula formulaA = new ChemicalFormula("CC{13}2H3NO");
+
+            formulaA.Replace(PeriodicTable.GetElement("C")[13], PeriodicTable.GetElement("C")[12]);
+            Assert.AreEqual("CC{12}2H3NO", formulaA.Formula);
+        }
+
+        [Test]
         public void ChemicalForulaIsSubSet()
         {
             ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
@@ -961,6 +971,20 @@ namespace Test
             ChemicalFormula formula = new ChemicalFormula();
             formula.Add(new ChemicalFormula("C3H5NO"));
             Assert.AreEqual(PeriodicTable.GetElement("C").PrincipalIsotope.AtomicMass * 3 + PeriodicTable.GetElement("H").PrincipalIsotope.AtomicMass * 5 + PeriodicTable.GetElement("N").PrincipalIsotope.AtomicMass + PeriodicTable.GetElement("O").PrincipalIsotope.AtomicMass,formula.MonoisotopicMass);
+        }
+        
+        [Test]
+        public void TestIsotopicDistribution()
+        {
+            IsotopicDistribution dist = new IsotopicDistribution();
+
+            ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
+
+            double[] masses;
+            double[] intensities;
+            dist.CalculateDistribuition(formulaA, out masses, out intensities);
+            
+            Assert.True(formulaA.MonoisotopicMass.MassEquals(masses[Array.IndexOf(intensities, intensities.Max())]));
         }
     }
 }

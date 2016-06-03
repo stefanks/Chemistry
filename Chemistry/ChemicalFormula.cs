@@ -180,10 +180,10 @@ namespace Chemistry
         /// </summary>
         /// <param name="isotopeToRemove">The isotope to remove</param>
         /// <param name="isotopToAdd">The isotope to add</param>
-        public void Replace(Isotope isotopeToRemove, Isotope isotopToAdd)
+        public void Replace(Isotope isotopeToRemove, Isotope isotopeToAdd)
         {
             int numberRemoved = Remove(isotopeToRemove);
-            Add(isotopToAdd, numberRemoved);
+            Add(isotopeToAdd, numberRemoved);
         }
 
         /// <summary>
