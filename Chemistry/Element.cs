@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU Lesser General Public
 // License along with Chemistry Library. If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using System.Collections.Generic;
 
 namespace Chemistry
@@ -105,7 +106,7 @@ namespace Chemistry
         public void AddIsotope(int massNumber, double atomicMass, double abundance)
         {
             if (Isotopes.ContainsKey(massNumber))
-                return;
+                throw new ArgumentException("Isotope with mass number " + massNumber + " already exists");
             var isotope = new Isotope(this, massNumber, atomicMass, abundance);
             Isotopes.Add(massNumber, isotope);
             if (PrincipalIsotope == null || (abundance > PrincipalIsotope.RelativeAbundance))
