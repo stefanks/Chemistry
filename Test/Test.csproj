@@ -88,6 +88,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ElementsAndIsotopesTests.cs" />
     <Compile Include="ChemicalFormulaTestFixture.cs" />
     <Compile Include="MassTestFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

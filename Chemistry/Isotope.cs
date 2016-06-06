@@ -16,6 +16,8 @@
 // You should have received a copy of the GNU Lesser General Public
 // License along with Chemistry Library. If not, see <http://www.gnu.org/licenses/>.
 
+using System;
+
 namespace Chemistry
 {
     /// <summary>
@@ -43,15 +45,7 @@ namespace Chemistry
         /// Is this the most abundant isotope of its parent element?
         /// </summary>
         internal bool IsPrincipalIsotope { get; set; }
-
-        /// <summary>
-        /// The atomic symbol for this isotope
-        /// </summary>
-        public string AtomicSymbol
-        {
-            get { return Element.AtomicSymbol; }
-        }
-        
+               
 
         /// <summary>
         /// The atomic number of the isotope's parent element (also the number of protons)
@@ -103,7 +97,7 @@ namespace Chemistry
         /// <returns>The atomic symbol and mass number combined</returns>
         public override string ToString()
         {
-            return string.Format("{0}{{1:N0}}", AtomicSymbol, MassNumber);
+            return string.Format("{0}{{{1}}}", Element.AtomicSymbol, MassNumber);
         }
     }
 }
