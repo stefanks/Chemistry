@@ -84,8 +84,6 @@ namespace Chemistry
                 foreach (Isotope isotope in elementAndCount.Key.Isotopes.Values.OrderBy(iso => iso.AtomicMass))
                 {
                     double probability = isotope.RelativeAbundance;
-                    if (probability <= 0)
-                        continue;
 
                     Composition c = new Composition
                     {

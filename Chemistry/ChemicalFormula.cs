@@ -768,7 +768,7 @@ namespace Chemistry
             foreach (var i in isotopes)
             {
                 if (i.Key.Element != PeriodicTable.GetElement("C") && i.Key.Element != PeriodicTable.GetElement("H"))
-                    otherParts.Add(i.Key.AtomicSymbol + "{" + i.Key.MassNumber + "}" + (i.Value == 1 ? "" : "" + i.Value));
+                    otherParts.Add(i.Key.Element.AtomicSymbol + "{" + i.Key.MassNumber + "}" + (i.Value == 1 ? "" : "" + i.Value));
             }
 
             otherParts.Sort();
