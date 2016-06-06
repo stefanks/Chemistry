@@ -42,8 +42,6 @@ namespace Chemistry
 
         public static bool MassEquals(this double mass1, IHasMass mass2, double epsilon = MassEqualityEpsilon)
         {
-            if (mass2 == null)
-                return false;
             return Math.Abs(mass1 - mass2.MonoisotopicMass) < epsilon;
         }
 
@@ -54,15 +52,11 @@ namespace Chemistry
 
         public static bool MassEquals(this IHasMass mass1, double mass2, double epsilon = MassEqualityEpsilon)
         {
-            if (mass1 == null)
-                return false;
             return Math.Abs(mass1.MonoisotopicMass - mass2) < epsilon;
         }
 
         public static bool MassEquals(this IHasMass mass1, IHasMass mass2, double epsilon = MassEqualityEpsilon)
         {
-            if (mass1 == null || mass2 == null)
-                return false;
             return Math.Abs(mass1.MonoisotopicMass - mass2.MonoisotopicMass) < epsilon;
         }
 
