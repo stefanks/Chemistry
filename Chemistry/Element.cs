@@ -77,7 +77,7 @@ namespace Chemistry
         /// The most abundant (principal) isotope of this element
         /// </summary>
         public Isotope PrincipalIsotope { get; private set; }
-        
+
         /// <summary>
         /// Returns the atomic symbol
         /// </summary>
@@ -101,8 +101,8 @@ namespace Chemistry
             var isotope = new Isotope(this, massNumber, atomicMass, abundance);
             Isotopes.Add(massNumber, isotope);
             if (PrincipalIsotope == null || (abundance > PrincipalIsotope.RelativeAbundance))
-            { 
-                if (PrincipalIsotope!=null)
+            {
+                if (PrincipalIsotope != null)
                     PrincipalIsotope.IsPrincipalIsotope = false;
                 PrincipalIsotope = isotope;
                 PrincipalIsotope.IsPrincipalIsotope = true;

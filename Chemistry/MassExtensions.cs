@@ -25,7 +25,7 @@ namespace Chemistry
         /// The mass difference tolerance for having identical masses
         /// </summary>
         public const double MassEqualityEpsilon = 1e-10;
-        
+
         public static double ToMz(this IHasMass mass, int charge)
         {
             if (charge == 0)

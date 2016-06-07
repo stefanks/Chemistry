@@ -18,9 +18,6 @@
 
 using Chemistry;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Test
 {
@@ -35,7 +32,7 @@ namespace Test
             elementC.AddIsotope(12, 12, 0.9893);
             elementC.AddIsotope(13, 13.00335483507, 0.0107);
             Isotope isotope = elementC[13];
-            Assert.AreEqual("C{13}",isotope.ToString());
+            Assert.AreEqual("C{13}", isotope.ToString());
             Assert.AreEqual(6, isotope.Protons);
             Assert.AreEqual(7, isotope.Neutrons);
 

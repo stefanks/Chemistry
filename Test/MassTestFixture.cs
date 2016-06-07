@@ -91,7 +91,7 @@ namespace Test
             ObjectWithMass1000 a = new ObjectWithMass1000();
             ObjectWithMass1000 b = new ObjectWithMass1000();
             Assert.IsTrue(a.MassEquals(b));
-            Assert.IsTrue(a.CompareMass(b)==0);
+            Assert.IsTrue(a.CompareMass(b) == 0);
         }
 
 
