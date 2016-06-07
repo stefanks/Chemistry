@@ -33,10 +33,16 @@ namespace Chemistry
         /// atomic units (u)
         /// </summary>
         public const double Electron = .000548579909070;
+
         /// <summary>
         /// The mass of the subatomic particle with a single elementary charge in atomic
         /// units (u)
         /// </summary>
         public const double Proton = 1.007276466879;
+        
+        /// <summary>
+        /// The mass difference tolerance for having identical masses
+        /// </summary>
+        public const double MassEqualityEpsilon = 1e-10;
     }
 }

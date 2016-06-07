@@ -28,7 +28,6 @@ namespace Test
     public class ChemicalFormulaTestFixture
     {
         private static readonly ChemicalFormula NullChemicalFormula = null;
-        private static readonly Element NullElement = null;
 
         [OneTimeSetUp]
         public void SetUp()
@@ -895,6 +894,15 @@ namespace Test
 
             Assert.AreEqual(1, formulaA.NumberOfUniqueIsotopes);
         }
+
+        [Test]
+        public void ContainsIsotopesOfYe()
+        {
+            ChemicalFormula formulaA = new ChemicalFormula("CC{13}H3NO");
+
+            Assert.IsTrue(formulaA.ContainsIsotopesOf(PeriodicTable.GetElement("C")));
+        }
+
 
         [Test]
         public void TestReplaceIsotopes()
