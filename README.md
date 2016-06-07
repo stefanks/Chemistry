@@ -14,14 +14,35 @@ The static periodic table class acts as a globally accessible store of elements.
             Element carbon = PeriodicTable.GetElement("C");
 ```
 
-If needed, an isotope can be specified by providing it's mass number, relative atomic mass and isotopic composition (mole fraction). 
+If needed, an isotope can be specified by providing it's mass number, relative atomic mass and relative abundance of the isotope.
 ```csharp
             carbon.AddIsotope(12, 12, 0.9893);
             carbon.AddIsotope(13, 13.00335483507, 0.0107);
 ```
-In theory, the standard atomic weight should be equal to the average of the relative atomic masses of all isotopes weighted by their isotopic compositon. We do not enforce this constraint, since there is no requirement to specify all (or any) isotopes. 
+In theory, the standard atomic weight should be equal to the average of the relative atomic masses of all isotopes weighted by their relative abundance. We do not enforce this constraint, since there is no requirement to specify all (or any) isotopes. 
 
+To automatically populate the periodic table with current NIST estimates of all masses and abundances use the NuGet package [UsefulProteomicsDatabases](https://www.nuget.org/packages/UsefulProteomicsDatabases). 
+```csharp
+            Loaders.elementLocation = "elements.dat";
+            Loaders.LoadElements();
+```
 
+### Chemical Formulas
+
+Elements (and isotopes) can be combined to create chemical formulas.
+```csharp
+            ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
+```
+
+### Isotopic Distribution
+
+Isotopic distribution of a chemical compound can be calculated from it's chemical formula.
+```csharp
+            ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
+            double[] masses;
+            double[] abundances;
+            dist.CalculateDistribuition(formulaA, out masses, out abundances);
+```
 
 ## License
 Code heavily borrowed from https://github.com/dbaileychess/CSMSL and distrubuted under the appropriate license, LGPL.
