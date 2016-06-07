@@ -224,15 +224,8 @@ namespace Chemistry
         /// <param name="count">The number of the element to add</param>
         public void Add(string symbol, int count)
         {
-            try
-            {
                 Isotope isotope = PeriodicTable.GetElement(symbol).PrincipalIsotope;
                 Add(isotope, count);
-            }
-            catch (KeyNotFoundException e)
-            {
-                throw new KeyNotFoundException(string.Format("The element symbol '{0}' is not found in the periodic table", symbol), e);
-            }
         }
 
         public void Add(Element element, int count)
@@ -276,8 +269,6 @@ namespace Chemistry
         /// <param name="item">The object that contains a chemical formula</param>
         public void Remove(IHasChemicalFormula item)
         {
-            if (item == null)
-                return;
             Remove(item.thisChemicalFormula);
         }
 
@@ -287,8 +278,6 @@ namespace Chemistry
         /// <param name="formula">The chemical formula to remove</param>
         public void Remove(ChemicalFormula formula)
         {
-            if (formula == null)
-                return;
             MonoisotopicMass -= formula.MonoisotopicMass;
             foreach (var e in formula.GetElements())
                 Remove(e.Key, e.Value);
