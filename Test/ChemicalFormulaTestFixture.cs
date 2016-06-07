@@ -669,6 +669,13 @@ namespace Test
         }
 
         [Test]
+        public void EqualsFalse()
+        {
+            ChemicalFormula formulaA = new ChemicalFormula("OCHHCHN");
+            Assert.IsFalse(formulaA.Equals("C"));
+        }
+
+        [Test]
         public void Equals()
         {
             ChemicalFormula formulaA = new ChemicalFormula("OCHHCHN");
@@ -688,10 +695,10 @@ namespace Test
         [Test]
         public void IsSuperSetOf()
         {
-            ChemicalFormula formulaA = new ChemicalFormula("CH3NO{16}C");
+            ChemicalFormula formulaA = new ChemicalFormula("CH3NO{17}C");
             ChemicalFormula formulaB = new ChemicalFormula("CHNO{16}");
 
-            Assert.IsTrue(formulaA.IsSuperSetOf(formulaB));
+            Assert.IsFalse(formulaA.IsSuperSetOf(formulaB));
         }
 
         [Test]
@@ -776,8 +783,8 @@ namespace Test
         {
             ChemicalFormula formulaA = new ChemicalFormula("O{16}");
             Assert.IsTrue(formulaA.ContainsIsotopesOf("O"));
-            Assert.IsTrue(formulaA.ContainsSpecificIsotope("O",16));
-            Assert.AreEqual(1,formulaA.CountSpecificIsotopes("O", 16));
+            Assert.IsTrue(formulaA.ContainsSpecificIsotope("O", 16));
+            Assert.AreEqual(1, formulaA.CountSpecificIsotopes("O", 16));
         }
 
         [Test]
@@ -1002,7 +1009,7 @@ namespace Test
         public void TestIsotopicDistribution2()
         {
             IsotopicDistribution dist = new IsotopicDistribution();
-            
+
             double[] masses;
             double[] intensities;
             dist.CalculateDistribuition("AlO{16}", out masses, out intensities);
@@ -1035,22 +1042,84 @@ namespace Test
             dist4.CalculateDistribuition(formulaA, out masses, out intensities);
 
             IsotopicDistribution dist5 = new IsotopicDistribution(1.0);
-            dist5.CalculateDistribuition(formulaA , out masses, out intensities);
+            dist5.CalculateDistribuition(formulaA, out masses, out intensities);
+
 
         }
+
+        //[Test]
+        //public void CatchIsotopicDistributionStuff()
+        //{
+
+        //    ChemicalFormula formula = (new ChemicalFormula("CO")) * 50;
+        //    List<double> frs = new List<double>() { 0.001, 0.01, 0.1, 1 };
+        //    List<double> minPs = new List<double>() { 0, 1e-200, 1e-50, 1e-1, 0.9 };
+        //    List<double> mwrs = new List<double>() { 1e-15, 1e-12, 1e-1 };
+        //    foreach (double fr in frs)
+        //    {
+        //        foreach (double minP in minPs)
+        //        {
+        //            foreach (double mwr in mwrs)
+        //            {
+        //                Console.WriteLine(fr + " " + minP + " " + mwr);
+        //                double[] masses;
+        //                double[] intensities;
+        //                IsotopicDistribution dist = new IsotopicDistribution(fr, minP, mwr);
+        //                dist.CalculateDistribuition(formula, out masses, out intensities);
+        //                Console.WriteLine("");
+        //            }
+        //        }
+        //    }
+        //}
+
+        [Test]
+        public void catchProbStuff()
+        {
+            ChemicalFormula formula = (new ChemicalFormula("CO")) * 50;
+            double[] masses;
+            double[] intensities;
+            IsotopicDistribution dist = new IsotopicDistribution(0.001, 1e-50,1e-15 );
+            dist.CalculateDistribuition(formula, out masses, out intensities);
+        }
+
+
+        [Test]
+        public void i0j1()
+        {
+            ChemicalFormula formula = (new ChemicalFormula("CO")) * 50;
+            double[] masses;
+            double[] intensities;
+            IsotopicDistribution dist = new IsotopicDistribution(0.01,0.1);
+            dist.CalculateDistribuition(formula, out masses, out intensities);
+            //Console.WriteLine(String.Join(", ", masses));
+            //Console.WriteLine(String.Join(", ", intensities));
+
+
+            dist = new IsotopicDistribution(0.01, 0.5);
+            dist.CalculateDistribuition(formula, out masses, out intensities);
+            //Console.WriteLine(String.Join(", ", masses));
+            //Console.WriteLine(String.Join(", ", intensities));
+
+
+            dist = new IsotopicDistribution(0.01,0.75);
+            dist.CalculateDistribuition(formula, out masses, out intensities);
+            //Console.WriteLine(String.Join(", ", masses));
+            //Console.WriteLine(String.Join(", ", intensities));
+        }
+
 
         [Test]
         public void ThresholdProbability()
         {
             ChemicalFormula formulaA = new ChemicalFormula("CO");
-            
+
             double[] masses;
             double[] intensities;
             // Only the principal isotopes have joint probability of 0.5! So one result when calcuating isotopic distribution
             IsotopicDistribution dist = new IsotopicDistribution(0.0001, 0.5);
             dist.CalculateDistribuition(formulaA, out masses, out intensities);
             Assert.AreEqual(1, masses.Count());
-            Assert.IsTrue((PeriodicTable.GetElement("C").PrincipalIsotope.AtomicMass+ PeriodicTable.GetElement("O").PrincipalIsotope.AtomicMass).MassEquals(masses[0]));
+            Assert.IsTrue((PeriodicTable.GetElement("C").PrincipalIsotope.AtomicMass + PeriodicTable.GetElement("O").PrincipalIsotope.AtomicMass).MassEquals(masses[0]));
 
         }
 

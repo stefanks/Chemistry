@@ -333,7 +333,8 @@ namespace Chemistry
         {
             int i = tPolynomial.Count;
             int j = fPolynomial.Count;
-            
+
+            //Console.WriteLine("i = " + i + " j = " + j);
             if (i == 0 || j == 0)
                 return;
 
@@ -391,6 +392,7 @@ namespace Chemistry
                 fgidPolynomial[i] = new Polynomial();
             }
 
+            //Console.WriteLine("j = " + j + " index = " + j);
             if (j < index)
             {
                 tPolynomial.RemoveRange(j, tPolynomial.Count - j);
@@ -437,8 +439,6 @@ namespace Chemistry
         
         private static double FactorLn(int n)
         {
-            if (n < 0)
-                throw new ArgumentException("n must be zero or greater");
 
             if (n <= 1)
                 return 0;
