@@ -32,6 +32,17 @@ namespace Test
         }
     }
 
+    internal class ObjectWithMass100 : IHasMass
+    {
+        public double MonoisotopicMass
+        {
+            get
+            {
+                return 100;
+            }
+        }
+    }
+
 
     [TestFixture]
     public class MassTestFixture
@@ -104,6 +115,16 @@ namespace Test
             double c = 1000 + 2e-10;
             Assert.IsTrue(a.MassEquals(b));
             Assert.IsFalse(c.MassEquals(a));
+        }
+
+        [Test]
+        public void MassNoEqual()
+        {
+
+            ObjectWithMass1000 a = new ObjectWithMass1000();
+            ObjectWithMass100 b = new ObjectWithMass100();
+            Assert.IsTrue(a.CompareMass(b)>0);
+            Assert.IsTrue(b.CompareMass(a)<0);
         }
     }
 }

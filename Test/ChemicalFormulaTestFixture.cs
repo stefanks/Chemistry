@@ -28,7 +28,6 @@ namespace Test
     public class ChemicalFormulaTestFixture
     {
         private static readonly ChemicalFormula NullChemicalFormula = null;
-        private static readonly Element NullElement = null;
 
         [OneTimeSetUp]
         public void SetUp()
@@ -661,12 +660,38 @@ namespace Test
         }
 
         [Test]
+        public void EqualObject()
+        {
+            ChemicalFormula formulaA = new ChemicalFormula("OCHHCHN");
+            ChemicalFormula formulaB = new ChemicalFormula("C2H3NO");
+
+            Assert.AreEqual(formulaA, formulaB as object);
+        }
+
+        [Test]
+        public void Equals()
+        {
+            ChemicalFormula formulaA = new ChemicalFormula("OCHHCHN");
+            Assert.IsTrue(formulaA.Equals(formulaA));
+        }
+
+        [Test]
         public void ParsingFormulaRepeatedElements()
         {
             ChemicalFormula formulaA = new ChemicalFormula("CH3NOC");
             ChemicalFormula formulaB = new ChemicalFormula("C2H3NO");
 
             Assert.AreEqual(formulaA, formulaB);
+        }
+
+
+        [Test]
+        public void IsSuperSetOf()
+        {
+            ChemicalFormula formulaA = new ChemicalFormula("CH3NO{16}C");
+            ChemicalFormula formulaB = new ChemicalFormula("CHNO{16}");
+
+            Assert.IsTrue(formulaA.IsSuperSetOf(formulaB));
         }
 
         [Test]
@@ -895,6 +920,15 @@ namespace Test
 
             Assert.AreEqual(1, formulaA.NumberOfUniqueIsotopes);
         }
+
+        [Test]
+        public void ContainsIsotopesOfYe()
+        {
+            ChemicalFormula formulaA = new ChemicalFormula("CC{13}H3NO");
+
+            Assert.IsTrue(formulaA.ContainsIsotopesOf(PeriodicTable.GetElement("C")));
+        }
+
 
         [Test]
         public void TestReplaceIsotopes()

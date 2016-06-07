@@ -434,7 +434,7 @@ namespace Chemistry
 
         private static readonly double[] factorLnArray = new double[50003];
         private static int _factorLnTop = 1;
-
+        
         private static double FactorLn(int n)
         {
             if (n < 0)
