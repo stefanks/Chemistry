@@ -109,7 +109,7 @@ namespace Chemistry
         {
             get
             {
-                return 0;
+                return isotopes.Sum(b => b.Key.AtomicMass * b.Value) + elements.Sum(b => b.Key.AverageMass * b.Value);
             }
         }
 
@@ -196,8 +196,6 @@ namespace Chemistry
         /// <param name="item">The object that contains a chemical formula</param>
         public void Add(IHasChemicalFormula item)
         {
-            if (item == null)
-                return;
             Add(item.thisChemicalFormula);
         }
 
@@ -207,9 +205,6 @@ namespace Chemistry
         /// <param name="formula">The chemical formula to add to this</param>
         public void Add(ChemicalFormula formula)
         {
-            if (formula == null)
-                return;
-
             foreach (var e in formula.GetElements())
             {
                 Add(e.Key, e.Value);
@@ -226,7 +221,7 @@ namespace Chemistry
         /// </summary>
         /// <param name="symbol">The chemical symbol of the element to add</param>
         /// <param name="count">The number of the element to add</param>
-        public void Add(string symbol, int count)
+        public void AddPrincipalIsotopesOf(string symbol, int count)
         {
             Isotope isotope = PeriodicTable.GetElement(symbol).PrincipalIsotope;
             Add(isotope, count);
@@ -234,7 +229,7 @@ namespace Chemistry
 
         public void Add(Element element, int count)
         {
-            if (count == 0 || element == null)
+            if (count == 0)
                 return;
             if (!elements.ContainsKey(element))
                 elements.Add(element, count);
@@ -253,7 +248,7 @@ namespace Chemistry
         /// <param name="count">The number of the isotope to add</param>
         public void Add(Isotope isotope, int count)
         {
-            if (count == 0 || isotope == null)
+            if (count == 0)
                 return;
             if (!isotopes.ContainsKey(isotope))
                 isotopes.Add(isotope, count);
@@ -296,7 +291,7 @@ namespace Chemistry
         /// </summary>
         /// <param name="symbol">The symbol of the chemical element to remove</param>
         /// <param name="count">The number of elements to remove</param>
-        public void Remove(string symbol, int count)
+        public void RemoveElements(string symbol, int count)
         {
             Add(PeriodicTable.GetElement(symbol), -count);
         }
@@ -342,8 +337,6 @@ namespace Chemistry
         /// <returns>Number of removed isotopes</returns>
         public int RemoveIsotopesOf(Element element)
         {
-            if (element == null)
-                return 0;
             int count = elements[element];
             Add(element, -count);
 
@@ -372,9 +365,9 @@ namespace Chemistry
         /// </summary>
         /// <param name="isotope">The isotope to look for</param>
         /// <returns>True if there is a non-negative number of the isotope in this formula</returns>
-        public bool Contains(Isotope isotope)
+        public bool ContainsSpecificIsotope(Isotope isotope)
         {
-            return Count(isotope) != 0;
+            return CountSpecificIsotopes(isotope) != 0;
         }
 
         /// <summary>
@@ -382,14 +375,14 @@ namespace Chemistry
         /// </summary>
         /// <param name="element">The element to look for</param>
         /// <returns>True if there is a non-zero number of the element in this formula</returns>
-        public bool Contains(Element element)
+        public bool ContainsIsotopesOf(Element element)
         {
-            return Count(element) != 0;
+            return CountWithIsotopes(element) != 0;
         }
 
-        public bool Contains(string symbol)
+        public bool ContainsIsotopesOf(string symbol)
         {
-            return Count(symbol) != 0;
+            return CountWithIsotopes(symbol) != 0;
         }
 
         public bool Contains(ChemicalFormula formula)
@@ -399,7 +392,7 @@ namespace Chemistry
 
         public bool IsSubSetOf(ChemicalFormula formula)
         {
-            return formula != null && formula.IsSuperSetOf(this);
+            return formula.IsSuperSetOf(this);
         }
 
         /// <summary>
@@ -424,9 +417,9 @@ namespace Chemistry
             return true;
         }
 
-        public bool Contains(string symbol, int atomicNumber)
+        public bool ContainsSpecificIsotope(string symbol, int atomicNumber)
         {
-            return Count(symbol, atomicNumber) != 0;
+            return CountSpecificIsotopes(symbol, atomicNumber) != 0;
         }
 
         /// <summary>
@@ -434,10 +427,8 @@ namespace Chemistry
         /// </summary>
         /// <param name="isotope"></param>
         /// <returns></returns>
-        public int Count(Isotope isotope)
+        public int CountSpecificIsotopes(Isotope isotope)
         {
-            if (isotope == null)
-                return 0;
             return isotopes[isotope];
         }
 
@@ -447,24 +438,22 @@ namespace Chemistry
         /// </summary>
         /// <param name="element">The element to search for</param>
         /// <returns>The total number of all the element isotopes in this chemical formula</returns>
-        public int Count(Element element)
+        public int CountWithIsotopes(Element element)
         {
-            if (element == null)
-                return 0;
-            var isotopeCount = element.Isotopes.Values.Sum(isotope => Count(isotope));
+            var isotopeCount = element.Isotopes.Values.Sum(isotope => CountSpecificIsotopes(isotope));
             return isotopeCount + elements[element];
         }
 
-        public int Count(string symbol)
+        public int CountWithIsotopes(string symbol)
         {
             Element element = PeriodicTable.GetElement(symbol);
-            return Count(element);
+            return CountWithIsotopes(element);
         }
 
-        public int Count(string symbol, int atomicNumber)
+        public int CountSpecificIsotopes(string symbol, int atomicNumber)
         {
             Isotope isotope = PeriodicTable.GetElement(symbol)[atomicNumber];
-            return Count(isotope);
+            return CountSpecificIsotopes(isotope);
         }
 
 
@@ -472,14 +461,11 @@ namespace Chemistry
         /// Gets the ratio of the number of Carbon to Hydrogen in this chemical formula
         /// </summary>
         /// <returns></returns>
-        public double GetCarbonHydrogenRatio()
+        public double HydrogenCarbonRatio()
         {
-            int carbonCount = Count("C");
+            int carbonCount = CountWithIsotopes("C");
 
-            if (carbonCount == 0)
-                return 0;
-
-            int hydrogenCount = Count("H");
+            int hydrogenCount = CountWithIsotopes("H");
 
             return hydrogenCount / (double)carbonCount;
         }
@@ -502,18 +488,10 @@ namespace Chemistry
             if (ReferenceEquals(this, other)) return true;
             if (!MonoisotopicMass.MassEquals(other.MonoisotopicMass))
             {
-               return false;
+                return false;
             }
-            foreach (var kk in other.isotopes)
-            {
-                if (!isotopes.ContainsKey(kk.Key) || isotopes[kk.Key] != kk.Value)
-                    return false;
-            }
-            foreach (var kk in other.elements)
-            {
-                if (!elements.ContainsKey(kk.Key) || elements[kk.Key] != kk.Value)
-                    return false;
-            }
+            if (!IsSubSetOf(other) || !IsSuperSetOf(other))
+                return false;
             return true;
         }
 
@@ -546,7 +524,6 @@ namespace Chemistry
                 string chemsym = match.Groups[1].Value; // Group 1: Chemical Symbol
 
                 Element element = PeriodicTable.GetElement(chemsym);
-                //Isotope isotope = element.PrincipalIsotope; // Start with the most abundant (principal) isotope
 
                 int sign = match.Groups[3].Success ? // Group 3 (optional): Negative Sign
                     -1 :
@@ -558,10 +535,12 @@ namespace Chemistry
 
                 if (match.Groups[2].Success) // Group 2 (optional): Isotope Mass Number
                 {
+                    // Adding isotope!
                     Add(element[int.Parse(match.Groups[2].Value)], sign * numofelem);
                 }
                 else
                 {
+                    // Adding element!
                     Add(element, numofelem * sign);
                 }
             }
@@ -572,7 +551,7 @@ namespace Chemistry
         #region Internal
 
         /// <summary>
-        /// Get the internal isotope array for this chemical formula as a deep copy.
+        /// Get the internal isotope array for this chemical formula
         /// </summary>
         /// <returns>The isotopes that make up this chemical formula</returns>
         internal Dictionary<Isotope, int> GetIsotopes()
@@ -601,13 +580,6 @@ namespace Chemistry
 
         public static ChemicalFormula operator -(ChemicalFormula left, IHasChemicalFormula right)
         {
-            if (left == null)
-            {
-                if (right == null)
-                    return null;
-                return new ChemicalFormula(right);
-            }
-
             ChemicalFormula newFormula = new ChemicalFormula(left);
             newFormula.Remove(right);
             return newFormula;
@@ -633,15 +605,6 @@ namespace Chemistry
 
         public static ChemicalFormula operator +(ChemicalFormula left, IHasChemicalFormula right)
         {
-            if (left == null)
-            {
-                if (right == null)
-                    return null;
-                return new ChemicalFormula(right);
-            }
-            if (right == null)
-                return new ChemicalFormula(left);
-
             ChemicalFormula newFormula = new ChemicalFormula(left);
             newFormula.Add(right);
             return newFormula;
