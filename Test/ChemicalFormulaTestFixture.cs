@@ -997,8 +997,11 @@ namespace Test
             Assert.AreEqual(4, masses.Count());
 
 
-            IsotopicDistribution dist4 = new IsotopicDistribution(1);
-            dist3.CalculateDistribuition(formulaA as IHasChemicalFormula, out masses, out intensities);
+            IsotopicDistribution dist4 = new IsotopicDistribution(0.1);
+            dist4.CalculateDistribuition(formulaA, out masses, out intensities);
+
+            IsotopicDistribution dist5 = new IsotopicDistribution(1.0);
+            dist5.CalculateDistribuition(formulaA , out masses, out intensities);
 
         }
 

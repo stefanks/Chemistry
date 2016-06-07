@@ -157,7 +157,6 @@ namespace Chemistry
                 _mergeFineResolution = fineResolution;
                 fineResolution = 1e-2;
             }
-
             _fineResolution = fineResolution / 2.0;
         }
 
