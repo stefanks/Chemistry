@@ -29,8 +29,6 @@ namespace Test
     {
         private static readonly ChemicalFormula NullChemicalFormula = null;
         private static readonly Element NullElement = null;
-        private static readonly Isotope NullIsotope = null;
-        private static readonly IHasChemicalFormula NullIChemicalFormula = null;
 
         [OneTimeSetUp]
         public void SetUp()
@@ -209,60 +207,16 @@ namespace Test
         {
             ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
 
-            Assert.Throws<ArgumentException>(() => { formulaA.Add("Faa", 1); }, "The atomic Symbol 'Faa' does not exist in the Periodic Table");
+            Assert.Throws<ArgumentException>(() => { formulaA.AddPrincipalIsotopesOf("Faa", 1); }, "The atomic Symbol 'Faa' does not exist in the Periodic Table");
             
         }
-
-        [Test]
-        public void AddNullElementToFormula()
-        {
-            ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
-            ChemicalFormula formulaB = new ChemicalFormula("C2H3NO");
-
-            formulaA.Add(NullElement, 1);
-
-            Assert.AreEqual(formulaA, formulaB);
-        }
-
+        
         [Test]
         public void InexistingElement()
         {
             Assert.Throws<ArgumentException>(() => { var formulaA = new ChemicalFormula("Q"); }, "The atomic Symbol 'Q' does not exist in the Periodic Table");
         }
-
-
-        [Test]
-        public void AddNullIsotopeToFormula()
-        {
-            ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
-            ChemicalFormula formulaB = new ChemicalFormula("C2H3NO");
-
-            formulaA.Add(NullIsotope, 1);
-
-            Assert.AreEqual(formulaA, formulaB);
-        }
-
-        [Test]
-        public void AddNullFormulaToFormula()
-        {
-            ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
-            ChemicalFormula formulaB = new ChemicalFormula("C2H3NO");
-
-            formulaA.Add(NullChemicalFormula);
-
-            Assert.AreEqual(formulaA, formulaB);
-        }
-
-        [Test]
-        public void AddNullIChemicalFormulaToFormula()
-        {
-            ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
-            ChemicalFormula formulaB = new ChemicalFormula("C2H3NO");
-
-            formulaA.Add(NullIChemicalFormula);
-
-            Assert.AreEqual(formulaA, formulaB);
-        }
+        
 
         [Test]
         public void AddZeroElementToFormula()
@@ -296,7 +250,7 @@ namespace Test
             ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
             ChemicalFormula formulaB = new ChemicalFormula("C2H3NO");
 
-            formulaA.Add("H", 0);
+            formulaA.AddPrincipalIsotopesOf("H", 0);
 
             Assert.AreEqual(formulaA, formulaB);
         }
@@ -522,17 +476,7 @@ namespace Test
 
             Assert.AreEqual(formulaC, formulaD);
         }
-
-        [Test]
-        public void ImplicitAddNullFormulaRight()
-        {
-            ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
-            ChemicalFormula formulaB = new ChemicalFormula("C2H3NO");
-
-            ChemicalFormula formulaC = formulaA + NullChemicalFormula;
-
-            Assert.AreEqual(formulaC, formulaB);
-        }
+        
 
         [Test]
         public void ImplicitAddNullFormulaLeft()
@@ -544,14 +488,7 @@ namespace Test
 
             Assert.AreEqual(formulaC, formulaB);
         }
-
-        [Test]
-        public void ImplicitAddNullFormulaLeftRight()
-        {
-            ChemicalFormula formulaA = NullChemicalFormula + NullChemicalFormula;
-
-            Assert.AreEqual(formulaA, NullChemicalFormula);
-        }
+        
 
         [Test]
         public void ImplicitConstructor()
@@ -795,7 +732,7 @@ namespace Test
             ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
             ChemicalFormula formulaB = new ChemicalFormula("C2H3O");
 
-            formulaA.Remove("N", 1);
+            formulaA.RemoveElements("N", 1);
 
             Assert.AreEqual(formulaB, formulaA);
         }
@@ -821,17 +758,6 @@ namespace Test
             formulaA.Remove(formulaB);
 
             Assert.AreEqual(formulaA, formulaC);
-        }
-
-        [Test]
-        public void RemoveNullElementFromFromula()
-        {
-            ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
-            ChemicalFormula formulaB = new ChemicalFormula("C2H3NO");
-
-            formulaA.RemoveIsotopesOf(NullElement);
-
-            Assert.AreEqual(formulaA, formulaB);
         }
 
         [Test]
