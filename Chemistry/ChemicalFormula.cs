@@ -88,7 +88,6 @@ namespace Chemistry
             {
                 isotopes = new Dictionary<Isotope, int>(other.isotopes);
                 elements = new Dictionary<Element, int>(other.elements);
-                MonoisotopicMass = other.MonoisotopicMass;
             }
         }
 
@@ -96,7 +95,6 @@ namespace Chemistry
         {
             isotopes = new Dictionary<Isotope, int>();
             elements = new Dictionary<Element, int>();
-            MonoisotopicMass = 0;
         }
 
 
@@ -118,7 +116,13 @@ namespace Chemistry
         /// <summary>
         /// Gets the monoisotopic mass of this chemical formula: for elements use the principle isotope mass, not average mass
         /// </summary>
-        public double MonoisotopicMass { get; private set; }
+        public double MonoisotopicMass
+        {
+            get
+            {
+                return isotopes.Sum(b => b.Key.AtomicMass * b.Value) + elements.Sum(b => b.Key.PrincipalIsotope.AtomicMass * b.Value);
+            }
+        }
 
         /// <summary>
         /// Gets the number of atoms in this chemical formula
@@ -224,15 +228,14 @@ namespace Chemistry
         /// <param name="count">The number of the element to add</param>
         public void Add(string symbol, int count)
         {
-                Isotope isotope = PeriodicTable.GetElement(symbol).PrincipalIsotope;
-                Add(isotope, count);
+            Isotope isotope = PeriodicTable.GetElement(symbol).PrincipalIsotope;
+            Add(isotope, count);
         }
 
         public void Add(Element element, int count)
         {
             if (count == 0 || element == null)
                 return;
-            MonoisotopicMass += element.PrincipalIsotope.AtomicMass * count;
             if (!elements.ContainsKey(element))
                 elements.Add(element, count);
             else
@@ -252,7 +255,6 @@ namespace Chemistry
         {
             if (count == 0 || isotope == null)
                 return;
-            MonoisotopicMass += isotope.AtomicMass * count;
             if (!isotopes.ContainsKey(isotope))
                 isotopes.Add(isotope, count);
             else
@@ -278,7 +280,6 @@ namespace Chemistry
         /// <param name="formula">The chemical formula to remove</param>
         public void Remove(ChemicalFormula formula)
         {
-            MonoisotopicMass -= formula.MonoisotopicMass;
             foreach (var e in formula.GetElements())
                 Remove(e.Key, e.Value);
             foreach (var i in formula.GetIsotopes())
@@ -291,14 +292,13 @@ namespace Chemistry
         }
 
         /// <summary>
-        /// Remove the principal isotope of the element represented by the symbol
-        /// from this chemical formula
+        /// Remove the provided number of elements (not isotopes!) from formula
         /// </summary>
         /// <param name="symbol">The symbol of the chemical element to remove</param>
-        /// <param name="count">The number of isotopes to remove</param>
+        /// <param name="count">The number of elements to remove</param>
         public void Remove(string symbol, int count)
         {
-            Add(PeriodicTable.GetElement(symbol).PrincipalIsotope, -count);
+            Add(PeriodicTable.GetElement(symbol), -count);
         }
 
         /// <summary>
@@ -318,8 +318,6 @@ namespace Chemistry
         /// <returns>Number of removed isotopes</returns>
         public int Remove(Isotope isotope)
         {
-            if (isotope == null)
-                return 0;
             int count = isotopes[isotope];
             Add(isotope, -count);
             return count;
@@ -353,14 +351,6 @@ namespace Chemistry
             {
                 isotopes.Remove(k.Key);
             }
-            //foreach(var i in isotopes)
-            //{
-            //    if (i.Key.Element == element)
-            //    {
-            //        count += i.Value;
-            //        Add(i.Key, -i.Value);
-            //    }
-            //}
             return count;
         }
 
@@ -371,7 +361,6 @@ namespace Chemistry
         {
             isotopes = new Dictionary<Isotope, int>();
             elements = new Dictionary<Element, int>();
-            MonoisotopicMass = 0;
         }
 
         #endregion Add/Remove
@@ -507,10 +496,14 @@ namespace Chemistry
             return Equals(obj as ChemicalFormula);
         }
 
+        // Not sure about this one here. What if there are some elements in this that are not in other?
         public bool Equals(ChemicalFormula other)
         {
-            if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
+            if (!MonoisotopicMass.MassEquals(other.MonoisotopicMass))
+            {
+               return false;
+            }
             foreach (var kk in other.isotopes)
             {
                 if (!isotopes.ContainsKey(kk.Key) || isotopes[kk.Key] != kk.Value)
@@ -624,15 +617,12 @@ namespace Chemistry
         {
             if (count == 0)
                 return new ChemicalFormula();
-            if (formula == null)
-                return null;
 
             ChemicalFormula newFormula = new ChemicalFormula();
             foreach (var kk in formula.isotopes)
                 newFormula.Add(kk.Key, kk.Value * count);
             foreach (var kk in formula.elements)
                 newFormula.Add(kk.Key, kk.Value * count);
-            newFormula.MonoisotopicMass = formula.MonoisotopicMass * count;
             return newFormula;
         }
 
@@ -654,7 +644,6 @@ namespace Chemistry
 
             ChemicalFormula newFormula = new ChemicalFormula(left);
             newFormula.Add(right);
-            newFormula.MonoisotopicMass = left.MonoisotopicMass + right.MonoisotopicMass;
             return newFormula;
         }
 

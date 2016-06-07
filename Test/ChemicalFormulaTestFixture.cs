@@ -718,7 +718,7 @@ namespace Test
 
             formulaA.RemoveIsotopesOf(PeriodicTable.GetElement("H"));
 
-            Assert.AreEqual(formulaA, formulaB);
+            Assert.AreEqual(formulaB,formulaA);
         }
 
         [Test]
@@ -727,9 +727,9 @@ namespace Test
             ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
             ChemicalFormula formulaB = new ChemicalFormula("C2NO");
 
-            formulaA.Remove("H");
+            formulaA.RemoveIsotopesOf("H");
 
-            Assert.AreEqual(formulaA, formulaB);
+            Assert.AreEqual(formulaB, formulaA);
         }
 
         [Test]
@@ -741,6 +741,7 @@ namespace Test
             formulaA.RemoveIsotopesOf("C");
 
             Assert.AreEqual(formulaA, formulaB);
+            Assert.AreEqual(formulaA.MonoisotopicMass, formulaB.MonoisotopicMass);
         }
 
         [Test]
@@ -796,7 +797,7 @@ namespace Test
 
             formulaA.Remove("N", 1);
 
-            Assert.AreEqual(formulaA, formulaB);
+            Assert.AreEqual(formulaB, formulaA);
         }
 
         [Test]
@@ -834,17 +835,6 @@ namespace Test
         }
 
         [Test]
-        public void RemoveNullIsotopeFromFromula()
-        {
-            ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
-            ChemicalFormula formulaB = new ChemicalFormula("C2H3NO");
-
-            formulaA.Remove(NullIsotope);
-
-            Assert.AreEqual(formulaA, formulaB);
-        }
-
-        [Test]
         public void RemoveZeroIsotopeFromFromula()
         {
             ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
@@ -859,7 +849,7 @@ namespace Test
         [Test]
         public void TotalProtons()
         {
-            ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
+            ChemicalFormula formulaA = new ChemicalFormula("C{12}2H3NO");
 
             Assert.AreEqual(30, formulaA.GetProtonCount());
         }
@@ -970,10 +960,10 @@ namespace Test
             ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
 
             double[] masses;
-            double[] intensities;
-            dist.CalculateDistribuition(formulaA, out masses, out intensities);
+            double[] abundances;
+            dist.CalculateDistribuition(formulaA, out masses, out abundances);
             
-            Assert.True(formulaA.MonoisotopicMass.MassEquals(masses[Array.IndexOf(intensities, intensities.Max())]));
+            Assert.True(formulaA.MonoisotopicMass.MassEquals(masses[Array.IndexOf(abundances, abundances.Max())]));
         }
 
         [Test]
@@ -1009,6 +999,42 @@ namespace Test
             dist3.CalculateDistribuition(formulaA, out masses3, out intensities3);
             Assert.AreEqual(4, masses3.Count());
 
+        }
+
+        [Test]
+        public void TestAnotherFormula()
+        {
+            ChemicalFormula formulaA = new ChemicalFormula("H{1}CC{13}2H3NO{16}");
+            Assert.AreEqual("CC{13}2H3H{1}NO{16}", formulaA.Formula);
+        }
+
+
+        [Test]
+        public void NeutronCount()
+        {
+            ChemicalFormula formulaA = new ChemicalFormula("C{12}O{16}");
+            Assert.AreEqual(14, formulaA.GetNeutronCount());
+        }
+
+        [Test]
+        public void NeutronCountFail()
+        {
+            ChemicalFormula formulaA = new ChemicalFormula("CO");
+            Assert.Throws<Exception>(() => { formulaA.GetNeutronCount(); }, "Cannot know for sure what the number of neutrons is!");
+
+        }
+
+        [Test]
+        public void CombineTest()
+        {
+            ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
+            ChemicalFormula formulaB = new ChemicalFormula("C2H3NO");
+            List<ChemicalFormula> theList = new List<ChemicalFormula>();
+            theList.Add(new ChemicalFormula("C2H3NO"));
+            theList.Add(new ChemicalFormula("CO"));
+            var c = ChemicalFormula.Combine(theList);
+
+            Assert.AreEqual("C3H3NO2", c.Formula);
         }
     }
 }
