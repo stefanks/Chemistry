@@ -61,12 +61,12 @@ namespace Chemistry
 
         public void CalculateDistribuition(string chemicalFormula, out double[] masses, out double[] intensities, Normalization normalization = Normalization.Sum)
         {
-             CalculateDistribuition(new ChemicalFormula(chemicalFormula), out masses, out intensities, normalization);
+            CalculateDistribuition(new ChemicalFormula(chemicalFormula), out masses, out intensities, normalization);
         }
 
         public void CalculateDistribuition(IHasChemicalFormula obj, out double[] masses, out double[] intensities, Normalization normalization = Normalization.Sum)
         {
-             CalculateDistribuition(obj.thisChemicalFormula, out masses, out intensities, normalization);
+            CalculateDistribuition(obj.thisChemicalFormula, out masses, out intensities, normalization);
         }
 
         public void CalculateDistribuition(ChemicalFormula formula, out double[] masses, out double[] intensities, Normalization normalization = Normalization.Sum)
@@ -113,7 +113,7 @@ namespace Chemistry
 
             double additionalMass = 0;
             foreach (var isotopeAndCount in formula.GetIsotopes())
-                additionalMass += isotopeAndCount.Key.AtomicMass*isotopeAndCount.Value;
+                additionalMass += isotopeAndCount.Key.AtomicMass * isotopeAndCount.Value;
 
             for (int i = 0; i < masses.Count(); i++)
                 masses[i] += additionalMass;
@@ -248,7 +248,7 @@ namespace Chemistry
             const int nc = 10;
             const int ncAddValue = 1;
             const int nAtoms = 200;
-            List <Polynomial> tPolynomial = new List<Polynomial>();
+            List<Polynomial> tPolynomial = new List<Polynomial>();
 
             int maxIsotope = 0;
             int n = 0;
@@ -308,17 +308,17 @@ namespace Chemistry
                             stds[i] = s1;
                             indices[i] = n1 + s1;
                         }
-                            int[] mins = new int[means.Length - 1];
-                            int[] maxs = new int[means.Length - 1];
-                            indices = new int[means.Length - 1];
-                            for (int i = 0; i < means.Length - 1; i++)
-                            {
-                                indices[i] = mins[i] = Math.Max(0, means[i] - stds[i]);
-                                maxs[i] = means[i] + stds[i];
-                            }
-
-                            MultipleFinePolynomialRecursiveHelper(mins, maxs, indices, 0, fPolynomial[k], composition, atoms, _fineMinProb, means[means.Length - 1] + stds[stds.Length - 1]);
+                        int[] mins = new int[means.Length - 1];
+                        int[] maxs = new int[means.Length - 1];
+                        indices = new int[means.Length - 1];
+                        for (int i = 0; i < means.Length - 1; i++)
+                        {
+                            indices[i] = mins[i] = Math.Max(0, means[i] - stds[i]);
+                            maxs[i] = means[i] + stds[i];
                         }
+
+                        MultipleFinePolynomialRecursiveHelper(mins, maxs, indices, 0, fPolynomial[k], composition, atoms, _fineMinProb, means[means.Length - 1] + stds[stds.Length - 1]);
+                    }
                 }
             }
 
@@ -335,7 +335,7 @@ namespace Chemistry
 
             return tPolynomial;
         }
-        
+
         private void MultiplyFineFinalPolynomial(List<Polynomial> tPolynomial, List<Polynomial> fPolynomial, List<Polynomial> fgidPolynomial)
         {
             int i = tPolynomial.Count;
