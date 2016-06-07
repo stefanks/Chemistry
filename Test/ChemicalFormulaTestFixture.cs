@@ -834,17 +834,6 @@ namespace Test
         }
 
         [Test]
-        public void RemoveNullFormulaFromFromula()
-        {
-            ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
-            ChemicalFormula formulaB = new ChemicalFormula("C2H3NO");
-
-            formulaA.Remove(NullChemicalFormula);
-
-            Assert.AreEqual(formulaA, formulaB);
-        }
-
-        [Test]
         public void RemoveNullIsotopeFromFromula()
         {
             ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
