@@ -76,7 +76,7 @@ namespace Test
             elementS.AddIsotope(33, 32.9714589098, 0.0075);
             elementS.AddIsotope(34, 33.967867004, 0.0425);
             elementS.AddIsotope(36, 35.96708071, 0.0001);
-            
+
             var elementSe = new Element("Se", 34, 78.971);
             PeriodicTable.Add(elementSe);
             elementSe.AddIsotope(74, 73.922475934, 0.0089);
@@ -984,6 +984,20 @@ namespace Test
             double[] intensities;
             dist.CalculateDistribuition(formulaA, out masses, out intensities);
             
+            Assert.True(formulaA.MonoisotopicMass.MassEquals(masses[Array.IndexOf(intensities, intensities.Max())]));
+        }
+
+        [Test]
+        public void TestIsotopicDistribution2()
+        {
+            IsotopicDistribution dist = new IsotopicDistribution();
+
+            ChemicalFormula formulaA = new ChemicalFormula("AlO{16}");
+
+            double[] masses;
+            double[] intensities;
+            dist.CalculateDistribuition(formulaA, out masses, out intensities);
+
             Assert.True(formulaA.MonoisotopicMass.MassEquals(masses[Array.IndexOf(intensities, intensities.Max())]));
         }
     }
