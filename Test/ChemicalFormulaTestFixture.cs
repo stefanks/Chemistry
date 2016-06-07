@@ -738,7 +738,7 @@ namespace Test
             ChemicalFormula formulaA = new ChemicalFormula("C2C{13}H3NO");
             ChemicalFormula formulaB = new ChemicalFormula("H3NO");
 
-            formulaA.RemoveIsotopesOf(PeriodicTable.GetElement("C"));
+            formulaA.RemoveIsotopesOf("C");
 
             Assert.AreEqual(formulaA, formulaB);
         }
@@ -999,6 +999,27 @@ namespace Test
             dist.CalculateDistribuition(formulaA, out masses, out intensities);
 
             Assert.True(formulaA.MonoisotopicMass.MassEquals(masses[Array.IndexOf(intensities, intensities.Max())]));
+        }
+
+        [Test]
+        public void TestIsotopicDistribution3()
+        {
+            ChemicalFormula formulaA = new ChemicalFormula("CO");
+
+            // Distinguish between O and C isotope masses
+            IsotopicDistribution dist1 = new IsotopicDistribution(0.0001);
+            double[] masses1;
+            double[] intensities1;
+            dist1.CalculateDistribuition(formulaA, out masses1, out intensities1);
+            Assert.AreEqual(6, masses1.Count());
+            
+            // Do not distinguish between O and C isotope masses
+            IsotopicDistribution dist3 = new IsotopicDistribution();
+            double[] masses3;
+            double[] intensities3;
+            dist3.CalculateDistribuition(formulaA, out masses3, out intensities3);
+            Assert.AreEqual(4, masses3.Count());
+
         }
     }
 }
