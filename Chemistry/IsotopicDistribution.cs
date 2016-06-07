@@ -249,8 +249,7 @@ namespace Chemistry
             const int ncAddValue = 1;
             const int nAtoms = 200;
             List<Polynomial> tPolynomial = new List<Polynomial>();
-
-            int maxIsotope = 0;
+            
             int n = 0;
             int k = 0;
 
@@ -258,8 +257,6 @@ namespace Chemistry
             {
                 if (composition.Count > 0)
                     n++;
-                if (composition.Count > 10)
-                    maxIsotope = 1;
             }
 
             List<List<Polynomial>> fPolynomial = new List<List<Polynomial>>();
@@ -268,57 +265,54 @@ namespace Chemistry
                 fPolynomial.Add(new List<Polynomial>());
             }
 
-            if (maxIsotope == 0)
+            for (k = 0; k < n; k++)
             {
-                for (k = 0; k < n; k++)
+                tPolynomial.Clear();
+
+                List<Composition> composition = elementalComposition[k];
+                int size = composition.Count;
+                int atoms = composition[0].Atoms;
+
+                int ncAdd = atoms < nAtoms ? 10 : ncAddValue;
+
+                if (size == 1)
                 {
-                    tPolynomial.Clear();
+                    double probability = composition[0].Probability;
 
-                    List<Composition> composition = elementalComposition[k];
-                    int size = composition.Count;
-                    int atoms = composition[0].Atoms;
+                    int n1 = (int)(atoms * probability);
 
-                    int ncAdd = atoms < nAtoms ? 10 : ncAddValue;
+                    double prob = FactorLn(atoms) - FactorLn(n1) + n1 * composition[0].LogProbability;
+                    prob = Math.Exp(prob);
 
-                    if (size == 1)
+                    fPolynomial[k].Add(new Polynomial { Power = n1 * composition[0].Power, Probablity = prob });
+                }
+                else
+                {
+                    int[] means = new int[size];
+                    int[] stds = new int[size];
+                    int[] indices = new int[size];
+
+                    double nPolynomialTerms = Math.Log(Math.Pow(2, size));
+                    for (int i = 0; i < size; i++)
                     {
-                        double probability = composition[0].Probability;
+                        int n1 = (int)(elementalComposition[k][0].Atoms * elementalComposition[k][i].Probability);
+                        int s1 = (int)Math.Ceiling(ncAdd + nc * Math.Sqrt(elementalComposition[k][i].Atoms * elementalComposition[k][i].Probability * (1.0 - elementalComposition[k][i].Probability)));
+                        nPolynomialTerms += Math.Log(n1 + s1);
 
-                        int n1 = (int)(atoms * probability);
-
-                        double prob = FactorLn(atoms) - FactorLn(n1) + n1 * composition[0].LogProbability;
-                        prob = Math.Exp(prob);
-
-                        fPolynomial[k].Add(new Polynomial { Power = n1 * composition[0].Power, Probablity = prob });
+                        means[i] = n1;
+                        stds[i] = s1;
+                        indices[i] = n1 + s1;
                     }
-                    else
+                    int[] mins = new int[means.Length - 1];
+                    int[] maxs = new int[means.Length - 1];
+                    indices = new int[means.Length - 1];
+                    for (int i = 0; i < means.Length - 1; i++)
                     {
-                        int[] means = new int[size];
-                        int[] stds = new int[size];
-                        int[] indices = new int[size];
-
-                        double nPolynomialTerms = Math.Log(Math.Pow(2, size));
-                        for (int i = 0; i < size; i++)
-                        {
-                            int n1 = (int)(elementalComposition[k][0].Atoms * elementalComposition[k][i].Probability);
-                            int s1 = (int)Math.Ceiling(ncAdd + nc * Math.Sqrt(elementalComposition[k][i].Atoms * elementalComposition[k][i].Probability * (1.0 - elementalComposition[k][i].Probability)));
-                            nPolynomialTerms += Math.Log(n1 + s1);
-
-                            means[i] = n1;
-                            stds[i] = s1;
-                            indices[i] = n1 + s1;
-                        }
-                        int[] mins = new int[means.Length - 1];
-                        int[] maxs = new int[means.Length - 1];
-                        indices = new int[means.Length - 1];
-                        for (int i = 0; i < means.Length - 1; i++)
-                        {
-                            indices[i] = mins[i] = Math.Max(0, means[i] - stds[i]);
-                            maxs[i] = means[i] + stds[i];
-                        }
-
-                        MultipleFinePolynomialRecursiveHelper(mins, maxs, indices, 0, fPolynomial[k], composition, atoms, _fineMinProb, means[means.Length - 1] + stds[stds.Length - 1]);
+                        indices[i] = mins[i] = Math.Max(0, means[i] - stds[i]);
+                        maxs[i] = means[i] + stds[i];
                     }
+
+                    MultipleFinePolynomialRecursiveHelper(mins, maxs, indices, 0, fPolynomial[k], composition, atoms, _fineMinProb, means[means.Length - 1] + stds[stds.Length - 1]);
                 }
             }
 
@@ -340,7 +334,7 @@ namespace Chemistry
         {
             int i = tPolynomial.Count;
             int j = fPolynomial.Count;
-
+            
             if (i == 0 || j == 0)
                 return;
 

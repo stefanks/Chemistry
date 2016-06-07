@@ -980,6 +980,22 @@ namespace Test
         }
 
         [Test]
+        public void ThresholdProbability()
+        {
+            ChemicalFormula formulaA = new ChemicalFormula("CO");
+            
+            double[] masses;
+            double[] intensities;
+            // Only the principal isotopes have joint probability of 0.5! So one result when calcuating isotopic distribution
+            IsotopicDistribution dist = new IsotopicDistribution(0.0001, 0.5);
+            dist.CalculateDistribuition(formulaA, out masses, out intensities);
+            Assert.AreEqual(1, masses.Count());
+            Assert.IsTrue((PeriodicTable.GetElement("C").PrincipalIsotope.AtomicMass+ PeriodicTable.GetElement("O").PrincipalIsotope.AtomicMass).MassEquals(masses[0]));
+
+        }
+
+
+        [Test]
         public void TestAnotherFormula()
         {
             ChemicalFormula formulaA = new ChemicalFormula("H{1}CC{13}2H3NO{16}");
@@ -999,7 +1015,6 @@ namespace Test
         {
             ChemicalFormula formulaA = new ChemicalFormula("CO");
             Assert.Throws<Exception>(() => { formulaA.GetNeutronCount(); }, "Cannot know for sure what the number of neutrons is!");
-
         }
 
         [Test]
