@@ -429,6 +429,8 @@ namespace Chemistry
         /// <returns></returns>
         public int CountSpecificIsotopes(Isotope isotope)
         {
+            if (!isotopes.ContainsKey(isotope))
+                return 0;
             return isotopes[isotope];
         }
 
@@ -441,6 +443,8 @@ namespace Chemistry
         public int CountWithIsotopes(Element element)
         {
             var isotopeCount = element.Isotopes.Values.Sum(isotope => CountSpecificIsotopes(isotope));
+            if (!elements.ContainsKey(element))
+                return isotopeCount;
             return isotopeCount + elements[element];
         }
 

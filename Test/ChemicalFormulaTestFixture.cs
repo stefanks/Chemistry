@@ -695,13 +695,32 @@ namespace Test
         [Test]
         public void RemoveFormulaFromFromula()
         {
-            ChemicalFormula formulaA = new ChemicalFormula("C2H5NO2");
-            ChemicalFormula formulaB = new ChemicalFormula("H2O");
+            ChemicalFormula formulaA = new ChemicalFormula("C2H5NOO{16}");
+            ChemicalFormula formulaB = new ChemicalFormula("H2O{16}");
             ChemicalFormula formulaC = new ChemicalFormula("C2H3NO");
 
             formulaA.Remove(formulaB);
 
             Assert.AreEqual(formulaA, formulaC);
+        }
+
+
+        [Test]
+        public void ContainsSpecificIsotope()
+        {
+            ChemicalFormula formulaA = new ChemicalFormula("C2H5NOO{16}");
+            
+            Assert.IsTrue(formulaA.ContainsSpecificIsotope(PeriodicTable.GetElement("O")[16]));
+
+        }
+
+
+        [Test]
+        public void ContainsIsotopesOf()
+        {
+            ChemicalFormula formulaA = new ChemicalFormula("O{16}");
+            Assert.IsTrue(formulaA.ContainsIsotopesOf("O"));
+
         }
 
         [Test]
@@ -771,6 +790,12 @@ namespace Test
             Assert.AreEqual(formulaA, formulaB);
         }
 
+        [Test]
+        public void NewIHasChemicalFormula()
+        {
+            IHasChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
+            ChemicalFormula formulaB = new ChemicalFormula(formulaA);
+        }
 
         [Test]
         public void TotalProtons()
@@ -778,6 +803,14 @@ namespace Test
             ChemicalFormula formulaA = new ChemicalFormula("C{12}2H3NO");
 
             Assert.AreEqual(30, formulaA.GetProtonCount());
+        }
+
+        [Test]
+        public void AverageMass()
+        {
+            ChemicalFormula formulaA = new ChemicalFormula("C");
+
+            Assert.AreEqual(PeriodicTable.GetElement("C").AverageMass, formulaA.AverageMass);
         }
 
         [Test]

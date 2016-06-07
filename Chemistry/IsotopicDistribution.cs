@@ -95,7 +95,6 @@ namespace Chemistry
 
                     isotopeComposition.Add(c);
                 }
-                Console.WriteLine("isotopeComposition.Count" + isotopeComposition.Count);
                 elementalComposition.Add(isotopeComposition);
             }
 
@@ -475,11 +474,6 @@ namespace Chemistry
         {
             public double Power;
             public double Probablity;
-
-            public override string ToString()
-            {
-                return string.Format("{0} - {1}", Power, Probablity);
-            }
         }
     }
 }
