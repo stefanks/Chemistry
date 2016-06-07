@@ -429,9 +429,8 @@ namespace Chemistry
         /// <returns></returns>
         public int CountSpecificIsotopes(Isotope isotope)
         {
-            if (!isotopes.ContainsKey(isotope))
-                return 0;
-            return isotopes[isotope];
+            int isotopeCount;
+            return (isotopes.TryGetValue(isotope, out isotopeCount) ? isotopeCount : 0);
         }
 
         /// <summary>
@@ -443,9 +442,8 @@ namespace Chemistry
         public int CountWithIsotopes(Element element)
         {
             var isotopeCount = element.Isotopes.Values.Sum(isotope => CountSpecificIsotopes(isotope));
-            if (!elements.ContainsKey(element))
-                return isotopeCount;
-            return isotopeCount + elements[element];
+            int ElementCount;
+            return isotopeCount + (elements.TryGetValue(element, out ElementCount) ? ElementCount : 0);
         }
 
         public int CountWithIsotopes(string symbol)
@@ -591,9 +589,6 @@ namespace Chemistry
 
         public static ChemicalFormula operator *(ChemicalFormula formula, int count)
         {
-            if (count == 0)
-                return new ChemicalFormula();
-
             ChemicalFormula newFormula = new ChemicalFormula();
             foreach (var kk in formula.isotopes)
                 newFormula.Add(kk.Key, kk.Value * count);
