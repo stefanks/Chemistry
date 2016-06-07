@@ -1072,6 +1072,16 @@ namespace Test
         //    }
         //}
 
+        [Test]
+        public void catchProbStuff()
+        {
+            ChemicalFormula formula = (new ChemicalFormula("CO")) * 50;
+            double[] masses;
+            double[] intensities;
+            IsotopicDistribution dist = new IsotopicDistribution(0.001, 1e-50,1e-15 );
+            dist.CalculateDistribuition(formula, out masses, out intensities);
+        }
+
 
         [Test]
         public void i0j1()
@@ -1079,15 +1089,22 @@ namespace Test
             ChemicalFormula formula = (new ChemicalFormula("CO")) * 50;
             double[] masses;
             double[] intensities;
-            IsotopicDistribution dist = new IsotopicDistribution(0.01,0.2);
+            IsotopicDistribution dist = new IsotopicDistribution(0.01,0.1);
             dist.CalculateDistribuition(formula, out masses, out intensities);
-            Console.WriteLine(String.Join(", ", masses));
-            Console.WriteLine(String.Join(", ", intensities));
+            //Console.WriteLine(String.Join(", ", masses));
+            //Console.WriteLine(String.Join(", ", intensities));
+
+
+            dist = new IsotopicDistribution(0.01, 0.5);
+            dist.CalculateDistribuition(formula, out masses, out intensities);
+            //Console.WriteLine(String.Join(", ", masses));
+            //Console.WriteLine(String.Join(", ", intensities));
+
 
             dist = new IsotopicDistribution(0.01,0.75);
             dist.CalculateDistribuition(formula, out masses, out intensities);
-            Console.WriteLine(String.Join(", ", masses));
-            Console.WriteLine(String.Join(", ", intensities));
+            //Console.WriteLine(String.Join(", ", masses));
+            //Console.WriteLine(String.Join(", ", intensities));
         }
 
 
