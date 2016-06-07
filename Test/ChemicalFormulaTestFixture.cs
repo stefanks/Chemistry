@@ -945,14 +945,10 @@ namespace Test
         public void TestIsotopicDistribution2()
         {
             IsotopicDistribution dist = new IsotopicDistribution();
-
-            ChemicalFormula formulaA = new ChemicalFormula("AlO{16}");
-
+            
             double[] masses;
             double[] intensities;
-            dist.CalculateDistribuition(formulaA, out masses, out intensities);
-
-            Assert.True(formulaA.MonoisotopicMass.MassEquals(masses[Array.IndexOf(intensities, intensities.Max())]));
+            dist.CalculateDistribuition("AlO{16}", out masses, out intensities);
         }
 
         [Test]
@@ -962,17 +958,24 @@ namespace Test
 
             // Distinguish between O and C isotope masses
             IsotopicDistribution dist1 = new IsotopicDistribution(0.0001);
-            double[] masses1;
-            double[] intensities1;
-            dist1.CalculateDistribuition(formulaA, out masses1, out intensities1);
-            Assert.AreEqual(6, masses1.Count());
+            double[] masses;
+            double[] intensities;
+            dist1.CalculateDistribuition(formulaA, out masses, out intensities);
+            Assert.AreEqual(6, masses.Count());
+
+            // Do not distinguish between O and C isotope masses
+            IsotopicDistribution dist2 = new IsotopicDistribution(0.001);
+            dist2.CalculateDistribuition(formulaA as IHasChemicalFormula, out masses, out intensities);
+
 
             // Do not distinguish between O and C isotope masses
             IsotopicDistribution dist3 = new IsotopicDistribution();
-            double[] masses3;
-            double[] intensities3;
-            dist3.CalculateDistribuition(formulaA, out masses3, out intensities3);
-            Assert.AreEqual(4, masses3.Count());
+            dist3.CalculateDistribuition(formulaA as IHasChemicalFormula, out masses, out intensities);
+            Assert.AreEqual(4, masses.Count());
+
+
+            IsotopicDistribution dist4 = new IsotopicDistribution(1);
+            dist3.CalculateDistribuition(formulaA as IHasChemicalFormula, out masses, out intensities);
 
         }
 
