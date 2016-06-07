@@ -395,6 +395,21 @@ namespace Test
         }
 
         [Test]
+        public void FormulaEquality()
+        {
+            ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
+            Assert.AreEqual(formulaA, formulaA);
+        }
+
+        [Test]
+        public void FormulaAlmostEquality()
+        {
+            ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
+            ChemicalFormula formulaB = new ChemicalFormula("C{12}2H3NO");
+            Assert.IsFalse(formulaA.Equals(formulaB));
+        }
+
+        [Test]
         public void HashCodeEquality()
         {
             ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
@@ -736,7 +751,15 @@ namespace Test
         {
             ChemicalFormula formulaA = new ChemicalFormula("O{16}");
             Assert.IsTrue(formulaA.ContainsIsotopesOf("O"));
+            Assert.IsTrue(formulaA.ContainsSpecificIsotope("O",16));
+            Assert.AreEqual(1,formulaA.CountSpecificIsotopes("O", 16));
+        }
 
+        [Test]
+        public void HydrogenCarbonRatio()
+        {
+            ChemicalFormula formulaA = new ChemicalFormula("C2H4");
+            Assert.AreEqual(2, formulaA.HydrogenCarbonRatio());
         }
 
         [Test]

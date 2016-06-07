@@ -378,12 +378,7 @@ namespace Chemistry
         {
             return CountWithIsotopes(symbol) != 0;
         }
-
-        public bool Contains(ChemicalFormula formula)
-        {
-            return IsSuperSetOf(formula);
-        }
-
+        
         public bool IsSubSetOf(ChemicalFormula formula)
         {
             return formula.IsSuperSetOf(this);
