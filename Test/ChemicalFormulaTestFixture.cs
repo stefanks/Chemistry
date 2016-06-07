@@ -1074,13 +1074,20 @@ namespace Test
 
 
         [Test]
-        public void i0j0()
+        public void i0j1()
         {
             ChemicalFormula formula = (new ChemicalFormula("CO")) * 50;
             double[] masses;
             double[] intensities;
-            IsotopicDistribution dist = new IsotopicDistribution(0.1,0.9,0.1);
+            IsotopicDistribution dist = new IsotopicDistribution(0.01,0.2);
             dist.CalculateDistribuition(formula, out masses, out intensities);
+            Console.WriteLine(String.Join(", ", masses));
+            Console.WriteLine(String.Join(", ", intensities));
+
+            dist = new IsotopicDistribution(0.01,0.75);
+            dist.CalculateDistribuition(formula, out masses, out intensities);
+            Console.WriteLine(String.Join(", ", masses));
+            Console.WriteLine(String.Join(", ", intensities));
         }
 
 
