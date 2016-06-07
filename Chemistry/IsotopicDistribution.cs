@@ -77,7 +77,7 @@ namespace Chemistry
             List<List<Composition>> elementalComposition = new List<List<Composition>>();
 
             // Get all the unique elements THAT MIGHT HAVE ISOTOPES of the formula
-            foreach (var elementAndCount in formula.GetElements())
+            foreach (var elementAndCount in formula.elements)
             {
                 int count = elementAndCount.Value;
                 List<Composition> isotopeComposition = new List<Composition>();
@@ -112,7 +112,7 @@ namespace Chemistry
             CalculateFineGrain(elementalComposition, normalization, out masses, out intensities);
 
             double additionalMass = 0;
-            foreach (var isotopeAndCount in formula.GetIsotopes())
+            foreach (var isotopeAndCount in formula.isotopes)
                 additionalMass += isotopeAndCount.Key.AtomicMass * isotopeAndCount.Value;
 
             for (int i = 0; i < masses.Count(); i++)

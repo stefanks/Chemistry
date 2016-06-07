@@ -44,21 +44,15 @@ namespace Chemistry
         /// A wrapper for the formula regex that validates if a string is in the correct chemical formula format or not
         /// </summary>
         private static readonly Regex ValidateFormulaRegex = new Regex("^(" + FormulaRegex + ")+$", RegexOptions.Compiled);
-
-        // Only gets elements which are not known if they are isotopes or not!!!
-        internal Dictionary<Element, int> GetElements()
-        {
-            return elements;
-        }
+        
 
         /// <summary>
         /// Main data stores, the isotopes and elements
         /// </summary>
-        private Dictionary<Isotope, int> isotopes;
-        private Dictionary<Element, int> elements;
+        internal Dictionary<Isotope, int> isotopes { get; private set; }
+        internal Dictionary<Element, int> elements { get; private set; }
 
         #region Constructors
-
 
         /// <summary>
         /// Create an chemical formula from the given string representation
@@ -205,11 +199,11 @@ namespace Chemistry
         /// <param name="formula">The chemical formula to add to this</param>
         public void Add(ChemicalFormula formula)
         {
-            foreach (var e in formula.GetElements())
+            foreach (var e in formula.elements)
             {
                 Add(e.Key, e.Value);
             }
-            foreach (var i in formula.GetIsotopes())
+            foreach (var i in formula.isotopes)
             {
                 Add(i.Key, i.Value);
             }
@@ -275,9 +269,9 @@ namespace Chemistry
         /// <param name="formula">The chemical formula to remove</param>
         public void Remove(ChemicalFormula formula)
         {
-            foreach (var e in formula.GetElements())
+            foreach (var e in formula.elements)
                 Remove(e.Key, e.Value);
-            foreach (var i in formula.GetIsotopes())
+            foreach (var i in formula.isotopes)
                 Remove(i.Key, i.Value);
         }
 
@@ -483,8 +477,7 @@ namespace Chemistry
         {
             return Equals(obj as ChemicalFormula);
         }
-
-        // Not sure about this one here. What if there are some elements in this that are not in other?
+        
         public bool Equals(ChemicalFormula other)
         {
             if (ReferenceEquals(this, other)) return true;
@@ -501,8 +494,7 @@ namespace Chemistry
         {
             return Formula;
         }
-
-
+        
         #region Private Methods
 
         /// <summary>
@@ -549,20 +541,7 @@ namespace Chemistry
         }
 
         #endregion Private Methods
-
-        #region Internal
-
-        /// <summary>
-        /// Get the internal isotope array for this chemical formula
-        /// </summary>
-        /// <returns>The isotopes that make up this chemical formula</returns>
-        internal Dictionary<Isotope, int> GetIsotopes()
-        {
-            return isotopes;
-        }
-
-        #endregion Internal
-
+        
         #region Statics
 
         public static implicit operator ChemicalFormula(string sequence)
