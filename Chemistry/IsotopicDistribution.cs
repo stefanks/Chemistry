@@ -392,11 +392,8 @@ namespace Chemistry
                 fgidPolynomial[i] = new Polynomial();
             }
 
-            //Console.WriteLine("j = " + j + " index = " + j);
             if (j < index)
-            {
                 tPolynomial.RemoveRange(j, tPolynomial.Count - j);
-            }
         }
 
         private static void MultipleFinePolynomialRecursiveHelper(int[] mins, int[] maxs, int[] indices, int index, IList<Polynomial> fPolynomial, IList<Composition> elementalComposition, int atoms, double minProb, int maxValue)
@@ -443,8 +440,8 @@ namespace Chemistry
             if (n <= 1)
                 return 0;
 
-            if (n > 50000)
-                return n * Math.Log(n) - n + 0.5 * Math.Log(6.28318530717959 * n) + 0.08333333333333 / n - 0.00333333333333 / (n * n * n);
+            //if (n > 50000)
+            //    return n * Math.Log(n) - n + 0.5 * Math.Log(6.28318530717959 * n) + 0.08333333333333 / n - 0.00333333333333 / (n * n * n);
 
             while (_factorLnTop <= n)
             {
