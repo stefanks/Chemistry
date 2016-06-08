@@ -662,10 +662,10 @@ namespace Test
         [Test]
         public void EqualObject()
         {
-            ChemicalFormula formulaA = new ChemicalFormula("OCHHCHN");
-            ChemicalFormula formulaB = new ChemicalFormula("C2H3NO");
+            IHasMass formulaA = new ChemicalFormula("OCHHCHN");
+            IHasMass formulaB = new ChemicalFormula("C2H3NO");
 
-            Assert.AreEqual(formulaA, formulaB as object);
+            Assert.IsTrue(Equals(formulaA, formulaB));
         }
 
         [Test]
