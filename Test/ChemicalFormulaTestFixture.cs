@@ -1047,30 +1047,17 @@ namespace Test
 
         }
 
-        //[Test]
-        //public void CatchIsotopicDistributionStuff()
-        //{
+        [Test]
+        public void CatchIsotopicDistributionStuff()
+        {
 
-        //    ChemicalFormula formula = (new ChemicalFormula("CO")) * 50;
-        //    List<double> frs = new List<double>() { 0.001, 0.01, 0.1, 1 };
-        //    List<double> minPs = new List<double>() { 0, 1e-200, 1e-50, 1e-1, 0.9 };
-        //    List<double> mwrs = new List<double>() { 1e-15, 1e-12, 1e-1 };
-        //    foreach (double fr in frs)
-        //    {
-        //        foreach (double minP in minPs)
-        //        {
-        //            foreach (double mwr in mwrs)
-        //            {
-        //                Console.WriteLine(fr + " " + minP + " " + mwr);
-        //                double[] masses;
-        //                double[] intensities;
-        //                IsotopicDistribution dist = new IsotopicDistribution(fr, minP, mwr);
-        //                dist.CalculateDistribuition(formula, out masses, out intensities);
-        //                Console.WriteLine("");
-        //            }
-        //        }
-        //    }
-        //}
+            ChemicalFormula formula = (new ChemicalFormula("C10OH5N")) * 50;
+            double[] masses;
+            double[] intensities;
+            IsotopicDistribution dist = new IsotopicDistribution(0.001, 1e-1, 1e-15);
+            dist.CalculateDistribuition(formula, out masses, out intensities);
+            Console.WriteLine("");
+        }
 
         [Test]
         public void catchProbStuff()
