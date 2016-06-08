@@ -467,7 +467,12 @@ namespace Chemistry
         {
             return Convert.ToInt32(MonoisotopicMass);
         }
-                
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as ChemicalFormula);
+        }
+
         public bool Equals(ChemicalFormula other)
         {
             if (ReferenceEquals(this, other)) return true;
