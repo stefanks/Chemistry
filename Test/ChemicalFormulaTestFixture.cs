@@ -149,6 +149,36 @@ namespace Test
             Assert.AreEqual(formulaA, formulaC);
         }
 
+        private void StringMethod(string a)
+        {
+            a += "asd";
+        }
+
+        [Test]
+        public void RemoveIChemicalFormulaFromFormula()
+        {
+            ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
+            IHasChemicalFormula formulaB = new TestObject("H2O");
+            ChemicalFormula formulaC = new ChemicalFormula("C2HN");
+
+            formulaA.Remove(formulaB);
+
+            Assert.AreEqual(formulaA, formulaC);
+
+            Assert.AreEqual("C2HN", formulaC.ToString());
+            StringMethod(formulaC);
+
+
+            formulaA = new ChemicalFormula("C2H3NO");
+            formulaB = new TestObject("H2O");
+            formulaA = formulaA - formulaB;
+            Assert.AreEqual(formulaA, formulaC);
+            formulaA = formulaA + formulaB;
+            Assert.AreEqual("C2H3NO", formulaA.Formula);
+
+            var ok = ChemicalFormula.Combine(new List<IHasChemicalFormula>() { formulaB });
+
+        }
         [Test]
         public void AddIsotopeToFormula()
         {
