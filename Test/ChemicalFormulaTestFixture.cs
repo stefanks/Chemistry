@@ -141,7 +141,7 @@ namespace Test
         public void AddIChemicalFormulaToFormula()
         {
             ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
-            IHasChemicalFormula formulaB = new ChemicalFormula("H2O");
+            IHasChemicalFormula formulaB = new TestObject("H2O");
             ChemicalFormula formulaC = new ChemicalFormula("C2H5NO2");
 
             formulaA.Add(formulaB);
@@ -423,6 +423,14 @@ namespace Test
             ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
 
             Assert.AreEqual(formulaA.GetHashCode(), formulaA.GetHashCode());
+        }
+        [Test]
+        public void AddStringChemicalFormula()
+        {
+            ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
+            formulaA.Add("C");
+
+            Assert.AreEqual("C3H3NO", formulaA.Formula);
         }
 
         [Test]
@@ -860,14 +868,7 @@ namespace Test
 
             Assert.AreEqual(formulaA, formulaB);
         }
-
-        [Test]
-        public void NewIHasChemicalFormula()
-        {
-            IHasChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
-            ChemicalFormula formulaB = new ChemicalFormula(formulaA);
-        }
-
+        
         [Test]
         public void TotalProtons()
         {
@@ -1019,6 +1020,7 @@ namespace Test
         public void TestIsotopicDistribution3()
         {
             ChemicalFormula formulaA = new ChemicalFormula("CO");
+            IHasChemicalFormula formulaB = new TestObject("CO");
 
             // Distinguish between O and C isotope masses
             IsotopicDistribution dist1 = new IsotopicDistribution(0.0001);
@@ -1029,12 +1031,12 @@ namespace Test
 
             // Do not distinguish between O and C isotope masses
             IsotopicDistribution dist2 = new IsotopicDistribution(0.001);
-            dist2.CalculateDistribuition(formulaA as IHasChemicalFormula, out masses, out intensities);
+            dist2.CalculateDistribuition(formulaA, out masses, out intensities);
 
 
             // Do not distinguish between O and C isotope masses
             IsotopicDistribution dist3 = new IsotopicDistribution();
-            dist3.CalculateDistribuition(formulaA as IHasChemicalFormula, out masses, out intensities);
+            dist3.CalculateDistribuition(formulaB, out masses, out intensities);
             Assert.AreEqual(4, masses.Count());
 
 
@@ -1157,6 +1159,28 @@ namespace Test
             var c = ChemicalFormula.Combine(theList);
 
             Assert.AreEqual("C3H3NO2", c.Formula);
+        }
+
+        private class TestObject : IHasChemicalFormula
+        {
+            public TestObject(string v)
+            {
+                thisChemicalFormula = new ChemicalFormula(v);
+            }
+
+            public double MonoisotopicMass
+            {
+                get
+                {
+                    return thisChemicalFormula.MonoisotopicMass;
+                }
+            }
+
+            public ChemicalFormula thisChemicalFormula
+            {
+                get;
+                private set;
+            }
         }
     }
 }

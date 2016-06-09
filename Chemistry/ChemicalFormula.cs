@@ -25,17 +25,16 @@ namespace Chemistry
 {
     /// <summary>
     /// A chemical / molecule consisting of multiple atoms.
-    /// <remarks>This class is mutable</remarks>
     /// </summary>
-    public sealed class ChemicalFormula : IEquatable<ChemicalFormula>, IHasChemicalFormula
+    public sealed class ChemicalFormula : IEquatable<ChemicalFormula>
     {
         /// <summary>
         /// A regular expression for matching chemical formulas such as: C2C{13}3H5NO5
         /// \s* (at end as well) allows for optional spacing among the elements, i.e. C2 C{13}3 H5 N O5
         /// The first group is the only non-optional group and that handles the chemical symbol: H, He, etc..
-        /// The second group is optional, which handles alternative isotopes of elements: C{13} means carbon-13, while C is the common carbon-12
-        /// The third group is optional and indicates if we are adding or subtracting the elements form the formula, C-2C{13}5 would mean first subtract 2 carbon-12 and then add 5 carbon-13
-        /// The fourth group is optional and represents the number of isotopes to add, if not present it assumes 1: H2O means 2 Hydrogen and 1 Oxygen
+        /// The second group is optional, which handles isotopes of elements: C{12} means carbon-12
+        /// The third group is optional and indicates if we are adding or subtracting the elements form the formula, C-2C{13}5 would mean first subtract 2 carbons and then add 5 carbon-13
+        /// The fourth group is optional and represents the number of elements or isotopes to add, if not present it assumes 1: H2O means 2 Hydrogen and 1 Oxygen
         /// Modified from: http://stackoverflow.com/questions/4116786/parsing-a-chemical-formula-from-a-string-in-c
         /// </summary>
         private static readonly Regex FormulaRegex = new Regex(@"\s*([A-Z][a-z]*)(?:\{([0-9]+)\})?(-)?([0-9]+)?\s*", RegexOptions.Compiled);
@@ -45,13 +44,6 @@ namespace Chemistry
         /// </summary>
         private static readonly Regex ValidateFormulaRegex = new Regex("^(" + FormulaRegex + ")+$", RegexOptions.Compiled);
         
-
-        /// <summary>
-        /// Main data stores, the isotopes and elements
-        /// </summary>
-        internal Dictionary<Isotope, int> isotopes { get; private set; }
-        internal Dictionary<Element, int> elements { get; private set; }
-
         #region Constructors
 
         /// <summary>
@@ -61,15 +53,6 @@ namespace Chemistry
         public ChemicalFormula(string chemicalFormula) : this()
         {
             ParseFormulaAndAddElements(chemicalFormula);
-        }
-
-        /// <summary>
-        /// Create an chemical formula from an item that contains a chemical formula
-        /// </summary>
-        /// <param name="item">The item of which a new chemical formula will be made from</param>
-        public ChemicalFormula(IHasChemicalFormula item)
-            : this(item.thisChemicalFormula)
-        {
         }
 
         /// <summary>
@@ -85,6 +68,9 @@ namespace Chemistry
             }
         }
 
+        /// <summary>
+        /// Constructor that initializes empty isotopes and elements dictionaries
+        /// </summary>
         public ChemicalFormula()
         {
             isotopes = new Dictionary<Isotope, int>();
@@ -95,6 +81,10 @@ namespace Chemistry
         #endregion Constructors
 
         #region Properties
+
+        internal Dictionary<Isotope, int> isotopes { get; private set; }
+
+        internal Dictionary<Element, int> elements { get; private set; }
 
         /// <summary>
         /// Gets the average mass of this chemical formula
@@ -155,8 +145,7 @@ namespace Chemistry
                 return isotopes.Count();
             }
         }
-
-
+        
         /// <summary>
         /// Gets the string representation (Hill Notation) of this chemical formula
         /// </summary>
@@ -191,6 +180,15 @@ namespace Chemistry
         public void Add(IHasChemicalFormula item)
         {
             Add(item.thisChemicalFormula);
+        }
+
+        /// <summary>
+        /// Add a chemical formula to this chemical formula.
+        /// </summary>
+        /// <param name="formula">The chemical formula to add to this</param>
+        public void Add(string formula)
+        {
+            ParseFormulaAndAddElements(formula);
         }
 
         /// <summary>
@@ -324,11 +322,10 @@ namespace Chemistry
         }
 
         /// <summary>
-        /// Remove all the isotopes of an chemical element from this
+        /// Remove all the elements and isotopes of an chemical element from this
         /// chemical formula
         /// </summary>
-        /// <param name="element">The chemical element to remove</param>
-        /// <returns>Number of removed isotopes</returns>
+        /// <returns>Number of removed isotopes and elements</returns>
         public int RemoveIsotopesOf(Element element)
         {
             int count = elements[element];
@@ -353,22 +350,23 @@ namespace Chemistry
         #endregion Add/Remove
 
         #region Count/Contains
-
+        
         /// <summary>
         /// Checks if the isotope is present in this chemical formula
         /// </summary>
-        /// <param name="isotope">The isotope to look for</param>
-        /// <returns>True if there is a non-negative number of the isotope in this formula</returns>
         public bool ContainsSpecificIsotope(Isotope isotope)
         {
             return CountSpecificIsotopes(isotope) != 0;
         }
 
+        public bool ContainsSpecificIsotope(string symbol, int atomicNumber)
+        {
+            return CountSpecificIsotopes(symbol, atomicNumber) != 0;
+        }
+        
         /// <summary>
         /// Checks if any isotope of the specified element is present in this chemical formula
         /// </summary>
-        /// <param name="element">The element to look for</param>
-        /// <returns>True if there is a non-zero number of the element in this formula</returns>
         public bool ContainsIsotopesOf(Element element)
         {
             return CountWithIsotopes(element) != 0;
@@ -378,56 +376,11 @@ namespace Chemistry
         {
             return CountWithIsotopes(symbol) != 0;
         }
-        
-        public bool IsSubSetOf(ChemicalFormula formula)
-        {
-            return formula.IsSuperSetOf(this);
-        }
-
-        /// <summary>
-        /// Checks whether this formula contains all the isotopes of the specified formula
-        /// MIGHT CONSIDER ELEMENTS TO BE SUPERSET OF ISOTOPES IF NEEDED!!!
-        /// Right now they are distinct
-        /// </summary>
-        /// <param name="formula"></param>
-        /// <returns></returns>
-        public bool IsSuperSetOf(ChemicalFormula formula)
-        {
-            foreach (var aa in formula.elements)
-            {
-                if (!elements.ContainsKey(aa.Key) || aa.Value > elements[aa.Key])
-                    return false;
-            }
-            foreach (var aa in formula.isotopes)
-            {
-                if (!isotopes.ContainsKey(aa.Key) || aa.Value > isotopes[aa.Key])
-                    return false;
-            }
-            return true;
-        }
-
-        public bool ContainsSpecificIsotope(string symbol, int atomicNumber)
-        {
-            return CountSpecificIsotopes(symbol, atomicNumber) != 0;
-        }
-
-        /// <summary>
-        /// Return the number of given isotopes in this chemical fomrula
-        /// </summary>
-        /// <param name="isotope"></param>
-        /// <returns></returns>
-        public int CountSpecificIsotopes(Isotope isotope)
-        {
-            int isotopeCount;
-            return (isotopes.TryGetValue(isotope, out isotopeCount) ? isotopeCount : 0);
-        }
 
         /// <summary>
         /// Count the number of isotopes and elements from this element that are
         /// present in this chemical formula
         /// </summary>
-        /// <param name="element">The element to search for</param>
-        /// <returns>The total number of all the element isotopes in this chemical formula</returns>
         public int CountWithIsotopes(Element element)
         {
             var isotopeCount = element.Isotopes.Values.Sum(isotope => CountSpecificIsotopes(isotope));
@@ -447,11 +400,18 @@ namespace Chemistry
             return CountSpecificIsotopes(isotope);
         }
 
+        /// <summary>
+        /// Return the number of given isotopes in this chemical fomrula
+        /// </summary>
+        public int CountSpecificIsotopes(Isotope isotope)
+        {
+            int isotopeCount;
+            return (isotopes.TryGetValue(isotope, out isotopeCount) ? isotopeCount : 0);
+        }
 
         /// <summary>
         /// Gets the ratio of the number of Carbon to Hydrogen in this chemical formula
         /// </summary>
-        /// <returns></returns>
         public double HydrogenCarbonRatio()
         {
             int carbonCount = CountWithIsotopes("C");
@@ -461,13 +421,58 @@ namespace Chemistry
             return hydrogenCount / (double)carbonCount;
         }
 
+        public double GetProtonCount()
+        {
+            int count = 0;
+            foreach (var kk in isotopes)
+                count += kk.Key.AtomicNumber * kk.Value;
+            foreach (var kk in elements)
+                count += kk.Key.AtomicNumber * kk.Value;
+            return count;
+        }
+
+        public double GetNeutronCount()
+        {
+            int count = 0;
+            if (elements.Count > 0)
+                throw new Exception("Cannot know for sure what the number of neutrons is!");
+            foreach (var kk in isotopes)
+                count += kk.Key.Neutrons * kk.Value;
+            return count;
+        }
+
+        public bool IsSubSetOf(ChemicalFormula formula)
+        {
+            return formula.IsSuperSetOf(this);
+        }
+
+        /// <summary>
+        /// Checks whether this formula is a superset of another formula. C is not a superset of C{12}
+        /// </summary>
+        /// <param name="formula"></param>
+        /// <returns></returns>
+        public bool IsSuperSetOf(ChemicalFormula formula)
+        {
+            foreach (var aa in formula.elements)
+            {
+                if (!elements.ContainsKey(aa.Key) || aa.Value > elements[aa.Key])
+                    return false;
+            }
+            foreach (var aa in formula.isotopes)
+            {
+                if (!isotopes.ContainsKey(aa.Key) || aa.Value > isotopes[aa.Key])
+                    return false;
+            }
+            return true;
+        }
+
         #endregion Count/Contains
 
         public override int GetHashCode()
         {
             return Convert.ToInt32(MonoisotopicMass);
         }
-                
+
         public bool Equals(ChemicalFormula other)
         {
             if (ReferenceEquals(this, other)) return true;
@@ -475,6 +480,8 @@ namespace Chemistry
             {
                 return false;
             }
+            // TODO: Optimize for speed, remove below and add some kind of hashing comparison. 
+            // C must be different from C{12}
             if (!IsSubSetOf(other) || !IsSuperSetOf(other))
                 return false;
             return true;
@@ -484,7 +491,7 @@ namespace Chemistry
         {
             return Formula;
         }
-        
+
         #region Private Methods
 
         /// <summary>
@@ -494,10 +501,6 @@ namespace Chemistry
         /// <param name="formula">the Chemical Formula to parse</param>
         private void ParseFormulaAndAddElements(string formula)
         {
-
-            if (string.IsNullOrEmpty(formula))
-                return;
-
             if (!IsValidChemicalFormula(formula))
             {
                 throw new FormatException("Input string for chemical formula was in an incorrect format");
@@ -529,9 +532,73 @@ namespace Chemistry
                 }
             }
         }
-
-        #endregion Private Methods
         
+        /// <summary>
+        /// Produces the Hill Notation of the chemical formula
+        /// </summary>
+        private string GetHillNotation()
+        {
+            string s = "";
+
+            // Find carbon
+            if (elements.ContainsKey(PeriodicTable.GetElement("C")))
+            {
+                s += "C";
+                s += (elements[PeriodicTable.GetElement("C")] == 1 ? "" : "" + elements[PeriodicTable.GetElement("C")]);
+            }
+
+            // Find carbon isotopes
+            foreach (var i in PeriodicTable.GetElement("C").Isotopes)
+            {
+                if (isotopes.ContainsKey(i.Value))
+                {
+                    s += "C{";
+                    s += i.Key;
+                    s += "}";
+                    s += (isotopes[i.Value] == 1 ? "" : "" + isotopes[i.Value]);
+                }
+            }
+
+            // Find hydrogen
+            if (elements.ContainsKey(PeriodicTable.GetElement("H")))
+            {
+                s += "H";
+                s += (elements[PeriodicTable.GetElement("H")] == 1 ? "" : "" + elements[PeriodicTable.GetElement("H")]);
+            }
+
+            // Find hydrogen isotopes
+            foreach (var i in PeriodicTable.GetElement("H").Isotopes)
+            {
+                if (isotopes.ContainsKey(i.Value))
+                {
+                    s += "H{";
+                    s += i.Key;
+                    s += "}";
+                    s += (isotopes[i.Value] == 1 ? "" : "" + isotopes[i.Value]);
+                }
+            }
+
+            List<string> otherParts = new List<string>();
+
+            foreach (var i in elements)
+            {
+                if (i.Key != PeriodicTable.GetElement("C") && i.Key != PeriodicTable.GetElement("H"))
+                    otherParts.Add(i.Key.AtomicSymbol + (i.Value == 1 ? "" : "" + i.Value));
+            }
+
+            foreach (var i in isotopes)
+            {
+                if (i.Key.Element != PeriodicTable.GetElement("C") && i.Key.Element != PeriodicTable.GetElement("H"))
+                    otherParts.Add(i.Key.Element.AtomicSymbol + "{" + i.Key.MassNumber + "}" + (i.Value == 1 ? "" : "" + i.Value));
+            }
+
+            otherParts.Sort();
+
+            return s + string.Join("", otherParts);
+        }
+        
+        #endregion Private Methods
+
         #region Statics
 
         public static implicit operator ChemicalFormula(string sequence)
@@ -539,13 +606,15 @@ namespace Chemistry
             return new ChemicalFormula(sequence);
         }
 
-        public static implicit operator String(ChemicalFormula sequence)
+        public static implicit operator string(ChemicalFormula sequence)
         {
             return sequence.ToString();
         }
 
         public static bool IsValidChemicalFormula(string chemicalFormula)
         {
+            if (string.IsNullOrEmpty(chemicalFormula))
+                return true;
             return ValidateFormulaRegex.IsMatch(chemicalFormula);
         }
 
@@ -555,6 +624,14 @@ namespace Chemistry
             newFormula.Remove(right);
             return newFormula;
         }
+
+        public static ChemicalFormula operator -(ChemicalFormula left, ChemicalFormula right)
+        {
+            ChemicalFormula newFormula = new ChemicalFormula(left);
+            newFormula.Remove(right);
+            return newFormula;
+        }
+
 
         public static ChemicalFormula operator *(ChemicalFormula formula, int count)
         {
@@ -578,6 +655,14 @@ namespace Chemistry
             return newFormula;
         }
 
+        public static ChemicalFormula operator +(ChemicalFormula left, ChemicalFormula right)
+        {
+            ChemicalFormula newFormula = new ChemicalFormula(left);
+            newFormula.Add(right);
+            return newFormula;
+
+        }
+
         public static ChemicalFormula Combine(IEnumerable<IHasChemicalFormula> formulas)
         {
             ChemicalFormula returnFormula = new ChemicalFormula();
@@ -586,103 +671,15 @@ namespace Chemistry
             return returnFormula;
         }
 
-        public double GetProtonCount()
+        public static ChemicalFormula Combine(IEnumerable<ChemicalFormula> formulas)
         {
-            int count = 0;
-            foreach (var kk in isotopes)
-                count += kk.Key.AtomicNumber * kk.Value;
-            foreach (var kk in elements)
-                count += kk.Key.AtomicNumber * kk.Value;
-            return count;
-        }
-
-        public double GetNeutronCount()
-        {
-            int count = 0;
-            if (elements.Count > 0)
-                throw new Exception("Cannot know for sure what the number of neutrons is!");
-            foreach (var kk in isotopes)
-                count += kk.Key.Neutrons * kk.Value;
-            return count;
+            ChemicalFormula returnFormula = new ChemicalFormula();
+            foreach (ChemicalFormula formula in formulas)
+                returnFormula.Add(formula);
+            return returnFormula;
         }
 
         #endregion Statics
-
-        #region IHasChemicalFormula
-
-        ChemicalFormula IHasChemicalFormula.thisChemicalFormula
-        {
-            get { return this; }
-        }
-
-        #endregion IHasChemicalFormula
-
-        /// <summary>
-        /// Produces the Hill Notation of the chemical formula
-        /// </summary>
-        private string GetHillNotation(string delimiter = "")
-        {
-            string s = "";
-
-            // Find carbon
-            if (elements.ContainsKey(PeriodicTable.GetElement("C")))
-            {
-                s += "C";
-                s += (elements[PeriodicTable.GetElement("C")] == 1 ? "" : "" + elements[PeriodicTable.GetElement("C")]);
-                s += delimiter;
-            }
-
-            // Find carbon isotopes
-            foreach (var i in PeriodicTable.GetElement("C").Isotopes)
-            {
-                if (isotopes.ContainsKey(i.Value))
-                {
-                    s += "C{";
-                    s += i.Key;
-                    s += "}";
-                    s += (isotopes[i.Value] == 1 ? "" : "" + isotopes[i.Value]);
-                    s += delimiter;
-                }
-            }
-
-            // Find hydrogen
-            if (elements.ContainsKey(PeriodicTable.GetElement("H")))
-            {
-                s += "H";
-                s += (elements[PeriodicTable.GetElement("H")] == 1 ? "" : "" + elements[PeriodicTable.GetElement("H")]);
-                s += delimiter;
-            }
-
-            // Find hydrogen isotopes
-            foreach (var i in PeriodicTable.GetElement("H").Isotopes)
-            {
-                if (isotopes.ContainsKey(i.Value))
-                {
-                    s += "H{";
-                    s += i.Key;
-                    s += "}";
-                    s += (isotopes[i.Value] == 1 ? "" : "" + isotopes[i.Value]);
-                    s += delimiter;
-                }
-            }
-
-            List<string> otherParts = new List<string>();
-
-            foreach (var i in elements)
-            {
-                if (i.Key != PeriodicTable.GetElement("C") && i.Key != PeriodicTable.GetElement("H"))
-                    otherParts.Add(i.Key.AtomicSymbol + (i.Value == 1 ? "" : "" + i.Value));
-            }
-
-            foreach (var i in isotopes)
-            {
-                if (i.Key.Element != PeriodicTable.GetElement("C") && i.Key.Element != PeriodicTable.GetElement("H"))
-                    otherParts.Add(i.Key.Element.AtomicSymbol + "{" + i.Key.MassNumber + "}" + (i.Value == 1 ? "" : "" + i.Value));
-            }
-
-            otherParts.Sort();
-            return s + string.Join(delimiter, otherParts);
-        }
 
     }
 }
