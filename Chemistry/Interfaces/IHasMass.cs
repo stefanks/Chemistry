@@ -29,5 +29,4 @@ namespace Chemistry
         /// </summary>
         double MonoisotopicMass { get; }
     }
-
 }

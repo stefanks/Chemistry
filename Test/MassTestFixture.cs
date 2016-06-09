@@ -102,7 +102,6 @@ namespace Test
             ObjectWithMass1000 a = new ObjectWithMass1000();
             ObjectWithMass1000 b = new ObjectWithMass1000();
             Assert.IsTrue(a.MassEquals(b));
-            Assert.IsTrue(a.CompareMass(b) == 0);
         }
 
 
@@ -116,15 +115,6 @@ namespace Test
             Assert.IsTrue(a.MassEquals(b));
             Assert.IsFalse(c.MassEquals(a));
         }
-
-        [Test]
-        public void MassNoEqual()
-        {
-
-            ObjectWithMass1000 a = new ObjectWithMass1000();
-            ObjectWithMass100 b = new ObjectWithMass100();
-            Assert.IsTrue(a.CompareMass(b)>0);
-            Assert.IsTrue(b.CompareMass(a)<0);
-        }
+        
     }
 }

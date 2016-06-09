@@ -60,13 +60,5 @@ namespace Chemistry
         {
             return Math.Abs(mass1.MonoisotopicMass - mass2.MonoisotopicMass) < epsilon;
         }
-
-        public static int CompareMass(this IHasMass mass1, IHasMass mass2, double epsilon = MassEqualityEpsilon)
-        {
-            double difference = mass1.MonoisotopicMass - mass2.MonoisotopicMass;
-            if (difference < -epsilon)
-                return -1;
-            return difference > epsilon ? 1 : 0;
-        }
     }
 }

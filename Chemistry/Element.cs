@@ -78,6 +78,14 @@ namespace Chemistry
         /// </summary>
         public Isotope PrincipalIsotope { get; private set; }
 
+        public int Protons
+        {
+            get
+            {
+                return AtomicNumber;
+            }
+        }
+
         /// <summary>
         /// Returns the atomic symbol
         /// </summary>
