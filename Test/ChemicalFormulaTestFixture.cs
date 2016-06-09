@@ -533,15 +533,7 @@ namespace Test
 
             Assert.AreEqual(formulaB, formulaC);
         }
-
-        [Test]
-        public void ImplicitString()
-        {
-            ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
-
-            Assert.AreEqual("C2H3NOye", formulaA + "ye");
-        }
-
+        
         [Test]
         public void BadFormula()
         {

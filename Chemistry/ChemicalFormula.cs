@@ -26,7 +26,7 @@ namespace Chemistry
     /// <summary>
     /// A chemical / molecule consisting of multiple atoms.
     /// </summary>
-    public sealed class ChemicalFormula : IEquatable<ChemicalFormula>
+    public sealed class ChemicalFormula : IEquatable<ChemicalFormula>, IHasMass
     {
         /// <summary>
         /// A regular expression for matching chemical formulas such as: C2C{13}3H5NO5
