@@ -21,6 +21,11 @@ namespace Chemistry
 {
     public static class MassExtensions
     {
+        
+        /// <summary>
+        /// The mass difference tolerance for having identical masses
+        /// </summary>
+        public const double MassEqualityEpsilon = 1e-10;
 
         public static double ToMz(this IHasMass mass, int charge)
         {
@@ -36,32 +41,24 @@ namespace Chemistry
             return Math.Abs(charge) * mz - charge * Constants.Proton;
         }
 
-        public static bool MassEquals(this double mass1, IHasMass mass2, double epsilon = Constants.MassEqualityEpsilon)
+        public static bool MassEquals(this double mass1, IHasMass mass2, double epsilon = MassEqualityEpsilon)
         {
             return Math.Abs(mass1 - mass2.MonoisotopicMass) < epsilon;
         }
 
-        public static bool MassEquals(this double mass1, double mass2, double epsilon = Constants.MassEqualityEpsilon)
+        public static bool MassEquals(this double mass1, double mass2, double epsilon = MassEqualityEpsilon)
         {
             return Math.Abs(mass1 - mass2) < epsilon;
         }
 
-        public static bool MassEquals(this IHasMass mass1, double mass2, double epsilon = Constants.MassEqualityEpsilon)
+        public static bool MassEquals(this IHasMass mass1, double mass2, double epsilon = MassEqualityEpsilon)
         {
             return Math.Abs(mass1.MonoisotopicMass - mass2) < epsilon;
         }
 
-        public static bool MassEquals(this IHasMass mass1, IHasMass mass2, double epsilon = Constants.MassEqualityEpsilon)
+        public static bool MassEquals(this IHasMass mass1, IHasMass mass2, double epsilon = MassEqualityEpsilon)
         {
             return Math.Abs(mass1.MonoisotopicMass - mass2.MonoisotopicMass) < epsilon;
-        }
-
-        public static int CompareMass(this IHasMass mass1, IHasMass mass2, double epsilon = Constants.MassEqualityEpsilon)
-        {
-            double difference = mass1.MonoisotopicMass - mass2.MonoisotopicMass;
-            if (difference < -epsilon)
-                return -1;
-            return difference > epsilon ? 1 : 0;
         }
     }
 }

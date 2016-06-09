@@ -28,6 +28,28 @@ namespace Test
     public class ChemicalFormulaTestFixture
     {
         private static readonly ChemicalFormula NullChemicalFormula = null;
+        
+        public class PhysicalObjectWithChemicalFormula : IHasChemicalFormula
+        {
+            public PhysicalObjectWithChemicalFormula(string v)
+            {
+                thisChemicalFormula = new ChemicalFormula(v);
+            }
+
+            public double MonoisotopicMass
+            {
+                get
+                {
+                    return thisChemicalFormula.MonoisotopicMass;
+                }
+            }
+
+            public ChemicalFormula thisChemicalFormula
+            {
+                get; private set;
+            }
+        }
+
 
         [OneTimeSetUp]
         public void SetUp()
@@ -141,7 +163,7 @@ namespace Test
         public void AddIChemicalFormulaToFormula()
         {
             ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
-            IHasChemicalFormula formulaB = new ChemicalFormula("H2O");
+            IHasChemicalFormula formulaB = new PhysicalObjectWithChemicalFormula("H2O");
             ChemicalFormula formulaC = new ChemicalFormula("C2H5NO2");
 
             formulaA.Add(formulaB);
@@ -492,19 +514,7 @@ namespace Test
 
             Assert.AreEqual(formulaC, formulaD);
         }
-
-
-        [Test]
-        public void ImplicitAddNullFormulaLeft()
-        {
-            ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
-            ChemicalFormula formulaB = new ChemicalFormula("C2H3NO");
-
-            ChemicalFormula formulaC = NullChemicalFormula + formulaA;
-
-            Assert.AreEqual(formulaC, formulaB);
-        }
-
+        
 
         [Test]
         public void ImplicitConstructor()
@@ -658,15 +668,7 @@ namespace Test
 
             Assert.AreEqual(formulaA, formulaB);
         }
-
-        [Test]
-        public void EqualObject()
-        {
-            IHasMass formulaA = new ChemicalFormula("OCHHCHN");
-            IHasMass formulaB = new ChemicalFormula("C2H3NO");
-
-            Assert.IsTrue(Equals(formulaA, formulaB));
-        }
+        
 
         [Test]
         public void EqualsFalse()
@@ -864,7 +866,7 @@ namespace Test
         [Test]
         public void NewIHasChemicalFormula()
         {
-            IHasChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
+            IHasChemicalFormula formulaA = new PhysicalObjectWithChemicalFormula("C2H3NO");
             ChemicalFormula formulaB = new ChemicalFormula(formulaA);
         }
 
@@ -1029,12 +1031,12 @@ namespace Test
 
             // Do not distinguish between O and C isotope masses
             IsotopicDistribution dist2 = new IsotopicDistribution(0.001);
-            dist2.CalculateDistribuition(formulaA as IHasChemicalFormula, out masses, out intensities);
+            dist2.CalculateDistribuition(formulaA , out masses, out intensities);
 
 
             // Do not distinguish between O and C isotope masses
             IsotopicDistribution dist3 = new IsotopicDistribution();
-            dist3.CalculateDistribuition(formulaA as IHasChemicalFormula, out masses, out intensities);
+            dist3.CalculateDistribuition(formulaA, out masses, out intensities);
             Assert.AreEqual(4, masses.Count());
 
 
@@ -1042,7 +1044,8 @@ namespace Test
             dist4.CalculateDistribuition(formulaA, out masses, out intensities);
 
             IsotopicDistribution dist5 = new IsotopicDistribution(1.0);
-            dist5.CalculateDistribuition(formulaA, out masses, out intensities);
+            PhysicalObjectWithChemicalFormula formulaB = new PhysicalObjectWithChemicalFormula("CO");
+            dist5.CalculateDistribuition(formulaB, out masses, out intensities);
 
 
         }
@@ -1136,11 +1139,9 @@ namespace Test
         [Test]
         public void CombineTest()
         {
-            ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
-            ChemicalFormula formulaB = new ChemicalFormula("C2H3NO");
-            List<ChemicalFormula> theList = new List<ChemicalFormula>();
-            theList.Add(new ChemicalFormula("C2H3NO"));
-            theList.Add(new ChemicalFormula("CO"));
+            List<IHasChemicalFormula> theList = new List<IHasChemicalFormula>();
+            theList.Add(new PhysicalObjectWithChemicalFormula("C2H3NO"));
+            theList.Add(new PhysicalObjectWithChemicalFormula("CO"));
             var c = ChemicalFormula.Combine(theList);
 
             Assert.AreEqual("C3H3NO2", c.Formula);

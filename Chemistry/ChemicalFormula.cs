@@ -24,10 +24,9 @@ using System.Text.RegularExpressions;
 namespace Chemistry
 {
     /// <summary>
-    /// A chemical / molecule consisting of multiple atoms.
-    /// <remarks>This class is mutable</remarks>
+    /// A chemical formula class. This does NOT correspond to a physical object. A physical object can have a chemical formula
     /// </summary>
-    public sealed class ChemicalFormula : IEquatable<ChemicalFormula>, IHasChemicalFormula
+    public sealed class ChemicalFormula : IEquatable<ChemicalFormula>
     {
         /// <summary>
         /// A regular expression for matching chemical formulas such as: C2C{13}3H5NO5
@@ -534,94 +533,7 @@ namespace Chemistry
                 }
             }
         }
-
-        #endregion Private Methods
         
-        #region Statics
-
-        public static implicit operator ChemicalFormula(string sequence)
-        {
-            return new ChemicalFormula(sequence);
-        }
-
-        public static implicit operator String(ChemicalFormula sequence)
-        {
-            return sequence.ToString();
-        }
-
-        public static bool IsValidChemicalFormula(string chemicalFormula)
-        {
-            return ValidateFormulaRegex.IsMatch(chemicalFormula);
-        }
-
-        public static ChemicalFormula operator -(ChemicalFormula left, IHasChemicalFormula right)
-        {
-            ChemicalFormula newFormula = new ChemicalFormula(left);
-            newFormula.Remove(right);
-            return newFormula;
-        }
-
-        public static ChemicalFormula operator *(ChemicalFormula formula, int count)
-        {
-            ChemicalFormula newFormula = new ChemicalFormula();
-            foreach (var kk in formula.isotopes)
-                newFormula.Add(kk.Key, kk.Value * count);
-            foreach (var kk in formula.elements)
-                newFormula.Add(kk.Key, kk.Value * count);
-            return newFormula;
-        }
-
-        public static ChemicalFormula operator *(int count, ChemicalFormula formula)
-        {
-            return formula * count;
-        }
-
-        public static ChemicalFormula operator +(ChemicalFormula left, IHasChemicalFormula right)
-        {
-            ChemicalFormula newFormula = new ChemicalFormula(left);
-            newFormula.Add(right);
-            return newFormula;
-        }
-
-        public static ChemicalFormula Combine(IEnumerable<IHasChemicalFormula> formulas)
-        {
-            ChemicalFormula returnFormula = new ChemicalFormula();
-            foreach (IHasChemicalFormula iformula in formulas)
-                returnFormula.Add(iformula);
-            return returnFormula;
-        }
-
-        public double GetProtonCount()
-        {
-            int count = 0;
-            foreach (var kk in isotopes)
-                count += kk.Key.AtomicNumber * kk.Value;
-            foreach (var kk in elements)
-                count += kk.Key.AtomicNumber * kk.Value;
-            return count;
-        }
-
-        public double GetNeutronCount()
-        {
-            int count = 0;
-            if (elements.Count > 0)
-                throw new Exception("Cannot know for sure what the number of neutrons is!");
-            foreach (var kk in isotopes)
-                count += kk.Key.Neutrons * kk.Value;
-            return count;
-        }
-
-        #endregion Statics
-
-        #region IHasChemicalFormula
-
-        ChemicalFormula IHasChemicalFormula.thisChemicalFormula
-        {
-            get { return this; }
-        }
-
-        #endregion IHasChemicalFormula
-
         /// <summary>
         /// Produces the Hill Notation of the chemical formula
         /// </summary>
@@ -688,6 +600,91 @@ namespace Chemistry
             otherParts.Sort();
             return s + string.Join(delimiter, otherParts);
         }
+        
+        #endregion Private Methods
 
+        #region Statics
+
+        public static implicit operator ChemicalFormula(string sequence)
+        {
+            return new ChemicalFormula(sequence);
+        }
+
+        public static implicit operator String(ChemicalFormula sequence)
+        {
+            return sequence.ToString();
+        }
+
+        public static bool IsValidChemicalFormula(string chemicalFormula)
+        {
+            return ValidateFormulaRegex.IsMatch(chemicalFormula);
+        }
+
+        public static ChemicalFormula operator -(ChemicalFormula left, IHasChemicalFormula right)
+        {
+            ChemicalFormula newFormula = new ChemicalFormula(left);
+            newFormula.Remove(right);
+            return newFormula;
+        }
+
+        public static ChemicalFormula operator -(ChemicalFormula left, ChemicalFormula right)
+        {
+            ChemicalFormula newFormula = new ChemicalFormula(left);
+            newFormula.Remove(right);
+            return newFormula;
+        }
+
+        public static ChemicalFormula operator *(ChemicalFormula formula, int count)
+        {
+            ChemicalFormula newFormula = new ChemicalFormula();
+            foreach (var kk in formula.isotopes)
+                newFormula.Add(kk.Key, kk.Value * count);
+            foreach (var kk in formula.elements)
+                newFormula.Add(kk.Key, kk.Value * count);
+            return newFormula;
+        }
+
+        public static ChemicalFormula operator *(int count, ChemicalFormula formula)
+        {
+            return formula * count;
+        }
+
+        public static ChemicalFormula operator +(ChemicalFormula left, IHasChemicalFormula right)
+        {
+            ChemicalFormula newFormula = new ChemicalFormula(left);
+            newFormula.Add(right);
+            return newFormula;
+        }
+
+        public static ChemicalFormula Combine(IEnumerable<IHasChemicalFormula> formulas)
+        {
+            ChemicalFormula returnFormula = new ChemicalFormula();
+            foreach (IHasChemicalFormula iformula in formulas)
+                returnFormula.Add(iformula);
+            return returnFormula;
+        }
+
+        public double GetProtonCount()
+        {
+            int count = 0;
+            foreach (var kk in isotopes)
+                count += kk.Key.Protons * kk.Value;
+            foreach (var kk in elements)
+                count += kk.Key.Protons * kk.Value;
+            return count;
+        }
+
+        public double GetNeutronCount()
+        {
+            int count = 0;
+            if (elements.Count > 0)
+                throw new Exception("Cannot know for sure what the number of neutrons is!");
+            foreach (var kk in isotopes)
+                count += kk.Key.Neutrons * kk.Value;
+            return count;
+        }
+
+        #endregion Statics
+        
     }
 }

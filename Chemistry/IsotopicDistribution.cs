@@ -334,7 +334,7 @@ namespace Chemistry
             int i = tPolynomial.Count;
             int j = fPolynomial.Count;
 
-            //Console.WriteLine("i = " + i + " j = " + j);
+            ////Console.WriteLine("i = " + i + " j = " + j);
             if (i == 0 || j == 0)
                 return;
 
