@@ -39,10 +39,5 @@ namespace Chemistry
         /// units (u)
         /// </summary>
         public const double Proton = 1.007276466879;
-        
-        /// <summary>
-        /// The mass difference tolerance for having identical masses
-        /// </summary>
-        public const double MassEqualityEpsilon = 1e-10;
     }
 }

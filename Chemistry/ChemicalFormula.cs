@@ -24,10 +24,9 @@ using System.Text.RegularExpressions;
 namespace Chemistry
 {
     /// <summary>
-    /// A chemical / molecule consisting of multiple atoms.
-    /// <remarks>This class is mutable</remarks>
+    /// A chemical formula class. This does NOT correspond to a physical object. A physical object can have a chemical formula
     /// </summary>
-    public sealed class ChemicalFormula : IEquatable<ChemicalFormula>, IHasChemicalFormula
+    public sealed class ChemicalFormula : IEquatable<ChemicalFormula>
     {
         /// <summary>
         /// A regular expression for matching chemical formulas such as: C2C{13}3H5NO5
@@ -561,6 +560,13 @@ namespace Chemistry
             return newFormula;
         }
 
+        public static ChemicalFormula operator -(ChemicalFormula left, ChemicalFormula right)
+        {
+            ChemicalFormula newFormula = new ChemicalFormula(left);
+            newFormula.Remove(right);
+            return newFormula;
+        }
+
         public static ChemicalFormula operator *(ChemicalFormula formula, int count)
         {
             ChemicalFormula newFormula = new ChemicalFormula();
@@ -612,16 +618,7 @@ namespace Chemistry
         }
 
         #endregion Statics
-
-        #region IHasChemicalFormula
-
-        ChemicalFormula IHasChemicalFormula.thisChemicalFormula
-        {
-            get { return this; }
-        }
-
-        #endregion IHasChemicalFormula
-
+        
         /// <summary>
         /// Produces the Hill Notation of the chemical formula
         /// </summary>
