@@ -569,12 +569,7 @@ namespace Chemistry
         {
             return new ChemicalFormula(sequence);
         }
-
-        public static implicit operator string(ChemicalFormula sequence)
-        {
-            return sequence.Formula;
-        }
-
+        
         public static bool IsValidChemicalFormula(string chemicalFormula)
         {
             return ValidateFormulaRegex.IsMatch(chemicalFormula);
