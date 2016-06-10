@@ -1196,5 +1196,18 @@ namespace Test
             // On purpose put in wrong abundance for Zr, so abundance is not verified
             Assert.Throws<ApplicationException>(() => { PeriodicTable.Validate(1e-5, false); }, "Total abundance of[Zr, Zr] is 0.9999 instead of 1");
         }
+
+
+        [Test]
+        public void AddSubtractTest()
+        {
+            var a = new PhysicalObjectWithChemicalFormula("CO");
+            var b = new ChemicalFormula("CO");
+            b += a;
+            Assert.AreEqual("C2O2", b.Formula);
+            b -= a;
+            Assert.AreEqual("CO", b.Formula);
+        }
+    }
     }
 }
