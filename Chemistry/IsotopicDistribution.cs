@@ -81,7 +81,7 @@ namespace Chemistry
             {
                 int count = elementAndCount.Value;
                 List<Composition> isotopeComposition = new List<Composition>();
-                foreach (Isotope isotope in elementAndCount.Key.Isotopes.Values.OrderBy(iso => iso.AtomicMass))
+                foreach (Isotope isotope in elementAndCount.Key.GetIsotopes().OrderBy(iso => iso.AtomicMass))
                 {
                     double probability = isotope.RelativeAbundance;
 

@@ -39,5 +39,15 @@ namespace Chemistry
         /// units (u)
         /// </summary>
         public const double Proton = 1.007276466879;
+
+        /// <summary>
+        /// The largest number of elements to consider
+        /// </summary>
+        public const int MaxNumElements = 128;
+
+        /// <summary>
+        /// The largest mass number 
+        /// </summary>
+        public const int MaxMassNumber = 295;
     }
 }

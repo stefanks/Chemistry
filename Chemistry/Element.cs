@@ -26,21 +26,40 @@ namespace Chemistry
     /// isotopes, with the element mass being a weighted average of all the
     /// isotopes atomic masses weighted by their natural relative abundance.
     /// </summary>
-    public sealed class Element
+    public class Element
     {
-        /// <summary>
-        /// The element's isotopes stored based on their atomic number
-        /// </summary>
-        public Dictionary<int, Isotope> Isotopes;
+        // Two data stores for isotopes! An array for fast access and a list for enumeration!
 
         /// <summary>
-        /// Gets an isotope of this element based on its atomic number
+        /// The element's isotopes stored based on their mass number
+        /// </summary>
+        private Isotope[] Isotopes = new Isotope[Constants.MaxMassNumber+1];
+
+
+        /// <summary>
+        /// Isotopes store for enumeration
+        /// </summary>
+        private readonly List<Isotope> IsotopesList = new List<Isotope>();
+        
+        /// <summary>
+        /// Gets an isotope of this element based on its mass number
         /// </summary>
         /// <param name="atomicNumber">The atomic number of the isotope to get</param>
         /// <returns>The isotope with the supplied atomic number</returns>
-        public Isotope this[int atomicNumber]
+        public Isotope this[int massNumber]
         {
-            get { return Isotopes[atomicNumber]; }
+            get { return Isotopes[massNumber]; }
+        }
+
+        /// <summary>
+        /// Gets an isotope of this element based on its mass number
+        /// </summary>
+        /// <param name="atomicNumber">The atomic number of the isotope to get</param>
+        /// <returns>The isotope with the supplied atomic number</returns>
+        public IEnumerable<Isotope> GetIsotopes()
+        {
+            foreach (Isotope i in IsotopesList)
+                yield return i;
         }
 
         /// <summary>
@@ -54,7 +73,6 @@ namespace Chemistry
             AtomicSymbol = symbol;
             AtomicNumber = atomicNumber;
             AverageMass = averageMass;
-            Isotopes = new Dictionary<int, Isotope>();
         }
 
         /// <summary>
@@ -104,10 +122,11 @@ namespace Chemistry
         /// <returns>The created isotopes that is added to this element</returns>
         public void AddIsotope(int massNumber, double atomicMass, double abundance)
         {
-            if (Isotopes.ContainsKey(massNumber))
-                throw new ArgumentException("Isotope with mass number " + massNumber + " already exists");
+            if (Isotopes[massNumber] != null)
+                throw new ArgumentException("Isotope with mass number " + massNumber + " already exists!");
             var isotope = new Isotope(this, massNumber, atomicMass, abundance);
-            Isotopes.Add(massNumber, isotope);
+            Isotopes[massNumber] = isotope;
+            IsotopesList.Add(isotope);
             if (PrincipalIsotope == null || (abundance > PrincipalIsotope.RelativeAbundance))
             {
                 if (PrincipalIsotope != null)
@@ -115,6 +134,23 @@ namespace Chemistry
                 PrincipalIsotope = isotope;
                 PrincipalIsotope.IsPrincipalIsotope = true;
             }
+        }
+        
+        /// <summary>
+        /// Can use an integer instead of an element anytime you like
+        /// </summary>
+        /// <param name="atomicNumber"></param>
+        public static implicit operator Element(int atomicNumber)
+        {
+            return PeriodicTable.GetElement(atomicNumber);
+        }
+
+        /// <summary>
+        /// Can use the atomic symbol instead of an element anytime you like
+        /// </summary>
+        public static implicit operator Element(string AtomicSymbol)
+        {
+            return PeriodicTable.GetElement(AtomicSymbol);
         }
     }
 }

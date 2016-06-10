@@ -23,23 +23,68 @@ namespace Chemistry
 {
     public static class PeriodicTable
     {
+        // Two datastores storing same elements! Code automatically chooses the more efficient one
+
         /// <summary>
         /// The internal dictionary housing elements, keyed by their unique atomic symbol
         /// </summary>
         private static Dictionary<string, Element> _elements = new Dictionary<string, Element>();
 
+        /// <summary>
+        /// The internal dictionary housing elements, keyed by their unique atomic number
+        /// </summary>
+        private static Element[] _elementsArray = new Element[Constants.MaxNumElements];
+
         public static void Add(Element element)
         {
+            if (_elements.ContainsKey(element.AtomicSymbol))
+                throw new ArgumentException("Element with symbol " + element.AtomicSymbol + " already added!");
+            if (_elementsArray[element.AtomicNumber]!=null)
+                throw new ArgumentException("Element with atomic number " + element.AtomicNumber + " already added!");
             _elements.Add(element.AtomicSymbol, element);
+            _elementsArray[element.AtomicNumber] = element;
         }
 
+        /// <summary>
+        /// Returns the element corresponding to a given atomic symbol. Needs to be fast.
+        /// </summary>
+        /// <param name="atomicSymbol"></param>
+        /// <returns></returns>
         public static Element GetElement(string atomicSymbol)
+
         {
-            Element element;
-            if (_elements.TryGetValue(atomicSymbol, out element))
-                return element;
-            else
-                throw new ArgumentException(string.Format("The atomic Symbol '{0}' does not exist in the Periodic Table", atomicSymbol));
+            return _elements[atomicSymbol];
+        }
+
+        /// <summary>
+        /// Fast method of getting element by atomic number. Needs to be fast.
+        /// </summary>
+        /// <param name="atomicNumber"></param>
+        /// <returns></returns>
+        public static Element GetElement(int atomicNumber)
+        {
+            return _elementsArray[atomicNumber];
+        }
+
+        /// <summary>
+        /// Validates the periodic table with relative accuracy epsilon
+        /// </summary>
+        public static void Validate(double epsilon, bool validateAverageMass = true)
+        {
+            foreach(var e in _elements)
+            {
+                double totalAbundance = 0;
+                double averageMass = 0;
+                foreach (Isotope i in e.Value.GetIsotopes()) {
+                    totalAbundance += i.RelativeAbundance;
+                    averageMass += i.RelativeAbundance * i.AtomicMass;
+                }
+                if (Math.Abs(totalAbundance - 1) > epsilon)
+                    throw new ApplicationException("Total abundance of " + e + " is " + totalAbundance + " instead of 1");
+                if (validateAverageMass && Math.Abs(averageMass - e.Value.AverageMass) / e.Value.AverageMass > epsilon)
+                    throw new ApplicationException("Average mass of " + e + " is " + averageMass + " instead of " + e.Value.AverageMass);
+
+            }
         }
     }
 }
