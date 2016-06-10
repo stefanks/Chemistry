@@ -1197,6 +1197,10 @@ namespace Test
             Assert.Throws<ApplicationException>(() => { PeriodicTable.Validate(1e-5, false); }, "Total abundance of[Zr, Zr] is 0.9999 instead of 1");
         }
 
+        private void Ok(string ok)
+        {
+            Console.WriteLine(ok);
+        }
 
         [Test]
         public void AddSubtractTest()
@@ -1206,8 +1210,7 @@ namespace Test
             b += a;
             Assert.AreEqual("C2O2", b.Formula);
             b -= a;
-            Assert.AreEqual("CO", b.Formula);
+            Assert.IsTrue("CO".Equals(b));
         }
-    }
     }
 }

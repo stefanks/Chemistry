@@ -43,12 +43,12 @@ namespace Test
         [Test]
         public void AddingExistingElementsTest()
         {
-            var elementC = new Element("C", 6, 12.0106);
+            var elementC = new Element("GGG", 66, 12.0106);
             PeriodicTable.Add(elementC);
-            var elementC1 = new Element("C", 6, 12.0106);
-            Assert.Throws<ArgumentException>(()=> { PeriodicTable.Add(elementC1); }, "Element with symbol C already added!");
-            var elementC2 = new Element("C2", 6, 12.0106);
-            Assert.Throws<ArgumentException>(() => { PeriodicTable.Add(elementC2); }, "Element with atomic number 6 already added!");
+            var elementC1 = new Element("GGG", 66, 12.0106);
+            Assert.Throws<ArgumentException>(()=> { PeriodicTable.Add(elementC1); }, "Element with symbol GGG already added!");
+            var elementC2 = new Element("GGG2", 66, 12.0106);
+            Assert.Throws<ArgumentException>(() => { PeriodicTable.Add(elementC2); }, "Element with atomic number 66 already added!");
         }
     }
 }

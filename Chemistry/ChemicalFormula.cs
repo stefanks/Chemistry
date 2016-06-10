@@ -440,12 +440,7 @@ namespace Chemistry
         {
             return Tuple.Create(isotopes.Sum(b => b.Key.AtomicMass * b.Value), elements.Sum(b => b.Key.AverageMass * b.Value)).GetHashCode();
         }
-
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as ChemicalFormula);
-        }
-
+        
         public bool Equals(ChemicalFormula other)
         {
             if (ReferenceEquals(this, other)) return true;
@@ -577,7 +572,7 @@ namespace Chemistry
 
         public static implicit operator string(ChemicalFormula sequence)
         {
-            return sequence.ToString();
+            return sequence.Formula;
         }
 
         public static bool IsValidChemicalFormula(string chemicalFormula)
