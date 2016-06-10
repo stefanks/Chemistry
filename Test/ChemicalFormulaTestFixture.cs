@@ -250,6 +250,20 @@ namespace Test
             Assert.AreEqual(formulaA, formulaB);
         }
 
+
+
+        [Test]
+        public void AddELementByAtomicNumber()
+        {
+            ChemicalFormula formulaA = new ChemicalFormula("C2H2NO");
+            ChemicalFormula formulaB = new ChemicalFormula("C2HNO");
+
+            formulaB.Add(1,1);
+
+            Assert.AreEqual(formulaA, formulaB);
+        }
+
+
         [Test]
         public void AddNonExistentSymbolToFormula()
         {
