@@ -357,12 +357,7 @@ namespace Chemistry
         {
             return CountWithIsotopes(element) != 0;
         }
-
-        public bool ContainsIsotopesOf(string symbol)
-        {
-            return CountWithIsotopes(symbol) != 0;
-        }
-        
+                
         public bool IsSubSetOf(ChemicalFormula formula)
         {
             return formula.IsSuperSetOf(this);
@@ -390,9 +385,9 @@ namespace Chemistry
             return true;
         }
 
-        public bool ContainsSpecificIsotope(string symbol, int atomicNumber)
+        public bool ContainsSpecificIsotope(Element element, int atomicNumber)
         {
-            return CountSpecificIsotopes(symbol, atomicNumber) != 0;
+            return CountSpecificIsotopes(element, atomicNumber) != 0;
         }
 
         /// <summary>
@@ -418,16 +413,10 @@ namespace Chemistry
             int ElementCount;
             return isotopeCount + (elements.TryGetValue(element, out ElementCount) ? ElementCount : 0);
         }
-
-        public int CountWithIsotopes(string symbol)
+        
+        public int CountSpecificIsotopes(Element element, int massNumber)
         {
-            Element element = PeriodicTable.GetElement(symbol);
-            return CountWithIsotopes(element);
-        }
-
-        public int CountSpecificIsotopes(string symbol, int atomicNumber)
-        {
-            Isotope isotope = PeriodicTable.GetElement(symbol)[atomicNumber];
+            Isotope isotope = element[massNumber];
             return CountSpecificIsotopes(isotope);
         }
 
@@ -467,11 +456,6 @@ namespace Chemistry
             if (!IsSubSetOf(other) || !IsSuperSetOf(other))
                 return false;
             return true;
-        }
-
-        public override string ToString()
-        {
-            return Formula;
         }
         
         #region Private Methods
@@ -522,7 +506,7 @@ namespace Chemistry
         /// <summary>
         /// Produces the Hill Notation of the chemical formula
         /// </summary>
-        private string GetHillNotation(string delimiter = "")
+        private string GetHillNotation()
         {
             string s = "";
 
@@ -531,7 +515,6 @@ namespace Chemistry
             {
                 s += "C";
                 s += (elements[PeriodicTable.GetElement(6)] == 1 ? "" : "" + elements[PeriodicTable.GetElement(6)]);
-                s += delimiter;
             }
 
             // Find carbon isotopes
@@ -543,7 +526,6 @@ namespace Chemistry
                     s += i.MassNumber;
                     s += "}";
                     s += (isotopes[i] == 1 ? "" : "" + isotopes[i]);
-                    s += delimiter;
                 }
             }
 
@@ -552,7 +534,6 @@ namespace Chemistry
             {
                 s += "H";
                 s += (elements[PeriodicTable.GetElement(1)] == 1 ? "" : "" + elements[PeriodicTable.GetElement(1)]);
-                s += delimiter;
             }
 
             // Find hydrogen isotopes
@@ -564,7 +545,6 @@ namespace Chemistry
                     s += i.MassNumber;
                     s += "}";
                     s += (isotopes[i] == 1 ? "" : "" + isotopes[i]);
-                    s += delimiter;
                 }
             }
 
@@ -583,7 +563,7 @@ namespace Chemistry
             }
 
             otherParts.Sort();
-            return s + string.Join(delimiter, otherParts);
+            return s + string.Join("",otherParts);
         }
         
         #endregion Private Methods
