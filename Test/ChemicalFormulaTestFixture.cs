@@ -79,30 +79,54 @@ namespace Test
 
             var elementFe = new Element("Fe", 26, 55.845);
             PeriodicTable.Add(elementFe);
+            elementFe.AddIsotope(54, 53.93960899, 0.05845);
             elementFe.AddIsotope(56, 55.93493633, 0.91754);
+            elementFe.AddIsotope(57, 56.93539284, 0.02119);
+            elementFe.AddIsotope(58, 57.93327443, 0.00282);
 
             var elementBr = new Element("Br", 35, 79.904);
             PeriodicTable.Add(elementBr);
             elementBr.AddIsotope(79, 78.9183376, 0.5069);
+            elementBr.AddIsotope(81, 80.9162897, 0.4931);
 
             var elementCa = new Element("Ca", 20, 40.078);
             PeriodicTable.Add(elementCa);
             elementCa.AddIsotope(40, 39.962590863, 0.96941);
-
+            elementCa.AddIsotope(42, 41.95861783, 0.00647);
+            elementCa.AddIsotope(43, 42.95876644, 0.00135);
+            elementCa.AddIsotope(44, 43.95548156, 0.02086);
+            elementCa.AddIsotope(46, 45.9536890, 0.00004);
+            elementCa.AddIsotope(48, 47.95252276, 0.00187);
+            
             var elementS = new Element("S", 16, 32.0675);
             PeriodicTable.Add(elementS);
             elementS.AddIsotope(32, 31.9720711744, 0.9499);
             elementS.AddIsotope(33, 32.9714589098, 0.0075);
             elementS.AddIsotope(34, 33.967867004, 0.0425);
             elementS.AddIsotope(36, 35.96708071, 0.0001);
-
+                
             var elementSe = new Element("Se", 34, 78.971);
             PeriodicTable.Add(elementSe);
             elementSe.AddIsotope(74, 73.922475934, 0.0089);
+            elementSe.AddIsotope(76, 75.919213704, 0.0937);
+            elementSe.AddIsotope(77, 76.919914154, 0.0763);
+            elementSe.AddIsotope(78, 77.91730928, 0.2377);
+            elementSe.AddIsotope(80, 79.9165218, 0.4961);
+            elementSe.AddIsotope(82, 81.9166995, 0.0873);
 
             var elementAl = new Element("Al", 13, 26.9815385);
             PeriodicTable.Add(elementAl);
             elementAl.AddIsotope(27, 26.98153853, 1);
+
+
+            var elementZr = new Element("Zr", 40, 91.224);
+            PeriodicTable.Add(elementZr);
+            elementZr.AddIsotope(90, 89.9046977, 0.5145);
+            elementZr.AddIsotope(91, 90.9056396, 0.1122);
+            elementZr.AddIsotope(92, 91.9050347, 0.1715);
+            elementZr.AddIsotope(94, 93.9063108, 0.1738);
+            // Wrong abundance on purpose, for testing
+            elementZr.AddIsotope(96, 95.9082714, 0.0279);
         }
 
         [Test]
@@ -122,7 +146,7 @@ namespace Test
             ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
             ChemicalFormula formulaB = new ChemicalFormula("C2H3N2O");
 
-            Element n = PeriodicTable.GetElement("N");
+            Element n = PeriodicTable.GetElement(7);
 
             formulaA.Add(n, 1);
 
@@ -230,14 +254,14 @@ namespace Test
         {
             ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
 
-            Assert.Throws<ArgumentException>(() => { formulaA.AddPrincipalIsotopesOf("Faa", 1); }, "The atomic Symbol 'Faa' does not exist in the Periodic Table");
+            Assert.Throws<KeyNotFoundException>(() => { formulaA.AddPrincipalIsotopesOf("Faa", 1); });
 
         }
 
         [Test]
         public void InexistingElement()
         {
-            Assert.Throws<ArgumentException>(() => { var formulaA = new ChemicalFormula("Q"); }, "The atomic Symbol 'Q' does not exist in the Periodic Table");
+            Assert.Throws<KeyNotFoundException>(() => { var formulaA = new ChemicalFormula("Q"); });
         }
 
 
@@ -535,15 +559,7 @@ namespace Test
 
             Assert.AreEqual(formulaB, formulaC);
         }
-
-        [Test]
-        public void ImplicitString()
-        {
-            ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
-
-            Assert.AreEqual("C2H3NOye", formulaA + "ye");
-        }
-
+        
         [Test]
         public void BadFormula()
         {
@@ -576,13 +592,13 @@ namespace Test
         [Test]
         public void InvalidChemicalElement()
         {
-            Assert.Throws<ArgumentException>(() => { Element e = PeriodicTable.GetElement("Faa"); }, "The atomic Symbol 'Faa' does not exist in the Periodic Table");
+            Assert.Throws<KeyNotFoundException>(() => { Element e = PeriodicTable.GetElement("Faa"); });
         }
 
         [Test]
         public void InvalidElementIsotope()
         {
-            Assert.Throws<KeyNotFoundException>(() => { Isotope i = PeriodicTable.GetElement("C")[100]; });
+            Assert.IsNull(PeriodicTable.GetElement("C")[100]);
         }
 
         [Test]
@@ -824,7 +840,7 @@ namespace Test
             ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
             ChemicalFormula formulaB = new ChemicalFormula("C2H3O");
 
-            formulaA.RemoveElements("N", 1);
+            formulaA.Remove("N", 1);
 
             Assert.AreEqual(formulaB, formulaA);
         }
@@ -1145,6 +1161,18 @@ namespace Test
             var c = ChemicalFormula.Combine(theList);
 
             Assert.AreEqual("C3H3NO2", c.Formula);
+        }
+
+        [Test]
+        public void ValidatePeriodicTable()
+        {
+            PeriodicTable.Validate(1e-3);
+            // Nist database values in 2016 for Se isotope abundances are accurate within 1e-3, but not 1e-4
+            Assert.Throws<ApplicationException>(() => { PeriodicTable.Validate(1e-4); }, "Average mass of Se is 78.9593885570136 instead of 78.971");
+            
+            PeriodicTable.Validate(1e-4, false);
+            // On purpose put in wrong abundance for Zr, so abundance is not verified
+            Assert.Throws<ApplicationException>(() => { PeriodicTable.Validate(1e-5, false); }, "Total abundance of[Zr, Zr] is 0.9999 instead of 1");
         }
     }
 }

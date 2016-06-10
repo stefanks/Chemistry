@@ -48,6 +48,7 @@ namespace Chemistry
         /// <summary>
         /// Main data stores, the isotopes and elements
         /// </summary>
+        
         internal Dictionary<Isotope, int> isotopes { get; private set; }
         internal Dictionary<Element, int> elements { get; private set; }
 
@@ -214,9 +215,9 @@ namespace Chemistry
         /// </summary>
         /// <param name="symbol">The chemical symbol of the element to add</param>
         /// <param name="count">The number of the element to add</param>
-        public void AddPrincipalIsotopesOf(string symbol, int count)
+        public void AddPrincipalIsotopesOf(Element element, int count)
         {
-            Isotope isotope = PeriodicTable.GetElement(symbol).PrincipalIsotope;
+            Isotope isotope = element.PrincipalIsotope;
             Add(isotope, count);
         }
 
@@ -273,20 +274,15 @@ namespace Chemistry
             foreach (var i in formula.isotopes)
                 Remove(i.Key, i.Value);
         }
-
-        public void Remove(Element key, int count)
-        {
-            Add(key, -count);
-        }
-
+        
         /// <summary>
         /// Remove the provided number of elements (not isotopes!) from formula
         /// </summary>
         /// <param name="symbol">The symbol of the chemical element to remove</param>
         /// <param name="count">The number of elements to remove</param>
-        public void RemoveElements(string symbol, int count)
+        public void Remove(Element element, int count)
         {
-            Add(PeriodicTable.GetElement(symbol), -count);
+            Add(element, -count);
         }
 
         /// <summary>
@@ -310,18 +306,7 @@ namespace Chemistry
             Add(isotope, -count);
             return count;
         }
-
-        /// <summary>
-        /// Remove all the isotopes of an chemical element represented by the symbol
-        /// from this chemical formula
-        /// </summary>
-        /// <param name="symbol">The symbol of the chemical element to remove</param>
-        /// <returns>Number of removed isotopes</returns>
-        public int RemoveIsotopesOf(string symbol)
-        {
-            return RemoveIsotopesOf(PeriodicTable.GetElement(symbol));
-        }
-
+        
         /// <summary>
         /// Remove all the isotopes of an chemical element from this
         /// chemical formula
@@ -429,7 +414,7 @@ namespace Chemistry
         /// <returns>The total number of all the element isotopes in this chemical formula</returns>
         public int CountWithIsotopes(Element element)
         {
-            var isotopeCount = element.Isotopes.Values.Sum(isotope => CountSpecificIsotopes(isotope));
+            var isotopeCount = element.GetIsotopes().Sum(isotope => CountSpecificIsotopes(isotope));
             int ElementCount;
             return isotopeCount + (elements.TryGetValue(element, out ElementCount) ? ElementCount : 0);
         }
@@ -542,43 +527,43 @@ namespace Chemistry
             string s = "";
 
             // Find carbon
-            if (elements.ContainsKey(PeriodicTable.GetElement("C")))
+            if (elements.ContainsKey(PeriodicTable.GetElement(6)))
             {
                 s += "C";
-                s += (elements[PeriodicTable.GetElement("C")] == 1 ? "" : "" + elements[PeriodicTable.GetElement("C")]);
+                s += (elements[PeriodicTable.GetElement(6)] == 1 ? "" : "" + elements[PeriodicTable.GetElement(6)]);
                 s += delimiter;
             }
 
             // Find carbon isotopes
-            foreach (var i in PeriodicTable.GetElement("C").Isotopes)
+            foreach (var i in PeriodicTable.GetElement(6).GetIsotopes())
             {
-                if (isotopes.ContainsKey(i.Value))
+                if (isotopes.ContainsKey(i))
                 {
                     s += "C{";
-                    s += i.Key;
+                    s += i.MassNumber;
                     s += "}";
-                    s += (isotopes[i.Value] == 1 ? "" : "" + isotopes[i.Value]);
+                    s += (isotopes[i] == 1 ? "" : "" + isotopes[i]);
                     s += delimiter;
                 }
             }
 
             // Find hydrogen
-            if (elements.ContainsKey(PeriodicTable.GetElement("H")))
+            if (elements.ContainsKey(PeriodicTable.GetElement(1)))
             {
                 s += "H";
-                s += (elements[PeriodicTable.GetElement("H")] == 1 ? "" : "" + elements[PeriodicTable.GetElement("H")]);
+                s += (elements[PeriodicTable.GetElement(1)] == 1 ? "" : "" + elements[PeriodicTable.GetElement(1)]);
                 s += delimiter;
             }
 
             // Find hydrogen isotopes
-            foreach (var i in PeriodicTable.GetElement("H").Isotopes)
+            foreach (var i in PeriodicTable.GetElement(1).GetIsotopes())
             {
-                if (isotopes.ContainsKey(i.Value))
+                if (isotopes.ContainsKey(i))
                 {
                     s += "H{";
-                    s += i.Key;
+                    s += i.MassNumber;
                     s += "}";
-                    s += (isotopes[i.Value] == 1 ? "" : "" + isotopes[i.Value]);
+                    s += (isotopes[i] == 1 ? "" : "" + isotopes[i]);
                     s += delimiter;
                 }
             }
@@ -587,13 +572,13 @@ namespace Chemistry
 
             foreach (var i in elements)
             {
-                if (i.Key != PeriodicTable.GetElement("C") && i.Key != PeriodicTable.GetElement("H"))
+                if (i.Key != PeriodicTable.GetElement(6) && i.Key != PeriodicTable.GetElement(1))
                     otherParts.Add(i.Key.AtomicSymbol + (i.Value == 1 ? "" : "" + i.Value));
             }
 
             foreach (var i in isotopes)
             {
-                if (i.Key.Element != PeriodicTable.GetElement("C") && i.Key.Element != PeriodicTable.GetElement("H"))
+                if (i.Key.Element != PeriodicTable.GetElement(6) && i.Key.Element != PeriodicTable.GetElement(1))
                     otherParts.Add(i.Key.Element.AtomicSymbol + "{" + i.Key.MassNumber + "}" + (i.Value == 1 ? "" : "" + i.Value));
             }
 
@@ -610,7 +595,7 @@ namespace Chemistry
             return new ChemicalFormula(sequence);
         }
 
-        public static implicit operator String(ChemicalFormula sequence)
+        public static implicit operator string(ChemicalFormula sequence)
         {
             return sequence.ToString();
         }
@@ -647,6 +632,13 @@ namespace Chemistry
         public static ChemicalFormula operator *(int count, ChemicalFormula formula)
         {
             return formula * count;
+        }
+
+        public static ChemicalFormula operator +(ChemicalFormula left, ChemicalFormula right)
+        {
+            ChemicalFormula newFormula = new ChemicalFormula(left);
+            newFormula.Add(right);
+            return newFormula;
         }
 
         public static ChemicalFormula operator +(ChemicalFormula left, IHasChemicalFormula right)

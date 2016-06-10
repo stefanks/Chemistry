@@ -44,8 +44,7 @@ namespace Chemistry
         /// Is this the most abundant isotope of its parent element?
         /// </summary>
         internal bool IsPrincipalIsotope { get; set; }
-
-
+        
         /// <summary>
         /// The atomic number of the isotope's parent element (also the number of protons)
         /// </summary>
