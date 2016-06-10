@@ -114,7 +114,8 @@ namespace Test
             elementSe.AddIsotope(80, 79.9165218, 0.4961);
             elementSe.AddIsotope(82, 81.9166995, 0.0873);
 
-            var elementAl = new Element("Al", 13, 26.9815385);
+            // Wrong average mass, for checking some chemical formula hashing 
+            var elementAl = new Element("Al", 13, 26.98153853);
             PeriodicTable.Add(elementAl);
             elementAl.AddIsotope(27, 26.98153853, 1);
 
@@ -467,8 +468,15 @@ namespace Test
         public void HashCodeImmutableEquality()
         {
             ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
-
             Assert.AreEqual(formulaA.GetHashCode(), formulaA.GetHashCode());
+        }
+
+        [Test]
+        public void HashCodeCheck()
+        {
+            ChemicalFormula formulaA = new ChemicalFormula("Al");
+            ChemicalFormula formulaB = new ChemicalFormula("Al{27}");
+            Assert.AreNotEqual(formulaA.GetHashCode(), formulaB.GetHashCode());
         }
 
         [Test]

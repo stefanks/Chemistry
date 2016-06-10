@@ -449,7 +449,7 @@ namespace Chemistry
 
         public override int GetHashCode()
         {
-            return Convert.ToInt32(MonoisotopicMass);
+            return Tuple.Create(isotopes.Sum(b => b.Key.AtomicMass * b.Value), elements.Sum(b => b.Key.AverageMass * b.Value)).GetHashCode();
         }
 
         public override bool Equals(object obj)
