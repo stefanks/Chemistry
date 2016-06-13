@@ -39,7 +39,7 @@ namespace Chemistry
         {
             if (_elements.ContainsKey(element.AtomicSymbol))
                 throw new ArgumentException("Element with symbol " + element.AtomicSymbol + " already added!");
-            if (_elementsArray[element.AtomicNumber]!=null)
+            if (_elementsArray[element.AtomicNumber] != null)
                 throw new ArgumentException("Element with atomic number " + element.AtomicNumber + " already added!");
             _elements.Add(element.AtomicSymbol, element);
             _elementsArray[element.AtomicNumber] = element;
@@ -71,11 +71,12 @@ namespace Chemistry
         /// </summary>
         public static void Validate(double epsilon, bool validateAverageMass = true)
         {
-            foreach(var e in _elements)
+            foreach (var e in _elements)
             {
                 double totalAbundance = 0;
                 double averageMass = 0;
-                foreach (Isotope i in e.Value.GetIsotopes()) {
+                foreach (Isotope i in e.Value.GetIsotopes())
+                {
                     totalAbundance += i.RelativeAbundance;
                     averageMass += i.RelativeAbundance * i.AtomicMass;
                 }
@@ -83,7 +84,6 @@ namespace Chemistry
                     throw new ApplicationException("Total abundance of " + e + " is " + totalAbundance + " instead of 1");
                 if (validateAverageMass && Math.Abs(averageMass - e.Value.AverageMass) / e.Value.AverageMass > epsilon)
                     throw new ApplicationException("Average mass of " + e + " is " + averageMass + " instead of " + e.Value.AverageMass);
-
             }
         }
     }

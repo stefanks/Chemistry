@@ -21,12 +21,15 @@ namespace Chemistry
 {
     public static class MassExtensions
     {
-        
+
         /// <summary>
         /// The mass difference tolerance for having identical masses
         /// </summary>
         public const double MassEqualityEpsilon = 1e-10;
 
+        /// <summary>
+        /// Calculates m/z value for a given mass assuming charge comes from losing or gaining protons
+        /// </summary>
         public static double ToMz(this IHasMass mass, int charge)
         {
             if (charge == 0)
@@ -34,6 +37,9 @@ namespace Chemistry
             return mass.MonoisotopicMass / Math.Abs(charge) + Math.Sign(charge) * Constants.Proton;
         }
 
+        /// <summary>
+        /// Determines the original mass from an m/z value, assuming charge comes from a proton
+        /// </summary>
         public static double ToMass(this double mz, int charge)
         {
             if (charge == 0)

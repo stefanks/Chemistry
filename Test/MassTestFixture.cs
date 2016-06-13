@@ -49,6 +49,14 @@ namespace Test
     {
 
         [Test]
+        public void MassToMzToMass()
+        {
+            ObjectWithMass1000 a = new ObjectWithMass1000();
+            double mz = a.ToMz(2).ToMass(2);
+            Assert.AreEqual(1000, mz);
+        }
+
+        [Test]
         public void MassToMzPositiveCharge()
         {
             ObjectWithMass1000 a = new ObjectWithMass1000();

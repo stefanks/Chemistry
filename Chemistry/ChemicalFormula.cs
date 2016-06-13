@@ -32,9 +32,9 @@ namespace Chemistry
         /// A regular expression for matching chemical formulas such as: C2C{13}3H5NO5
         /// \s* (at end as well) allows for optional spacing among the elements, i.e. C2 C{13}3 H5 N O5
         /// The first group is the only non-optional group and that handles the chemical symbol: H, He, etc..
-        /// The second group is optional, which handles alternative isotopes of elements: C{13} means carbon-13, while C is the common carbon-12
-        /// The third group is optional and indicates if we are adding or subtracting the elements form the formula, C-2C{13}5 would mean first subtract 2 carbon-12 and then add 5 carbon-13
-        /// The fourth group is optional and represents the number of isotopes to add, if not present it assumes 1: H2O means 2 Hydrogen and 1 Oxygen
+        /// The second group is optional, which handles isotopes of elements: C{13} means carbon-13, while C is the carbon element with unspecified mass number
+        /// The third group is optional and indicates if we are adding or subtracting the elements form the formula, C-2C{13}5 would mean first subtract 2 carbons and then add 5 carbon-13
+        /// The fourth group is optional and represents the number of isotopes or elements to add, if not present it assumes 1: H2O means 2 Hydrogen and 1 Oxygen
         /// Modified from: http://stackoverflow.com/questions/4116786/parsing-a-chemical-formula-from-a-string-in-c
         /// </summary>
         private static readonly Regex FormulaRegex = new Regex(@"\s*([A-Z][a-z]*)(?:\{([0-9]+)\})?(-)?([0-9]+)?\s*", RegexOptions.Compiled);
@@ -441,13 +441,13 @@ namespace Chemistry
             return Tuple.Create(isotopes.Sum(b => b.Key.AtomicMass * b.Value), elements.Sum(b => b.Key.AverageMass * b.Value)).GetHashCode();
         }
         
+
         public bool Equals(ChemicalFormula other)
         {
             if (ReferenceEquals(this, other)) return true;
             if (!MonoisotopicMass.MassEquals(other.MonoisotopicMass))
-            {
                 return false;
-            }
+            // TODO: Might not actually need this! Verify
             if (!IsSubSetOf(other) || !IsSuperSetOf(other))
                 return false;
             return true;
@@ -462,7 +462,6 @@ namespace Chemistry
         /// <param name="formula">the Chemical Formula to parse</param>
         private void ParseFormulaAndAddElements(string formula)
         {
-
             if (string.IsNullOrEmpty(formula))
                 return;
 
