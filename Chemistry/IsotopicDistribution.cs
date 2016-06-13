@@ -248,7 +248,7 @@ namespace Chemistry
             const int ncAddValue = 1;
             const int nAtoms = 200;
             List<Polynomial> tPolynomial = new List<Polynomial>();
-            
+
             int n = 0;
             int k = 0;
 
@@ -433,7 +433,7 @@ namespace Chemistry
 
         private static readonly double[] factorLnArray = new double[50003];
         private static int _factorLnTop = 1;
-        
+
         private static double FactorLn(int n)
         {
 

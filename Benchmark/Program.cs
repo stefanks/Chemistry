@@ -14,6 +14,13 @@ namespace Benchmark
 
         static void Main(string[] args)
         {
+            BenchmarkTimeGettingElementFromPeriodicTable();
+            Console.ReadLine();
+        }
+
+        private static void BenchmarkTimeGettingElementFromPeriodicTable()
+        {
+            Console.WriteLine("Starting benchmark BenchmarkTimeGettingElementFromPeriodicTable");
             var elementH = new Element("H", 1, 1.007975);
             PeriodicTable.Add(elementH);
             elementH.AddIsotope(1, 1.00782503223, 0.999885);
@@ -28,18 +35,19 @@ namespace Benchmark
                 var b = a.Protons + a.AverageMass + 4;
             }
             stopWatch.Stop();
-            Console.WriteLine("Time for getting by atomic number: "+stopWatch.Elapsed);
+            Console.WriteLine("Time for getting by atomic number: " + stopWatch.Elapsed);
 
             stopWatch.Restart();
             for (int i = 0; i < numIterations; i++)
             {
                 var a = PeriodicTable.GetElement("H");
-                var b = a.Protons + a.AverageMass+4;
+                var b = a.Protons + a.AverageMass + 4;
             }
             stopWatch.Stop();
             Console.WriteLine("Time for getting by atomic symbol: " + stopWatch.Elapsed);
 
-            Console.ReadLine();
+            Console.WriteLine("Benchmark BenchmarkTimeGettingElementFromPeriodicTable finished");
+
         }
     }
 }
