@@ -1,25 +1,18 @@
 At compile time, git show was:
-58fc08a4ee7b60932f9116264dfe66b301749c9d
+c937badb7b1241c743154b0f9b65f29604900571
 
 
 At compile time, git status was:
 On branch local
 Your branch is up-to-date with 'origin/local'.
-Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git checkout -- <file>..." to discard changes in working directory)
-
-	modified:   ../../../Benchmark.txt
-	modified:   ../../Benchmark.csproj
-
-no changes added to commit (use "git add" and/or "git commit -a")
+nothing to commit, working directory clean
 
 
 Starting benchmark BenchmarkFormula
-Time for getting formulas: 00:00:02.8929204
+Time for getting formulas: 00:00:02.9671759
 Benchmark BenchmarkFormula finished
 
 Starting benchmark BenchmarkTimeGettingElementFromPeriodicTable
-Time for getting by atomic number: 00:00:00.0735346
-Time for getting by atomic symbol: 00:00:02.5641666
+Time for getting by atomic number: 00:00:00.0734453
+Time for getting by atomic symbol: 00:00:02.4931893
 Benchmark BenchmarkTimeGettingElementFromPeriodicTable finished
