@@ -1,0 +1,18 @@
+At compile time, git show was:
+c937badb7b1241c743154b0f9b65f29604900571
+
+
+At compile time, git status was:
+On branch local
+Your branch is up-to-date with 'origin/local'.
+nothing to commit, working directory clean
+
+
+Starting benchmark BenchmarkFormula
+Time for getting formulas: 00:00:02.9671759
+Benchmark BenchmarkFormula finished
+
+Starting benchmark BenchmarkTimeGettingElementFromPeriodicTable
+Time for getting by atomic number: 00:00:00.0734453
+Time for getting by atomic symbol: 00:00:02.4931893
+Benchmark BenchmarkTimeGettingElementFromPeriodicTable finished

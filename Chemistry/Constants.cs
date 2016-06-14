@@ -49,5 +49,9 @@ namespace Chemistry
         /// The largest mass number 
         /// </summary>
         public const int MaxMassNumber = 295;
+
+        public const int CarbonAtomicNumber = 6;
+
+        public const int HydrogenAtomicNumber = 1;
     }
 }

@@ -244,3 +244,5 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+/Benchmark/show.txt
+/Benchmark/status.txt
