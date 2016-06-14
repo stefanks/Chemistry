@@ -89,7 +89,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>"C:\Program Files\Git\bin\git.exe" status &gt; "$(ProjectDir)\status.txt"
-"C:\Program Files\Git\bin\git.exe" show &gt; "$(ProjectDir)\show.txt"</PreBuildEvent>
+"C:\Program Files\Git\bin\git.exe" rev-parse HEAD &gt; "$(ProjectDir)\show.txt"</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
