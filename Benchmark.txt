@@ -1,0 +1,40 @@
+At compile time, git status was:
+On branch local
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+	deleted:    ../../../.gitattributes
+	modified:   ../../Benchmark.csproj
+	modified:   ../../Program.cs
+	modified:   ../../../Chemistry/ChemicalFormula.cs
+	modified:   ../../../Chemistry/Constants.cs
+	modified:   ../../../Test/ChemicalFormulaTestFixture.cs
+	modified:   ../../../Test/packages.config
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+	../../show.txt
+	../../status.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+commit 3c9d628e01c539b9a698e05f2e30fd2f02145d22
+Merge: 17db901 3d90bd1
+Author: stefanks <solntsev@gmail.com>
+Date:   Mon Jun 13 09:53:01 2016 -0500
+
+    Merge pull request #34 from stefanks/local
+    
+    minor
+
+
+Starting benchmark BenchmarkFormula
+Time for getting formulas: 00:00:02.9975866
+Benchmark BenchmarkFormula finished
+
+Starting benchmark BenchmarkTimeGettingElementFromPeriodicTable
+Time for getting by atomic number: 00:00:00.0741022
+Time for getting by atomic symbol: 00:00:02.6759829
+Benchmark BenchmarkTimeGettingElementFromPeriodicTable finished

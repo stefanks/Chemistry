@@ -28,7 +28,7 @@ namespace Test
     public class ChemicalFormulaTestFixture
     {
         private static readonly ChemicalFormula NullChemicalFormula = null;
-        
+
         public class PhysicalObjectWithChemicalFormula : IHasChemicalFormula
         {
             public PhysicalObjectWithChemicalFormula(string v)
@@ -97,14 +97,14 @@ namespace Test
             elementCa.AddIsotope(44, 43.95548156, 0.02086);
             elementCa.AddIsotope(46, 45.9536890, 0.00004);
             elementCa.AddIsotope(48, 47.95252276, 0.00187);
-            
+
             var elementS = new Element("S", 16, 32.0675);
             PeriodicTable.Add(elementS);
             elementS.AddIsotope(32, 31.9720711744, 0.9499);
             elementS.AddIsotope(33, 32.9714589098, 0.0075);
             elementS.AddIsotope(34, 33.967867004, 0.0425);
             elementS.AddIsotope(36, 35.96708071, 0.0001);
-                
+
             var elementSe = new Element("Se", 34, 78.971);
             PeriodicTable.Add(elementSe);
             elementSe.AddIsotope(74, 73.922475934, 0.0089);
@@ -258,7 +258,7 @@ namespace Test
             ChemicalFormula formulaA = new ChemicalFormula("C2H2NO");
             ChemicalFormula formulaB = new ChemicalFormula("C2HNO");
 
-            formulaB.Add(1,1);
+            formulaB.Add(1, 1);
 
             Assert.AreEqual(formulaA, formulaB);
         }
@@ -560,7 +560,7 @@ namespace Test
 
             Assert.AreEqual(formulaC, formulaD);
         }
-        
+
 
         [Test]
         public void ImplicitConstructor()
@@ -581,7 +581,7 @@ namespace Test
 
             Assert.AreEqual(formulaB, formulaC);
         }
-        
+
         [Test]
         public void BadFormula()
         {
@@ -706,7 +706,7 @@ namespace Test
 
             Assert.AreEqual(formulaA, formulaB);
         }
-        
+
 
         [Test]
         public void EqualsFalse()
@@ -913,7 +913,7 @@ namespace Test
         {
             ChemicalFormula formulaA = new ChemicalFormula("C{12}2H3NO");
 
-            Assert.AreEqual(30, formulaA.GetProtonCount());
+            Assert.AreEqual(30, formulaA.ProtonCount);
         }
 
         [Test]
@@ -1069,7 +1069,7 @@ namespace Test
 
             // Do not distinguish between O and C isotope masses
             IsotopicDistribution dist2 = new IsotopicDistribution(0.001);
-            dist2.CalculateDistribuition(formulaA , out masses, out intensities);
+            dist2.CalculateDistribuition(formulaA, out masses, out intensities);
 
 
             // Do not distinguish between O and C isotope masses
@@ -1106,7 +1106,7 @@ namespace Test
             ChemicalFormula formula = (new ChemicalFormula("CO")) * 50;
             double[] masses;
             double[] intensities;
-            IsotopicDistribution dist = new IsotopicDistribution(0.001, 1e-50,1e-15 );
+            IsotopicDistribution dist = new IsotopicDistribution(0.001, 1e-50, 1e-15);
             dist.CalculateDistribuition(formula, out masses, out intensities);
         }
 
@@ -1117,7 +1117,7 @@ namespace Test
             ChemicalFormula formula = (new ChemicalFormula("CO")) * 50;
             double[] masses;
             double[] intensities;
-            IsotopicDistribution dist = new IsotopicDistribution(0.01,0.1);
+            IsotopicDistribution dist = new IsotopicDistribution(0.01, 0.1);
             dist.CalculateDistribuition(formula, out masses, out intensities);
             //Console.WriteLine(String.Join(", ", masses));
             //Console.WriteLine(String.Join(", ", intensities));
@@ -1129,7 +1129,7 @@ namespace Test
             //Console.WriteLine(String.Join(", ", intensities));
 
 
-            dist = new IsotopicDistribution(0.01,0.75);
+            dist = new IsotopicDistribution(0.01, 0.75);
             dist.CalculateDistribuition(formula, out masses, out intensities);
             //Console.WriteLine(String.Join(", ", masses));
             //Console.WriteLine(String.Join(", ", intensities));
@@ -1164,14 +1164,14 @@ namespace Test
         public void NeutronCount()
         {
             ChemicalFormula formulaA = new ChemicalFormula("C{12}O{16}");
-            Assert.AreEqual(14, formulaA.GetNeutronCount());
+            Assert.AreEqual(14, formulaA.NeutronCount);
         }
 
         [Test]
         public void NeutronCountFail()
         {
             ChemicalFormula formulaA = new ChemicalFormula("CO");
-            Assert.Throws<Exception>(() => { formulaA.GetNeutronCount(); }, "Cannot know for sure what the number of neutrons is!");
+            Assert.Throws<Exception>(() => { var a = formulaA.NeutronCount; }, "Cannot know for sure what the number of neutrons is!");
         }
 
         [Test]
@@ -1191,12 +1191,12 @@ namespace Test
             PeriodicTable.Validate(1e-3);
             // Nist database values in 2016 for Se isotope abundances are accurate within 1e-3, but not 1e-4
             Assert.Throws<ApplicationException>(() => { PeriodicTable.Validate(1e-4); }, "Average mass of Se is 78.9593885570136 instead of 78.971");
-            
+
             PeriodicTable.Validate(1e-4, false);
             // On purpose put in wrong abundance for Zr, so abundance is not verified
             Assert.Throws<ApplicationException>(() => { PeriodicTable.Validate(1e-5, false); }, "Total abundance of[Zr, Zr] is 0.9999 instead of 1");
         }
-        
+
         [Test]
         public void AddSubtractTest()
         {
@@ -1205,7 +1205,7 @@ namespace Test
             b += a;
             Assert.AreEqual("C2O2", b.Formula);
             b -= a;
-            Assert.AreEqual("CO",b.Formula);
+            Assert.AreEqual("CO", b.Formula);
         }
     }
 }
