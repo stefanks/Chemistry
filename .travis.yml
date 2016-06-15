@@ -5,4 +5,4 @@ install:
   - nuget install NUnit.Console -OutputDirectory testrunner
 script:
   - xbuild /p:Configuration=TestAndRelease Chemistry.sln 
-  - mono ./testrunner/NUnit.ConsoleRunner.*/tools/nunit3-console.exe ./Test/bin/TestAndRelease/Test.dll
+  - mono ./testrunner/NUnit.ConsoleRunner.*/tools/nunit3-console.exe ./Test/bin/Release/Test.dll
