@@ -142,7 +142,7 @@ namespace Chemistry
             }
         }
 
-        private string _formula=null;
+        private string _formula = null;
         /// <summary>
         /// Gets the string representation (Hill Notation) of this chemical formula
         /// </summary>
