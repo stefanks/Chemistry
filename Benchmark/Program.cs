@@ -45,6 +45,8 @@ namespace Benchmark
 
                 BenchmarkFormula(file);
                 file.WriteLine("");
+                BenchmarkFormula2(file);
+                file.WriteLine("");
                 BenchmarkTimeGettingElementFromPeriodicTable(file);
                 file.WriteLine("");
                 BenchmarkGettingIsotopes(file);
@@ -155,12 +157,31 @@ namespace Benchmark
             stopWatch.Restart();
             for (int i = 0; i < numRepetitions; i++)
             {
-                 var b = a.Formula + i;
+                var b = a.Formula + i;
             }
             stopWatch.Stop();
             file.WriteLine("Time for getting formulas: " + stopWatch.Elapsed);
 
             file.WriteLine("Benchmark BenchmarkFormula finished");
+        }
+        private static void BenchmarkFormula2(StreamWriter file)
+        {
+            file.WriteLine("Starting benchmark BenchmarkFormula2");
+
+            int numRepetitions = 100000;
+
+            Stopwatch stopWatch = new Stopwatch();
+
+             stopWatch.Restart();
+            for (int i = 0; i < numRepetitions; i++)
+            {
+                var a = new ChemicalFormula("H"+i+"H{1}10 H{2}10 O20 O{16}20 O{17}20 O{18}20 C{12}100 C100 C{13}100 S{32}200 S200 S{33}200 S{34}200 S{36}200");
+                var b = a.Formula + i;
+            }
+            stopWatch.Stop();
+            file.WriteLine("Time for creating and getting formulas: " + stopWatch.Elapsed);
+
+            file.WriteLine("Benchmark BenchmarkFormula2 finished");
         }
 
         private static void BenchmarkTimeGettingElementFromPeriodicTable(StreamWriter file)
