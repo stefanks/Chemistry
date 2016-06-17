@@ -86,10 +86,16 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="buildDate.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>"C:\Program Files\Git\bin\git.exe" status &gt; "$(ProjectDir)\status.txt"
-"C:\Program Files\Git\bin\git.exe" rev-parse HEAD &gt; "$(ProjectDir)\show.txt"</PreBuildEvent>
+"C:\Program Files\Git\bin\git.exe" rev-parse HEAD &gt; "$(ProjectDir)\show.txt"
+echo %25date%25 %25time%25 &gt; "$(ProjectDir)\buildDate.txt"</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
