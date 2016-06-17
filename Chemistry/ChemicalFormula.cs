@@ -142,7 +142,7 @@ namespace Chemistry
             }
         }
 
-
+        private string _formula=null;
         /// <summary>
         /// Gets the string representation (Hill Notation) of this chemical formula
         /// </summary>
@@ -150,7 +150,9 @@ namespace Chemistry
         {
             get
             {
-                return GetHillNotation();
+                if (_formula == null)
+                    _formula = GetHillNotation();
+                return _formula;
             }
         }
 
@@ -245,6 +247,7 @@ namespace Chemistry
                 if (elements[element] == 0)
                     elements.Remove(element);
             }
+            _formula = null;
         }
 
         /// <summary>
@@ -264,6 +267,7 @@ namespace Chemistry
                 if (isotopes[isotope] == 0)
                     isotopes.Remove(isotope);
             }
+            _formula = null;
         }
 
         /// <summary>
@@ -344,6 +348,7 @@ namespace Chemistry
         {
             isotopes = new Dictionary<Isotope, int>();
             elements = new Dictionary<Element, int>();
+            _formula = null;
         }
 
         #endregion Add/Remove
