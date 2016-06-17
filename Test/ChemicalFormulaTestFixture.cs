@@ -388,9 +388,9 @@ namespace Test
         }
 
         [Test]
-        public void EmptyStringIsBlank()
+        public void EmptyFormulaIsNull()
         {
-            Assert.IsEmpty(new ChemicalFormula().Formula);
+            Assert.IsNull(new ChemicalFormula().Formula);
         }
 
         [Test]
