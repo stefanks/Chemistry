@@ -32,9 +32,17 @@ namespace Chemistry
         /// </summary>
         public static double ToMz(this IHasMass mass, int charge)
         {
+            return ToMz(mass.MonoisotopicMass, charge);
+        }
+
+        /// <summary>
+        /// Calculates m/z value for a given mass assuming charge comes from losing or gaining protons
+        /// </summary>
+        public static double ToMz(this double mass, int charge)
+        {
             if (charge == 0)
                 throw new DivideByZeroException("Charge cannot be zero");
-            return mass.MonoisotopicMass / Math.Abs(charge) + Math.Sign(charge) * Constants.Proton;
+            return mass / Math.Abs(charge) + Math.Sign(charge) * Constants.Proton;
         }
 
         /// <summary>
