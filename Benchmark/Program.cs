@@ -1,6 +1,7 @@
 ﻿using Chemistry;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace Benchmark
@@ -45,6 +46,8 @@ namespace Benchmark
                 BenchmarkFormula(file);
                 file.WriteLine("");
                 BenchmarkTimeGettingElementFromPeriodicTable(file);
+                file.WriteLine("");
+                BenchmarkGettingIsotopes(file);
             }
         }
 
@@ -119,7 +122,28 @@ namespace Benchmark
             elementZr.AddIsotope(94, 93.9063108, 0.1738);
         }
 
-        private static void BenchmarkFormula(System.IO.StreamWriter file)
+        private static void BenchmarkGettingIsotopes(StreamWriter file)
+        {
+            file.WriteLine("Starting benchmark BenchmarkGettingIsotopes");
+
+            int numRepetitions = 10000000;
+
+            Stopwatch stopWatch = new Stopwatch();
+
+            long a = 0;
+            stopWatch.Restart();
+            for (int i = 0; i < numRepetitions; i++)
+            {
+                a += PeriodicTable.GetElement(20).GetIsotopes().Count();
+            }
+            stopWatch.Stop();
+            file.WriteLine("Time for getting isotopes1: " + stopWatch.Elapsed + " a = " + a);
+
+
+            file.WriteLine("Benchmark BenchmarkGettingIsotopes finished");
+        }
+
+        private static void BenchmarkFormula(StreamWriter file)
         {
             file.WriteLine("Starting benchmark BenchmarkFormula");
 
@@ -139,7 +163,7 @@ namespace Benchmark
             file.WriteLine("Benchmark BenchmarkFormula finished");
         }
 
-        private static void BenchmarkTimeGettingElementFromPeriodicTable(System.IO.StreamWriter file)
+        private static void BenchmarkTimeGettingElementFromPeriodicTable(StreamWriter file)
         {
             file.WriteLine("Starting benchmark BenchmarkTimeGettingElementFromPeriodicTable");
 
