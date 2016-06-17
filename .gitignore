@@ -246,3 +246,4 @@ ModelManifest.xml
 .fake/
 /Benchmark/show.txt
 /Benchmark/status.txt
+/Benchmark/buildDate.txt

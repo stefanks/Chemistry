@@ -1,5 +1,9 @@
+At compile time, date and time:
+Fri 06/17/2016  8:53:53.81 
+
+
 At compile time, git show was:
-c937badb7b1241c743154b0f9b65f29604900571
+02b00e20a47227ab8b0c4ce9ab47209b1cfdab04
 
 
 At compile time, git status was:
@@ -9,10 +13,10 @@ nothing to commit, working directory clean
 
 
 Starting benchmark BenchmarkFormula
-Time for getting formulas: 00:00:02.9671759
+Time for getting formulas: 00:00:02.8440131
 Benchmark BenchmarkFormula finished
 
 Starting benchmark BenchmarkTimeGettingElementFromPeriodicTable
-Time for getting by atomic number: 00:00:00.0734453
-Time for getting by atomic symbol: 00:00:02.4931893
+Time for getting by atomic number: 00:00:00.0717552
+Time for getting by atomic symbol: 00:00:02.4862818
 Benchmark BenchmarkTimeGettingElementFromPeriodicTable finished
