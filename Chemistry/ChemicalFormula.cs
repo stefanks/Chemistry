@@ -29,8 +29,6 @@ namespace Chemistry
     public sealed class ChemicalFormula : IEquatable<ChemicalFormula>
     {
 
-
-
         /// <summary>
         /// Main data stores, the isotopes and elements
         /// </summary>
@@ -146,13 +144,7 @@ namespace Chemistry
         /// <summary>
         /// Gets the string representation (Hill Notation) of this chemical formula
         /// </summary>
-        public string Formula
-        {
-            get
-            {
-                return GetHillNotation();
-            }
-        }
+        public string Formula=null;
 
         public double ProtonCount
         {
@@ -245,6 +237,7 @@ namespace Chemistry
                 if (elements[element] == 0)
                     elements.Remove(element);
             }
+            Formula = GetHillNotation();
         }
 
         /// <summary>
@@ -264,6 +257,7 @@ namespace Chemistry
                 if (isotopes[isotope] == 0)
                     isotopes.Remove(isotope);
             }
+            Formula = GetHillNotation();
         }
 
         /// <summary>
@@ -344,6 +338,7 @@ namespace Chemistry
         {
             isotopes = new Dictionary<Isotope, int>();
             elements = new Dictionary<Element, int>();
+            Formula = null;
         }
 
         #endregion Add/Remove
