@@ -33,14 +33,14 @@ namespace Chemistry
         /// <summary>
         /// The element's isotopes stored based on their mass number
         /// </summary>
-        private Isotope[] Isotopes = new Isotope[Constants.MaxMassNumber+1];
+        private Isotope[] Isotopes = new Isotope[Constants.MaxMassNumber + 1];
 
 
         /// <summary>
-        /// Isotopes store for enumeration
+        /// The element's isotopes stored based on their mass number
         /// </summary>
-        private readonly List<Isotope> IsotopesList = new List<Isotope>();
-        
+        private Isotope[] Isotopes2 = new Isotope[Constants.MaxMassNumber + 1];
+
         /// <summary>
         /// Gets an isotope of this element based on its mass number
         /// </summary>
@@ -58,8 +58,11 @@ namespace Chemistry
         /// <returns>The isotope with the supplied atomic number</returns>
         public IEnumerable<Isotope> GetIsotopes()
         {
-            foreach (Isotope i in IsotopesList)
-                yield return i;
+            foreach (Isotope i in Isotopes2)
+            {
+                if (i != null) yield return i;
+                else yield break;
+            }
         }
 
         /// <summary>
@@ -126,7 +129,12 @@ namespace Chemistry
                 throw new ArgumentException("Isotope with mass number " + massNumber + " already exists!");
             var isotope = new Isotope(this, massNumber, atomicMass, abundance);
             Isotopes[massNumber] = isotope;
-            IsotopesList.Add(isotope);
+            int ok = 0;
+            while (Isotopes2[ok] != null)
+            {
+                ok++;
+            }
+            Isotopes2[ok] = isotope;
             if (PrincipalIsotope == null || (abundance > PrincipalIsotope.RelativeAbundance))
             {
                 if (PrincipalIsotope != null)
@@ -135,7 +143,7 @@ namespace Chemistry
                 PrincipalIsotope.IsPrincipalIsotope = true;
             }
         }
-        
+
         /// <summary>
         /// Can use an integer instead of an element anytime you like
         /// </summary>
