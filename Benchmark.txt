@@ -1,25 +1,32 @@
 At compile time, date and time:
-Fri 06/17/2016 10:03:49.92 
+Fri 06/17/2016 10:17:20.06 
 
 
 At compile time, git show was:
-3ac4a6174735fa4b3081b73072667be5765b913b
+055721b035ab89ed4555e5c0a7e2f116e49b270c
 
 
 At compile time, git status was:
-On branch local
-nothing to commit, working directory clean
+On branch GetIsotopesChange2
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+	modified:   ../../../Benchmark.txt
+	modified:   ../../../Chemistry/Element.cs
+
+no changes added to commit (use "git add" and/or "git commit -a")
 
 
 Starting benchmark BenchmarkFormula
-Time for getting formulas: 00:00:02.8590016
+Time for getting formulas: 00:00:02.8542642
 Benchmark BenchmarkFormula finished
 
 Starting benchmark BenchmarkTimeGettingElementFromPeriodicTable
-Time for getting by atomic number: 00:00:00.0729380
-Time for getting by atomic symbol: 00:00:02.5940080
+Time for getting by atomic number: 00:00:00.0724227
+Time for getting by atomic symbol: 00:00:02.4954750
 Benchmark BenchmarkTimeGettingElementFromPeriodicTable finished
 
 Starting benchmark BenchmarkGettingIsotopes
-Time for getting isotopes1: 00:00:01.1124988 a = 60000000
+Time for getting isotopes1: 00:00:00.7812670 a = 60000000
 Benchmark BenchmarkGettingIsotopes finished
