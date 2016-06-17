@@ -1,30 +1,30 @@
 At compile time, date and time:
-Fri 06/17/2016 10:45:28.42 
+Fri 06/17/2016 10:55:20.04 
 
 
 At compile time, git show was:
-c33e4276b662d50daa8cce2d811750df2d694d26
+740c56b6fdbbe6a47b3a3fa5650c0d8479de9ffb
 
 
 At compile time, git status was:
-On branch ChangeBenchmarking
-Your branch is up-to-date with 'origin/ChangeBenchmarking'.
+On branch local
+Your branch is up-to-date with 'origin/local'.
 nothing to commit, working directory clean
 
 
 Starting benchmark BenchmarkFormula
-Time for getting formulas: 00:00:00.6343427
+Time for getting formulas: 00:00:00.0174968
 Benchmark BenchmarkFormula finished
 
 Starting benchmark BenchmarkFormula2
-Time for creating and getting formulas: 00:00:02.7581449
+Time for creating and getting formulas: 00:00:06.8879757
 Benchmark BenchmarkFormula2 finished
 
 Starting benchmark BenchmarkTimeGettingElementFromPeriodicTable
-Time for getting by atomic number: 00:00:00.0723170
-Time for getting by atomic symbol: 00:00:02.4913422
+Time for getting by atomic number: 00:00:00.0718066
+Time for getting by atomic symbol: 00:00:02.4862209
 Benchmark BenchmarkTimeGettingElementFromPeriodicTable finished
 
 Starting benchmark BenchmarkGettingIsotopes
-Time for getting isotopes1: 00:00:00.7788690 a = 60000000
+Time for getting isotopes1: 00:00:00.7801133 a = 60000000
 Benchmark BenchmarkGettingIsotopes finished
