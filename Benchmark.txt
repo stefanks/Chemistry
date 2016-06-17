@@ -1,18 +1,29 @@
+At compile time, date and time:
+Fri 06/17/2016  8:52:16.62 
+
+
 At compile time, git show was:
-c937badb7b1241c743154b0f9b65f29604900571
+8375713665e83b34cd83ffc46aef132a5dc7fd06
 
 
 At compile time, git status was:
 On branch local
-Your branch is up-to-date with 'origin/local'.
-nothing to commit, working directory clean
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+	modified:   ../../../.gitignore
+	modified:   ../../Benchmark.csproj
+	modified:   ../../Program.cs
+
+no changes added to commit (use "git add" and/or "git commit -a")
 
 
 Starting benchmark BenchmarkFormula
-Time for getting formulas: 00:00:02.9671759
+Time for getting formulas: 00:00:02.9230303
 Benchmark BenchmarkFormula finished
 
 Starting benchmark BenchmarkTimeGettingElementFromPeriodicTable
-Time for getting by atomic number: 00:00:00.0734453
-Time for getting by atomic symbol: 00:00:02.4931893
+Time for getting by atomic number: 00:00:00.0736965
+Time for getting by atomic symbol: 00:00:02.5353872
 Benchmark BenchmarkTimeGettingElementFromPeriodicTable finished

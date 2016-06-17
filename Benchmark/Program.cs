@@ -21,11 +21,20 @@ namespace Benchmark
             {
                 gitShow = reader.ReadToEnd();
             }
+            string compileTime = string.Empty;
+            using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Benchmark." + "buildDate.txt"))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                compileTime = reader.ReadToEnd();
+            }
             PopulatePeriodicTable();
 
             using (System.IO.StreamWriter file =
             new System.IO.StreamWriter(@"..\..\..\Benchmark.txt"))
             {
+                file.WriteLine("At compile time, date and time:");
+                file.WriteLine(compileTime);
+                file.WriteLine("");
                 file.WriteLine("At compile time, git show was:");
                 file.WriteLine(gitShow);
                 file.WriteLine("");
