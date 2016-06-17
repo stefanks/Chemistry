@@ -1,22 +1,31 @@
 At compile time, date and time:
-Fri 06/17/2016  8:53:53.81 
+Fri 06/17/2016  9:53:05.34 
 
 
 At compile time, git show was:
-02b00e20a47227ab8b0c4ce9ab47209b1cfdab04
+c4708eb1813c4fb3e319f95877f4098cbf109a42
 
 
 At compile time, git status was:
 On branch local
-Your branch is up-to-date with 'origin/local'.
-nothing to commit, working directory clean
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+	modified:   ../../../Benchmark.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")
 
 
 Starting benchmark BenchmarkFormula
-Time for getting formulas: 00:00:02.8440131
+Time for getting formulas: 00:00:02.8627163
 Benchmark BenchmarkFormula finished
 
 Starting benchmark BenchmarkTimeGettingElementFromPeriodicTable
-Time for getting by atomic number: 00:00:00.0717552
-Time for getting by atomic symbol: 00:00:02.4862818
+Time for getting by atomic number: 00:00:00.0714922
+Time for getting by atomic symbol: 00:00:02.4987584
 Benchmark BenchmarkTimeGettingElementFromPeriodicTable finished
+
+Starting benchmark BenchmarkGettingIsotopes
+Time for getting isotopes1: 00:00:01.1173449 a = 60000000
+Benchmark BenchmarkGettingIsotopes finished
