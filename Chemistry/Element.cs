@@ -33,32 +33,28 @@ namespace Chemistry
         /// <summary>
         /// The element's isotopes stored based on their mass number
         /// </summary>
-        private Isotope[] Isotopes = new Isotope[Constants.MaxMassNumber + 1];
+        private Isotope[] IsotopesByMassNumber = new Isotope[Constants.MaxMassNumber + 1];
 
 
         /// <summary>
-        /// The element's isotopes stored based on their mass number
+        /// The element's isotopes stored in order they were added
         /// </summary>
-        private Isotope[] Isotopes2 = new Isotope[Constants.MaxMassNumber + 1];
+        private Isotope[] IsotopesInOrderTheyWereAdded = new Isotope[Constants.MaxMassNumber + 1];
 
         /// <summary>
         /// Gets an isotope of this element based on its mass number
         /// </summary>
-        /// <param name="atomicNumber">The atomic number of the isotope to get</param>
-        /// <returns>The isotope with the supplied atomic number</returns>
         public Isotope this[int massNumber]
         {
-            get { return Isotopes[massNumber]; }
+            get { return IsotopesByMassNumber[massNumber]; }
         }
 
         /// <summary>
-        /// Gets an isotope of this element based on its mass number
+        /// Gets all isotopes of an element
         /// </summary>
-        /// <param name="atomicNumber">The atomic number of the isotope to get</param>
-        /// <returns>The isotope with the supplied atomic number</returns>
         public IEnumerable<Isotope> GetIsotopes()
         {
-            foreach (Isotope i in Isotopes2)
+            foreach (Isotope i in IsotopesInOrderTheyWereAdded)
             {
                 if (i != null) yield return i;
                 else yield break;
@@ -125,16 +121,16 @@ namespace Chemistry
         /// <returns>The created isotopes that is added to this element</returns>
         public void AddIsotope(int massNumber, double atomicMass, double abundance)
         {
-            if (Isotopes[massNumber] != null)
+            if (IsotopesByMassNumber[massNumber] != null)
                 throw new ArgumentException("Isotope with mass number " + massNumber + " already exists!");
             var isotope = new Isotope(this, massNumber, atomicMass, abundance);
-            Isotopes[massNumber] = isotope;
+            IsotopesByMassNumber[massNumber] = isotope;
             int ok = 0;
-            while (Isotopes2[ok] != null)
+            while (IsotopesInOrderTheyWereAdded[ok] != null)
             {
                 ok++;
             }
-            Isotopes2[ok] = isotope;
+            IsotopesInOrderTheyWereAdded[ok] = isotope;
             if (PrincipalIsotope == null || (abundance > PrincipalIsotope.RelativeAbundance))
             {
                 if (PrincipalIsotope != null)
