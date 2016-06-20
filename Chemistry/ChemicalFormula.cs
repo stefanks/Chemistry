@@ -158,7 +158,7 @@ namespace Chemistry
         {
             get
             {
-                return isotopes.Sum(b => b.Key.Neutrons * b.Value) + elements.Sum((b => b.Key.Protons * b.Value);
+                return isotopes.Sum(b => b.Key.Neutrons * b.Value) + elements.Sum(b => b.Key.Protons * b.Value);
             }
         }
 
