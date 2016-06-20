@@ -29,8 +29,6 @@ namespace Chemistry
     public sealed class ChemicalFormula : IEquatable<ChemicalFormula>
     {
 
-
-
         /// <summary>
         /// Main data stores, the isotopes and elements
         /// </summary>
@@ -160,12 +158,7 @@ namespace Chemistry
         {
             get
             {
-                int count = 0;
-                foreach (var kk in isotopes)
-                    count += kk.Key.Protons * kk.Value;
-                foreach (var kk in elements)
-                    count += kk.Key.Protons * kk.Value;
-                return count;
+                return isotopes.Sum(b => b.Key.Neutrons * b.Value) + elements.Sum((b => b.Key.Protons * b.Value);
             }
         }
 
@@ -173,12 +166,9 @@ namespace Chemistry
         {
             get
             {
-                int count = 0;
                 if (elements.Count > 0)
                     throw new Exception("Cannot know for sure what the number of neutrons is!");
-                foreach (var kk in isotopes)
-                    count += kk.Key.Neutrons * kk.Value;
-                return count;
+                return isotopes.Sum(b => b.Key.Neutrons * b.Value);
             }
         }
 
