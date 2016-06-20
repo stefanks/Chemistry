@@ -911,6 +911,14 @@ namespace Test
         [Test]
         public void TotalProtons()
         {
+            ChemicalFormula formulaA = new ChemicalFormula("C{13}2H3NO");
+
+            Assert.AreEqual(30, formulaA.ProtonCount);
+        }
+
+        [Test]
+        public void TotalProtons2()
+        {
             ChemicalFormula formulaA = new ChemicalFormula("C{12}2H3NO");
 
             Assert.AreEqual(30, formulaA.ProtonCount);
