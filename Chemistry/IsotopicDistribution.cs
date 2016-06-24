@@ -55,7 +55,7 @@ namespace Chemistry
         public static Tuple<double[], double[]> CalculateDistribution(ChemicalFormula formula, double fineResolution = 0.01, double minProbability = 1e-200, double molecularWeightResolution = 1e-12, Normalization normalization = Normalization.Sum)
         {
             double monoisotopicMass = formula.MonoisotopicMass;
-            var a = SetResolution(monoisotopicMass, fineResolution);
+            var a = GetNewFineAndMergeResolutions(monoisotopicMass, fineResolution);
             fineResolution = a.Item1;
             double _mergeFineResolution = a.Item2;
             List<List<Composition>> elementalComposition = new List<List<Composition>>();
@@ -115,7 +115,7 @@ namespace Chemistry
         // If between 1e-2 and 1, set to 1e-2, but merge fine resolution set to original fine resolution
         // If bigger than 1, set to 0.9
         // DIVIDE FINE RESOLUTION BY 2 AT THE END
-        private static Tuple<double, double> SetResolution(double monoisotopicMass, double _fineResolution)
+        private static Tuple<double, double> GetNewFineAndMergeResolutions(double monoisotopicMass, double _fineResolution)
         {
             double fineResolution = _fineResolution;
             double _mergeFineResolution;
