@@ -33,13 +33,13 @@ namespace Chemistry
         /// <summary>
         /// The element's isotopes stored based on their mass number
         /// </summary>
-        private Isotope[] IsotopesByMassNumber = new Isotope[Constants.MaxMassNumber + 1];
+        private Isotope[] IsotopesByMassNumber = new Isotope[Constants.MaximumMassNumberPossible + 1];
 
 
         /// <summary>
         /// The element's isotopes stored in order they were added
         /// </summary>
-        private Isotope[] IsotopesInOrderTheyWereAdded = new Isotope[Constants.MaxMassNumber + 1];
+        private Isotope[] IsotopesInOrderTheyWereAdded = new Isotope[Constants.MaximumMassNumberPossible + 1];
 
         /// <summary>
         /// Gets an isotope of this element based on its mass number
@@ -52,12 +52,15 @@ namespace Chemistry
         /// <summary>
         /// Gets all isotopes of an element
         /// </summary>
-        public IEnumerable<Isotope> GetIsotopes()
+        public IEnumerable<Isotope> Isotopes
         {
-            foreach (Isotope i in IsotopesInOrderTheyWereAdded)
+            get
             {
-                if (i != null) yield return i;
-                else yield break;
+                foreach (Isotope i in IsotopesInOrderTheyWereAdded)
+                {
+                    if (i != null) yield return i;
+                    else yield break;
+                }
             }
         }
 
@@ -133,10 +136,7 @@ namespace Chemistry
             IsotopesInOrderTheyWereAdded[ok] = isotope;
             if (PrincipalIsotope == null || (abundance > PrincipalIsotope.RelativeAbundance))
             {
-                if (PrincipalIsotope != null)
-                    PrincipalIsotope.IsPrincipalIsotope = false;
                 PrincipalIsotope = isotope;
-                PrincipalIsotope.IsPrincipalIsotope = true;
             }
         }
 
@@ -152,9 +152,9 @@ namespace Chemistry
         /// <summary>
         /// Can use the atomic symbol instead of an element anytime you like
         /// </summary>
-        public static implicit operator Element(string AtomicSymbol)
+        public static implicit operator Element(string atomicSymbol)
         {
-            return PeriodicTable.GetElement(AtomicSymbol);
+            return PeriodicTable.GetElement(atomicSymbol);
         }
     }
 }

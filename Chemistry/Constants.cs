@@ -43,12 +43,12 @@ namespace Chemistry
         /// <summary>
         /// The largest number of elements to consider
         /// </summary>
-        public const int MaxNumElements = 128;
+        public const int MaximumNumberOfElementsAllowed = 128;
 
         /// <summary>
         /// The largest mass number 
         /// </summary>
-        public const int MaxMassNumber = 295;
+        public const int MaximumMassNumberPossible = 295;
 
         public const int CarbonAtomicNumber = 6;
 

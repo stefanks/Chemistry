@@ -19,7 +19,7 @@
 using System;
 namespace Chemistry
 {
-    public static class MassExtensions
+    public static class ClassExtensions
     {
 
         /// <summary>
@@ -30,15 +30,15 @@ namespace Chemistry
         /// <summary>
         /// Calculates m/z value for a given mass assuming charge comes from losing or gaining protons
         /// </summary>
-        public static double ToMz(this IHasMass mass, int charge)
+        public static double ToMZ(this IHasMass mass, int charge)
         {
-            return ToMz(mass.MonoisotopicMass, charge);
+            return ToMZ(mass.MonoisotopicMass, charge);
         }
 
         /// <summary>
         /// Calculates m/z value for a given mass assuming charge comes from losing or gaining protons
         /// </summary>
-        public static double ToMz(this double mass, int charge)
+        public static double ToMZ(this double mass, int charge)
         {
             if (charge == 0)
                 throw new DivideByZeroException("Charge cannot be zero");
@@ -48,11 +48,11 @@ namespace Chemistry
         /// <summary>
         /// Determines the original mass from an m/z value, assuming charge comes from a proton
         /// </summary>
-        public static double ToMass(this double mz, int charge)
+        public static double ToMass(this double MZ, int charge)
         {
             if (charge == 0)
                 throw new DivideByZeroException("Charge cannot be zero");
-            return Math.Abs(charge) * mz - charge * Constants.Proton;
+            return Math.Abs(charge) * MZ - charge * Constants.Proton;
         }
 
         public static bool MassEquals(this double mass1, IHasMass mass2, double epsilon = MassEqualityEpsilon)

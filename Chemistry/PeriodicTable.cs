@@ -33,7 +33,7 @@ namespace Chemistry
         /// <summary>
         /// The internal dictionary housing elements, keyed by their unique atomic number
         /// </summary>
-        private static Element[] _elementsArray = new Element[Constants.MaxNumElements];
+        private static Element[] _elementsArray = new Element[Constants.MaximumNumberOfElementsAllowed];
 
         public static void Add(Element element)
         {
@@ -69,22 +69,23 @@ namespace Chemistry
         /// <summary>
         /// Validates the periodic table with relative accuracy epsilon
         /// </summary>
-        public static void Validate(double epsilon, bool validateAverageMass = true)
+        public static PeriodicTableValidationResult Validate(double epsilon, bool validateAverageMass = true)
         {
             foreach (var e in _elements)
             {
                 double totalAbundance = 0;
                 double averageMass = 0;
-                foreach (Isotope i in e.Value.GetIsotopes())
+                foreach (Isotope i in e.Value.Isotopes)
                 {
                     totalAbundance += i.RelativeAbundance;
                     averageMass += i.RelativeAbundance * i.AtomicMass;
                 }
                 if (Math.Abs(totalAbundance - 1) > epsilon)
-                    throw new ApplicationException("Total abundance of " + e + " is " + totalAbundance + " instead of 1");
+                    return new PeriodicTableValidationResult(false, "Total abundance of " + e.Value + " is " + totalAbundance + " instead of 1");
                 if (validateAverageMass && Math.Abs(averageMass - e.Value.AverageMass) / e.Value.AverageMass > epsilon)
-                    throw new ApplicationException("Average mass of " + e + " is " + averageMass + " instead of " + e.Value.AverageMass);
+                    return new PeriodicTableValidationResult(false, "Average mass of " + e.Value + " is " + averageMass + " instead of " + e.Value.AverageMass);
             }
+            return new PeriodicTableValidationResult(true, "Validation passed");
         }
     }
 }

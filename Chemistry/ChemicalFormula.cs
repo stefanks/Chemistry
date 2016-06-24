@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -52,7 +53,7 @@ namespace Chemistry
         /// </summary>
         /// <param name="item">The item of which a new chemical formula will be made from</param>
         public ChemicalFormula(IHasChemicalFormula item)
-            : this(item.thisChemicalFormula)
+            : this(item.ThisChemicalFormula)
         {
         }
 
@@ -62,11 +63,8 @@ namespace Chemistry
         /// <param name="other">The chemical formula to copy</param>
         public ChemicalFormula(ChemicalFormula other) : this()
         {
-            if (other != null)
-            {
-                isotopes = new Dictionary<Isotope, int>(other.isotopes);
-                elements = new Dictionary<Element, int>(other.elements);
-            }
+            isotopes = new Dictionary<Isotope, int>(other.isotopes);
+            elements = new Dictionary<Element, int>(other.elements);
         }
 
         public ChemicalFormula()
@@ -167,7 +165,7 @@ namespace Chemistry
             get
             {
                 if (elements.Count > 0)
-                    throw new Exception("Cannot know for sure what the number of neutrons is!");
+                    throw new NotSupportedException("Cannot know for sure what the number of neutrons is!");
                 return isotopes.Sum(b => b.Key.Neutrons * b.Value);
             }
         }
@@ -194,7 +192,7 @@ namespace Chemistry
         /// <param name="item">The object that contains a chemical formula</param>
         public void Add(IHasChemicalFormula item)
         {
-            Add(item.thisChemicalFormula);
+            Add(item.ThisChemicalFormula);
         }
 
         /// <summary>
@@ -266,7 +264,7 @@ namespace Chemistry
         /// <param name="item">The object that contains a chemical formula</param>
         public void Remove(IHasChemicalFormula item)
         {
-            Remove(item.thisChemicalFormula);
+            Remove(item.ThisChemicalFormula);
         }
 
         /// <summary>
@@ -365,9 +363,9 @@ namespace Chemistry
             return CountWithIsotopes(element) != 0;
         }
 
-        public bool IsSubSetOf(ChemicalFormula formula)
+        public bool IsSubsetOf(ChemicalFormula formula)
         {
-            return formula.IsSuperSetOf(this);
+            return formula.IsSupersetOf(this);
         }
 
         /// <summary>
@@ -377,7 +375,7 @@ namespace Chemistry
         /// </summary>
         /// <param name="formula"></param>
         /// <returns></returns>
-        public bool IsSuperSetOf(ChemicalFormula formula)
+        public bool IsSupersetOf(ChemicalFormula formula)
         {
             foreach (var aa in formula.elements)
             {
@@ -416,7 +414,7 @@ namespace Chemistry
         /// <returns>The total number of all the element isotopes in this chemical formula</returns>
         public int CountWithIsotopes(Element element)
         {
-            var isotopeCount = element.GetIsotopes().Sum(isotope => CountSpecificIsotopes(isotope));
+            var isotopeCount = element.Isotopes.Sum(isotope => CountSpecificIsotopes(isotope));
             int ElementCount;
             return isotopeCount + (elements.TryGetValue(element, out ElementCount) ? ElementCount : 0);
         }
@@ -448,14 +446,13 @@ namespace Chemistry
             return Tuple.Create(isotopes.Sum(b => b.Key.AtomicMass * b.Value), elements.Sum(b => b.Key.AverageMass * b.Value)).GetHashCode();
         }
 
-
         public bool Equals(ChemicalFormula other)
         {
             if (ReferenceEquals(this, other)) return true;
             if (!MonoisotopicMass.MassEquals(other.MonoisotopicMass))
                 return false;
             // TODO: Might not actually need this! Verify
-            if (!IsSubSetOf(other) || !IsSuperSetOf(other))
+            if (!IsSubsetOf(other) || !IsSupersetOf(other))
                 return false;
             return true;
         }
@@ -488,13 +485,13 @@ namespace Chemistry
                     1;
 
                 int numofelem = match.Groups[4].Success ? // Group 4 (optional): Number of Elements
-                    int.Parse(match.Groups[4].Value) :
+                    int.Parse(match.Groups[4].Value, CultureInfo.InvariantCulture) :
                     1;
 
                 if (match.Groups[2].Success) // Group 2 (optional): Isotope Mass Number
                 {
                     // Adding isotope!
-                    Add(element[int.Parse(match.Groups[2].Value)], sign * numofelem);
+                    Add(element[int.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture)], sign * numofelem);
                 }
                 else
                 {
@@ -520,7 +517,7 @@ namespace Chemistry
             }
 
             // Find carbon isotopes
-            foreach (var i in PeriodicTable.GetElement(Constants.CarbonAtomicNumber).GetIsotopes())
+            foreach (var i in PeriodicTable.GetElement(Constants.CarbonAtomicNumber).Isotopes)
             {
                 if (isotopes.ContainsKey(i))
                 {
@@ -539,7 +536,7 @@ namespace Chemistry
             }
 
             // Find hydrogen isotopes
-            foreach (var i in PeriodicTable.GetElement(Constants.HydrogenAtomicNumber).GetIsotopes())
+            foreach (var i in PeriodicTable.GetElement(Constants.HydrogenAtomicNumber).Isotopes)
             {
                 if (isotopes.ContainsKey(i))
                 {
