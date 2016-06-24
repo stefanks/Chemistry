@@ -11,22 +11,55 @@ namespace Benchmark
         static void Main(string[] args)
         {
             string gitStatus = string.Empty;
-            using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Benchmark." + "status.txt"))
-            using (StreamReader reader = new StreamReader(stream))
+            Stream stream = null;
+            try
             {
-                gitStatus = reader.ReadToEnd();
+                stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Benchmark." + "status.txt");
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    stream = null;
+                    // Use the reader object...
+                    gitStatus = reader.ReadToEnd();
+                }
+            }
+            finally
+            {
+                if (stream != null)
+                    stream.Dispose();
             }
             string gitShow = string.Empty;
-            using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Benchmark." + "show.txt"))
-            using (StreamReader reader = new StreamReader(stream))
+            stream = null;
+            try
             {
-                gitShow = reader.ReadToEnd();
+                stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Benchmark." + "show.txt");
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    stream = null;
+                    // Use the reader object...
+                    gitShow = reader.ReadToEnd();
+                }
+            }
+            finally
+            {
+                if (stream != null)
+                    stream.Dispose();
             }
             string compileTime = string.Empty;
-            using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Benchmark." + "buildDate.txt"))
-            using (StreamReader reader = new StreamReader(stream))
+            stream = null;
+            try
             {
-                compileTime = reader.ReadToEnd();
+                stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Benchmark." + "buildDate.txt");
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    stream = null;
+                    // Use the reader object...
+                    compileTime = reader.ReadToEnd();
+                }
+            }
+            finally
+            {
+                if (stream != null)
+                    stream.Dispose();
             }
             PopulatePeriodicTable();
 
@@ -136,7 +169,7 @@ namespace Benchmark
             stopWatch.Restart();
             for (int i = 0; i < numRepetitions; i++)
             {
-                a += PeriodicTable.GetElement(20).GetIsotopes().Count();
+                a += PeriodicTable.GetElement(20).Isotopes.Count();
             }
             stopWatch.Stop();
             file.WriteLine("Time for getting isotopes1: " + stopWatch.Elapsed + " a = " + a);
@@ -172,10 +205,10 @@ namespace Benchmark
 
             Stopwatch stopWatch = new Stopwatch();
 
-             stopWatch.Restart();
+            stopWatch.Restart();
             for (int i = 0; i < numRepetitions; i++)
             {
-                var a = new ChemicalFormula("H"+i+"H{1}10 H{2}10 O20 O{16}20 O{17}20 O{18}20 C{12}100 C100 C{13}100 S{32}200 S200 S{33}200 S{34}200 S{36}200");
+                var a = new ChemicalFormula("H" + i + "H{1}10 H{2}10 O20 O{16}20 O{17}20 O{18}20 C{12}100 C100 C{13}100 S{32}200 S200 S{33}200 S{34}200 S{36}200");
                 var b = a.Formula + i;
             }
             stopWatch.Stop();

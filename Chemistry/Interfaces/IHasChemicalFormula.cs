@@ -27,6 +27,6 @@ namespace Chemistry
         /// <summary>
         /// The chemical formula of this object
         /// </summary>
-        ChemicalFormula thisChemicalFormula { get; }
+        ChemicalFormula ThisChemicalFormula { get; }
     }
 }

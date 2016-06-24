@@ -17,6 +17,8 @@
 // License along with Chemistry Library. If not, see <http://www.gnu.org/licenses/>.
 
 
+using System.Globalization;
+
 namespace Chemistry
 {
     /// <summary>
@@ -40,11 +42,6 @@ namespace Chemistry
             RelativeAbundance = abundance;
         }
 
-        /// <summary>
-        /// Is this the most abundant isotope of its parent element?
-        /// </summary>
-        internal bool IsPrincipalIsotope { get; set; }
-        
         /// <summary>
         /// The atomic number of the isotope's parent element (also the number of protons)
         /// </summary>
@@ -95,7 +92,7 @@ namespace Chemistry
         /// <returns>The atomic symbol and mass number combined</returns>
         public override string ToString()
         {
-            return string.Format("{0}{{{1}}}", Element.AtomicSymbol, MassNumber);
+            return string.Format(CultureInfo.InvariantCulture, "{0}{{{1}}}", Element.AtomicSymbol, MassNumber);
         }
     }
 }
