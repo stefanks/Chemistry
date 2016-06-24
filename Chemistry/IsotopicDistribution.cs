@@ -49,7 +49,7 @@ namespace Chemistry
         
         public static Tuple<double[], double[]> CalculateDistribution(IHasChemicalFormula obj, double fineResolution = 0.01, double minProbability = 1e-200, double molecularWeightResolution = 1e-12, Normalization normalization = Normalization.Sum)
         {
-            return CalculateDistribution(obj.ThisChemicalFormula, molecularWeightResolution, fineResolution, minProbability, normalization);
+            return CalculateDistribution(obj.ThisChemicalFormula, fineResolution, minProbability, molecularWeightResolution, normalization);
         }
 
         public static Tuple<double[], double[]> CalculateDistribution(ChemicalFormula formula, double fineResolution = 0.01, double minProbability = 1e-200, double molecularWeightResolution = 1e-12, Normalization normalization = Normalization.Sum)
