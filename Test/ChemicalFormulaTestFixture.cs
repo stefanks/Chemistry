@@ -531,7 +531,7 @@ namespace Test
 
             Assert.AreEqual("C2C{13}-2H3NO", formulaA.Formula);
         }
-        
+
 
         [Test]
         public void ImplicitConstructor()
@@ -541,15 +541,15 @@ namespace Test
 
             Assert.AreEqual(formulaA, formulaB);
         }
-        
+
 
         [Test]
         public void BadFormula()
         {
             Assert.Throws<FormatException>(() => { var formulaA = new ChemicalFormula("!@#$"); }, "Input string for chemical formula was in an incorrect format");
         }
-        
-        
+
+
         [Test]
         public void InvalidChemicalElement()
         {
@@ -1019,7 +1019,7 @@ namespace Test
         public void CatchIsotopicDistributionStuff()
         {
 
-            ChemicalFormula formula = (new ChemicalFormula("C500O50H250N50")) ;
+            ChemicalFormula formula = (new ChemicalFormula("C500O50H250N50"));
             IsotopicDistribution.CalculateDistribution(formula, 0.001, 1e-1, 1e-15);
             Console.WriteLine("");
         }
@@ -1035,7 +1035,7 @@ namespace Test
         [Test]
         public void i0j1()
         {
-            ChemicalFormula formula = (new ChemicalFormula("C50O50")) ;
+            ChemicalFormula formula = (new ChemicalFormula("C50O50"));
             IsotopicDistribution.CalculateDistribution(formula, 0.01, 0.1);
             //Console.WriteLine(String.Join(", ", masses));
             //Console.WriteLine(String.Join(", ", intensities));
@@ -1113,7 +1113,7 @@ namespace Test
             Assert.AreEqual("Total abundance of Zr is 0.9999 instead of 1", PeriodicTable.ValidateAbundance(1e-5).Message);
             Assert.IsFalse(PeriodicTable.ValidateAbundance(1e-5).ValidationPassed);
         }
-        
+
         [Test]
         public void TestNullArguments()
         {
@@ -1149,7 +1149,40 @@ namespace Test
 
             IHasMass ok6 = null;
             Assert.Throws<ArgumentNullException>(() => { ok5.MassEquals(ok6); }, "Cannot compute mass for a null object");
+            var ok7 = new PhysicalObjectWithChemicalFormula("C");
+            Assert.Throws<ArgumentNullException>(() => { ok7.MassEquals(ok6); }, "Cannot compute mass for a null object");
 
+
+        }
+
+        [Test]
+        public void TestAddChemicalFormula()
+        {
+
+            ChemicalFormula formulaB = new ChemicalFormula("C");
+            ChemicalFormula formulaA = new ChemicalFormula("C{12}");
+            formulaB.Add(formulaA);
+            Assert.AreEqual("CC{12}", formulaB.Formula);
+        }
+
+
+        [Test]
+        public void TestRemoveObjectFromChemicalFormula()
+        {
+
+            ChemicalFormula formulaB = new ChemicalFormula("CO");
+            var ok = new PhysicalObjectWithChemicalFormula("C");
+            formulaB.Remove(ok);
+
+            Assert.AreEqual("O", formulaB.Formula);
+
+        }
+
+        [Test]
+        public void TestEquality()
+        {
+            ChemicalFormula formulaB = new ChemicalFormula("CO");
+            Assert.IsTrue(formulaB.Equals(formulaB));
 
         }
     }
