@@ -1,49 +1,30 @@
 At compile time, date and time:
-Mon 06/27/2016 10:38:44.57 
+Mon 06/27/2016 10:45:25.66 
 
 
 At compile time, git show was:
-fdf5206bbb5a49d092cacd287905f6d97a4fbfee
+9353e3bd816bcf8d3b529bf5f27a9cb3fd49a24f
 
 
 At compile time, git status was:
 On branch local
-Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git checkout -- <file>..." to discard changes in working directory)
-
-	modified:   ../../../Benchmark.txt
-	modified:   ../../../Chemistry/ChemicalFormula.cs
-	modified:   ../../../Chemistry/Chemistry.csproj
-	modified:   ../../../Chemistry/ClassExtensions.cs
-	modified:   ../../../Chemistry/Constants.cs
-	modified:   ../../../Chemistry/IsotopicDistribution.cs
-	modified:   ../../../Chemistry/PeriodicTable.cs
-	modified:   ../../../Chemistry/PeriodicTableValidationResult.cs
-	modified:   ../../../Chemistry/Properties/AssemblyInfo.cs
-	modified:   ../../../Test/ChemicalFormulaTestFixture.cs
-
-Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-
-	../../../Chemistry/CustomDictionary.xml
-
-no changes added to commit (use "git add" and/or "git commit -a")
+Your branch is up-to-date with 'origin/local'.
+nothing to commit, working directory clean
 
 
 Starting benchmark BenchmarkFormula
-Time for getting formulas: 00:00:00.0224487
+Time for getting formulas: 00:00:00.0212547
 Benchmark BenchmarkFormula finished
 
 Starting benchmark BenchmarkFormula2
-Time for creating and getting formulas: 00:00:02.9130858
+Time for creating and getting formulas: 00:00:02.8020365
 Benchmark BenchmarkFormula2 finished
 
 Starting benchmark BenchmarkTimeGettingElementFromPeriodicTable
-Time for getting by atomic number: 00:00:00.0721980
-Time for getting by atomic symbol: 00:00:02.4827509
+Time for getting by atomic number: 00:00:00.0760554
+Time for getting by atomic symbol: 00:00:02.4803923
 Benchmark BenchmarkTimeGettingElementFromPeriodicTable finished
 
 Starting benchmark BenchmarkGettingIsotopes
-Time for getting isotopes1: 00:00:00.8110046 a = 60000000
+Time for getting isotopes1: 00:00:00.8138063 a = 60000000
 Benchmark BenchmarkGettingIsotopes finished
