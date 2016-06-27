@@ -18,9 +18,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace Chemistry
 {
+
     public static class PeriodicTable
     {
         // Two datastores storing same elements! Need both for efficient access by both symbol and atomic number
@@ -83,9 +85,9 @@ namespace Chemistry
                     averageMass += i.RelativeAbundance * i.AtomicMass;
                 }
                 if (Math.Abs(totalAbundance - 1) > epsilon)
-                    return new PeriodicTableValidationResult(false, "Total abundance of " + e.Value + " is " + totalAbundance + " instead of 1");
+                    return new PeriodicTableValidationResult(ValidationResult.FailedAbundanceValidation, string.Format(CultureInfo.InvariantCulture, StringResources.AbundancesNotValidated, e.Value, totalAbundance));
             }
-            return new PeriodicTableValidationResult(true, "Validation passed");
+            return new PeriodicTableValidationResult(ValidationResult.PassedAbundanceValidation, StringResources.ValidationPassed);
         }
 
         public static PeriodicTableValidationResult ValidateAverageMasses(double epsilon)
@@ -100,9 +102,9 @@ namespace Chemistry
                     averageMass += i.RelativeAbundance * i.AtomicMass;
                 }
                 if (Math.Abs(averageMass - e.Value.AverageMass) / e.Value.AverageMass > epsilon)
-                    return new PeriodicTableValidationResult(false, "Average mass of " + e.Value + " is " + averageMass + " instead of " + e.Value.AverageMass);
+                    return new PeriodicTableValidationResult(ValidationResult.FailedAverageMassValidation, string.Format(CultureInfo.InvariantCulture, StringResources.MassesNotValidated, e.Value, averageMass, e.Value.AverageMass));
             }
-            return new PeriodicTableValidationResult(true, "Validation passed");
+            return new PeriodicTableValidationResult(ValidationResult.PassedAverageMassValidation, StringResources.ValidationPassed);
         }
     }
 }

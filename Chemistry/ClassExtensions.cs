@@ -57,33 +57,20 @@ namespace Chemistry
             return Math.Abs(charge) * massToChargeRatio - charge * Constants.ProtonMass;
         }
 
-        public static bool MassEquals(this double mass, IHasMass objectWithMass, double epsilon = MassEqualityEpsilon)
-        {
-            if (objectWithMass == null)
-                throw new ArgumentNullException("objectWithMass", "Cannot compute mass for a null object");
-            return Math.Abs(mass - objectWithMass.MonoisotopicMass) < epsilon;
-        }
-
-        public static bool MassEquals(this double mass1, double mass2, double epsilon = MassEqualityEpsilon)
+        /// <summary>
+        /// Approximate equality check, error due to rounding
+        /// </summary>
+        public static bool MassEquals(this double mass1, double mass2, double epsilon)
         {
             return Math.Abs(mass1 - mass2) < epsilon;
         }
 
-        public static bool MassEquals(this IHasMass objectWithMass, double mass, double epsilon = MassEqualityEpsilon)
+        /// <summary>
+        /// Approximate equality check, error due to rounding
+        /// </summary>
+        public static bool MassEquals(this double mass1, double mass2)
         {
-            if (objectWithMass == null)
-                throw new ArgumentNullException("objectWithMass", "Cannot compute mass for a null object");
-            return Math.Abs(objectWithMass.MonoisotopicMass - mass) < epsilon;
+            return Math.Abs(mass1 - mass2) < MassEqualityEpsilon;
         }
-
-        public static bool MassEquals(this IHasMass objectWithMass1, IHasMass objectWithMass2, double epsilon = MassEqualityEpsilon)
-        {
-            if (objectWithMass1 == null)
-                throw new ArgumentNullException("objectWithMass1", "Cannot compute mass for a null object");
-            if ( objectWithMass2 == null)
-                throw new ArgumentNullException("objectWithMass2", "Cannot compute mass for a null object");
-            return Math.Abs(objectWithMass1.MonoisotopicMass - objectWithMass2.MonoisotopicMass) < epsilon;
-        }
-
     }
 }

@@ -581,6 +581,14 @@ namespace Chemistry
         #region Public Statics
 
         /// <summary>
+        /// Alternative conversion from string to ChemicalFormula. Use when implicit is not possible.
+        /// </summary>
+        public static ChemicalFormula ToChemicalFormula(string sequence)
+        {
+            return new ChemicalFormula(sequence);
+        }
+
+        /// <summary>
         /// Any time a chemical formula is needed, a string can be used, it will be automatically converted
         /// </summary>
         public static implicit operator ChemicalFormula(string sequence)
