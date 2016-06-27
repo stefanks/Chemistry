@@ -449,7 +449,7 @@ namespace Test
         {
             ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
             ChemicalFormula formulaB = new ChemicalFormula("C{12}2H3NO");
-            Assert.IsFalse(formulaA.Equals(formulaB));
+            Assert.AreNotEqual(formulaA, formulaB);
         }
 
         [Test]
@@ -531,19 +531,7 @@ namespace Test
 
             Assert.AreEqual("C2C{13}-2H3NO", formulaA.Formula);
         }
-
-        [Test]
-        public void ImplicitAddFormula()
-        {
-            ChemicalFormula formulaA = new ChemicalFormula("C{12}2H3NO{16}");
-            ChemicalFormula formulaB = new ChemicalFormula("H2O{16}");
-            ChemicalFormula formulaC = new ChemicalFormula("C{12}2H5NO{16}2");
-
-            ChemicalFormula formulaD = formulaA + formulaB;
-
-            Assert.AreEqual(formulaC, formulaD);
-        }
-
+        
 
         [Test]
         public void ImplicitConstructor()
@@ -553,47 +541,15 @@ namespace Test
 
             Assert.AreEqual(formulaA, formulaB);
         }
-
-        [Test]
-        public void ImplicitMultipleFormulaLeft()
-        {
-            ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
-            ChemicalFormula formulaB = new ChemicalFormula("C4H6N2O2");
-
-            ChemicalFormula formulaC = formulaA * 2;
-
-            Assert.AreEqual(formulaB, formulaC);
-        }
+        
 
         [Test]
         public void BadFormula()
         {
             Assert.Throws<FormatException>(() => { var formulaA = new ChemicalFormula("!@#$"); }, "Input string for chemical formula was in an incorrect format");
         }
-
-        [Test]
-        public void ImplicitMultipleFormulaRight()
-        {
-            ChemicalFormula formulaA = new ChemicalFormula("C{12}2H3NO");
-            ChemicalFormula formulaB = new ChemicalFormula("C{12}4H6N2O2");
-
-            ChemicalFormula formulaC = 2 * formulaA;
-
-            Assert.AreEqual(formulaC, formulaB);
-        }
-
-        [Test]
-        public void ImplicitSubtractFormula()
-        {
-            ChemicalFormula formulaA = new ChemicalFormula("C2H5NO2");
-            ChemicalFormula formulaB = new ChemicalFormula("H2O");
-            ChemicalFormula formulaC = new ChemicalFormula("C2H3NO");
-
-            ChemicalFormula formulaD = formulaA - formulaB;
-
-            Assert.AreEqual(formulaC, formulaD);
-        }
-
+        
+        
         [Test]
         public void InvalidChemicalElement()
         {
@@ -695,7 +651,7 @@ namespace Test
         public void Equals()
         {
             ChemicalFormula formulaA = new ChemicalFormula("OCHHCHN");
-            Assert.IsTrue(formulaA.Equals(formulaA));
+            Assert.AreEqual(formulaA, formulaA);
         }
 
         [Test]
@@ -806,8 +762,8 @@ namespace Test
         [Test]
         public void HydrogenCarbonRatio()
         {
-            ChemicalFormula formulaA = new ChemicalFormula("C2H4");
-            Assert.AreEqual(2, formulaA.HydrogenCarbonRatio());
+            ChemicalFormula formulaA = new ChemicalFormula("C8H4");
+            Assert.AreEqual(0.5, formulaA.HydrogenCarbonRatio);
         }
 
         [Test]
@@ -1063,7 +1019,7 @@ namespace Test
         public void CatchIsotopicDistributionStuff()
         {
 
-            ChemicalFormula formula = (new ChemicalFormula("C10OH5N")) * 50;
+            ChemicalFormula formula = (new ChemicalFormula("C500O50H250N50")) ;
             IsotopicDistribution.CalculateDistribution(formula, 0.001, 1e-1, 1e-15);
             Console.WriteLine("");
         }
@@ -1071,7 +1027,7 @@ namespace Test
         [Test]
         public void catchProbStuff()
         {
-            ChemicalFormula formula = (new ChemicalFormula("CO")) * 50;
+            ChemicalFormula formula = (new ChemicalFormula("C50O50"));
             IsotopicDistribution.CalculateDistribution(formula, 0.001, 1e-50, 1e-15);
         }
 
@@ -1079,7 +1035,7 @@ namespace Test
         [Test]
         public void i0j1()
         {
-            ChemicalFormula formula = (new ChemicalFormula("CO")) * 50;
+            ChemicalFormula formula = (new ChemicalFormula("C50O50")) ;
             IsotopicDistribution.CalculateDistribution(formula, 0.01, 0.1);
             //Console.WriteLine(String.Join(", ", masses));
             //Console.WriteLine(String.Join(", ", intensities));
@@ -1145,28 +1101,56 @@ namespace Test
         [Test]
         public void ValidatePeriodicTable()
         {
-            Assert.AreEqual("Validation passed", PeriodicTable.Validate(1e-3).Message);
-            Assert.IsTrue(PeriodicTable.Validate(1e-3).ValidationPassed);
+            Assert.AreEqual("Validation passed", PeriodicTable.ValidateAverageMass(1e-3).Message);
+            Assert.IsTrue(PeriodicTable.ValidateAverageMass(1e-3).ValidationPassed);
             // Nist database values in 2016 for Se isotope abundances are accurate within 1e-3, but not 1e-4
-            Assert.AreEqual("Average mass of Se is 78.9593885570136 instead of 78.971", PeriodicTable.Validate(1e-4).Message);
-            Assert.IsFalse(PeriodicTable.Validate(1e-4).ValidationPassed);
+            Assert.AreEqual("Average mass of Se is 78.9593885570136 instead of 78.971", PeriodicTable.ValidateAverageMass(1e-4).Message);
+            Assert.IsFalse(PeriodicTable.ValidateAverageMass(1e-4).ValidationPassed);
 
-            Assert.AreEqual("Validation passed", PeriodicTable.Validate(1e-4, false).Message);
-            Assert.IsTrue(PeriodicTable.Validate(1e-4, false).ValidationPassed);
+            Assert.AreEqual("Validation passed", PeriodicTable.ValidateAbundance(1e-4).Message);
+            Assert.IsTrue(PeriodicTable.ValidateAbundance(1e-4).ValidationPassed);
             // On purpose put in wrong abundance for Zr, so abundance is not verified
-            Assert.AreEqual("Total abundance of Zr is 0.9999 instead of 1", PeriodicTable.Validate(1e-5, false).Message);
-            Assert.IsFalse(PeriodicTable.Validate(1e-5, false).ValidationPassed);
+            Assert.AreEqual("Total abundance of Zr is 0.9999 instead of 1", PeriodicTable.ValidateAbundance(1e-5).Message);
+            Assert.IsFalse(PeriodicTable.ValidateAbundance(1e-5).ValidationPassed);
         }
-
+        
         [Test]
-        public void AddSubtractTest()
+        public void TestNullArguments()
         {
-            var a = new PhysicalObjectWithChemicalFormula("CO");
-            var b = new ChemicalFormula("CO");
-            b += a;
-            Assert.AreEqual("C2O2", b.Formula);
-            b -= a;
-            Assert.AreEqual("CO", b.Formula);
+            ChemicalFormula formulaA = new ChemicalFormula("CO");
+            IHasChemicalFormula ok = null;
+            Assert.Throws<ArgumentNullException>(() => { new ChemicalFormula(ok); }, "Cannot initialize chemical formula from a null formula");
+            Assert.Throws<ArgumentNullException>(() => { formulaA.Add(ok); }, "Cannot add null item to formula");
+            ChemicalFormula ok2 = null;
+            Assert.Throws<ArgumentNullException>(() => { formulaA.Add(ok2); }, "Cannot add null formula to formula");
+            Element ok3 = null;
+            Assert.Throws<ArgumentNullException>(() => { formulaA.AddPrincipalIsotopesOf(ok3, 0); }, "Cannot add null element to formula");
+            Assert.Throws<ArgumentNullException>(() => { formulaA.Remove(ok); }, "Cannot remove null item from formula");
+            Assert.Throws<ArgumentNullException>(() => { formulaA.Remove(ok2); }, "Cannot remove null formula from formula");
+            Assert.Throws<ArgumentNullException>(() => { formulaA.IsSubsetOf(ok2); }, "Cannot check if is subset of null formula");
+            Assert.Throws<ArgumentNullException>(() => { formulaA.IsSupersetOf(ok2); }, "Cannot check if is superset of null formula");
+            Assert.Throws<ArgumentNullException>(() => { formulaA.CountWithIsotopes(ok3); }, "Cannot count null elements in formula");
+            Assert.Throws<ArgumentNullException>(() => { formulaA.CountSpecificIsotopes(ok3, 0); }, "Cannot count null elements in formula");
+            Assert.IsFalse(formulaA.Equals(ok2));
+            IEnumerable<IHasChemicalFormula> ok4 = null;
+            Assert.Throws<ArgumentNullException>(() => { ChemicalFormula.Combine(ok4); }, "Cannot combine a null collection of formulas");
+            Assert.Throws<ArgumentNullException>(() => { PeriodicTable.Add(ok3); }, "Cannot add a null element to periodic table");
+
+            Assert.Throws<ArgumentNullException>(() => { IsotopicDistribution.CalculateDistribution(ok); }, "Cannot compute isotopic distribution for a null object");
+            Assert.Throws<ArgumentNullException>(() => { IsotopicDistribution.CalculateDistribution(ok2); }, "Cannot compute isotopic distribution for a null formula");
+
+            IHasMass ok5 = null;
+
+
+            Assert.Throws<ArgumentNullException>(() => { ok5.ToMZ(0); }, "Cannot compute an MZ value for a null object");
+            Assert.Throws<ArgumentNullException>(() => { ok5.MassEquals(0); }, "Cannot compute mass for a null object");
+            Assert.Throws<ArgumentNullException>(() => { (0.0).MassEquals(ok5); }, "Cannot compute mass for a null object");
+
+
+            IHasMass ok6 = null;
+            Assert.Throws<ArgumentNullException>(() => { ok5.MassEquals(ok6); }, "Cannot compute mass for a null object");
+
+
         }
     }
 }

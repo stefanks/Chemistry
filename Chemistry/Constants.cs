@@ -32,13 +32,13 @@ namespace Chemistry
         /// The mass of the subatomic particle with a single negative elementary charge in
         /// atomic units (u)
         /// </summary>
-        public const double Electron = .000548579909070;
+        public const double ElectronMass = .000548579909070;
 
         /// <summary>
         /// The mass of the subatomic particle with a single elementary charge in atomic
         /// units (u)
         /// </summary>
-        public const double Proton = 1.007276466879;
+        public const double ProtonMass = 1.007276466879;
 
         /// <summary>
         /// The largest number of elements to consider
