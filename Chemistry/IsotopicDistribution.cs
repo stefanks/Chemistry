@@ -39,22 +39,17 @@ namespace Chemistry
     /// 
     /// Only calculates the fine grained distribution. 
     /// </remarks>
-    public static class IsotopicDistribution
+    public class IsotopicDistribution
     {
-        public enum Normalization
-        {
-            Sum,
-            BasePeak
-        };
+        public double[] masses { get; private set; }
+        public double[] intensities { get; private set; }
 
-        public static Tuple<double[], double[]> CalculateDistribution(IHasChemicalFormula obj, double fineResolution = 0.01, double minProbability = 1e-200, double molecularWeightResolution = 1e-12, Normalization normalization = Normalization.Sum)
+        public IsotopicDistribution(IHasChemicalFormula obj, double fineResolution = 0.01, double minProbability = 1e-200, double molecularWeightResolution = 1e-12)
+            : this(obj == null ? null : obj.ThisChemicalFormula, fineResolution, minProbability, molecularWeightResolution)
         {
-            if (obj == null)
-                throw new ArgumentNullException("obj", "Cannot compute isotopic distribution for a null object");
-            return CalculateDistribution(obj.ThisChemicalFormula, fineResolution, minProbability, molecularWeightResolution, normalization);
         }
 
-        public static Tuple<double[], double[]> CalculateDistribution(ChemicalFormula formula, double fineResolution = 0.01, double minProbability = 1e-200, double molecularWeightResolution = 1e-12, Normalization normalization = Normalization.Sum)
+        public IsotopicDistribution(ChemicalFormula formula, double fineResolution = 0.01, double minProbability = 1e-200, double molecularWeightResolution = 1e-12)
         {
             if (formula == null)
                 throw new ArgumentNullException("formula", "Cannot compute isotopic distribution for a null formula");
@@ -94,9 +89,7 @@ namespace Chemistry
                     composition.Power = Math.Floor(composition.MolecularWeight / molecularWeightResolution + 0.5);
                 }
             }
-            double[] masses;
-            double[] intensities;
-            CalculateFineGrain(elementalComposition, normalization, out masses, out intensities, molecularWeightResolution, _mergeFineResolution, fineResolution, minProbability);
+            CalculateFineGrain(elementalComposition, molecularWeightResolution, _mergeFineResolution, fineResolution, minProbability);
 
             double additionalMass = 0;
             foreach (var isotopeAndCount in formula.isotopes)
@@ -104,8 +97,6 @@ namespace Chemistry
 
             for (int i = 0; i < masses.Count(); i++)
                 masses[i] += additionalMass;
-
-            return new Tuple<double[], double[]>(masses, intensities);
         }
 
         // Takes your guess for fine resolution, and messes it up
@@ -147,7 +138,7 @@ namespace Chemistry
             return new Tuple<double, double>(fineResolution, _mergeFineResolution);
         }
 
-        private static void CalculateFineGrain(List<List<Composition>> elementalComposition, Normalization normalization, out double[] masses, out double[] intensities, double _mwResolution, double _mergeFineResolution, double _fineResolution, double _fineMinProb)
+        private void CalculateFineGrain(List<List<Composition>> elementalComposition, double _mwResolution, double _mergeFineResolution, double _fineResolution, double _fineMinProb)
         {
             List<Polynomial> fPolynomial = MultiplyFinePolynomial(elementalComposition, _fineResolution, _mwResolution, _fineMinProb);
             fPolynomial = MergeFinePolynomial(fPolynomial, _mwResolution, _mergeFineResolution);
@@ -167,14 +158,6 @@ namespace Chemistry
                 masses[i] = polynomial.Power * _mwResolution;
                 intensities[i] = polynomial.Probablity;
                 i++;
-            }
-
-            double normalizedValue = normalization == Normalization.Sum ? totalProbability : basePeak;
-
-            // Normalize
-            for (i = 0; i < count; i++)
-            {
-                intensities[i] /= normalizedValue;
             }
         }
 
