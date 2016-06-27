@@ -103,26 +103,5 @@ namespace Test
             Assert.That(ex.Message, Is.EqualTo("Charge cannot be zero"));
         }
 
-        [Test]
-        public void MassEqualsTest1()
-        {
-
-            ObjectWithMass1000 a = new ObjectWithMass1000();
-            ObjectWithMass1000 b = new ObjectWithMass1000();
-            Assert.IsTrue(a.MassEquals(b));
-        }
-
-
-        [Test]
-        public void MassEqualsTest2()
-        {
-
-            ObjectWithMass1000 a = new ObjectWithMass1000();
-            double b = 1000 + 5e-11;
-            double c = 1000 + 2e-10;
-            Assert.IsTrue(a.MassEquals(b));
-            Assert.IsFalse(c.MassEquals(a));
-        }
-
     }
 }

@@ -973,7 +973,7 @@ namespace Test
 
             var a = new IsotopicDistribution(formulaA);
 
-            Assert.True(formulaA.MonoisotopicMass.MassEquals(a.masses[Array.IndexOf(a.intensities, a.intensities.Max())]));
+            Assert.True(formulaA.MonoisotopicMass.MassEquals(a.Masses[a.Intensities.IndexOf(a.Intensities.Max())]));
         }
 
         [Test]
@@ -989,7 +989,7 @@ namespace Test
 
             // Distinguish between O and C isotope masses
             var a = new IsotopicDistribution(formulaA, 0.0001);
-            Assert.AreEqual(6, a.masses.Count());
+            Assert.AreEqual(6, a.Masses.Count());
 
             // Do not distinguish between O and C isotope masses
             new IsotopicDistribution(formulaA, 0.001);
@@ -997,7 +997,7 @@ namespace Test
 
             // Do not distinguish between O and C isotope masses
             var b = new IsotopicDistribution(formulaA);
-            Assert.AreEqual(4, b.masses.Count());
+            Assert.AreEqual(4, b.Masses.Count());
 
 
             new IsotopicDistribution(formulaA, 0.1);
@@ -1052,8 +1052,8 @@ namespace Test
 
             // Only the principal isotopes have joint probability of 0.5! So one result when calcuating isotopic distribution
             var a = new IsotopicDistribution(formulaA, 0.0001, 0.5);
-            Assert.AreEqual(1, a.masses.Count());
-            Assert.IsTrue((PeriodicTable.GetElement("C").PrincipalIsotope.AtomicMass + PeriodicTable.GetElement("O").PrincipalIsotope.AtomicMass).MassEquals(a.masses[0]));
+            Assert.AreEqual(1, a.Masses.Count());
+            Assert.IsTrue((PeriodicTable.GetElement("C").PrincipalIsotope.AtomicMass + PeriodicTable.GetElement("O").PrincipalIsotope.AtomicMass).MassEquals(a.Masses[0]));
 
         }
 
@@ -1095,16 +1095,16 @@ namespace Test
         public void ValidatePeriodicTable()
         {
             Assert.AreEqual("Validation passed", PeriodicTable.ValidateAverageMasses(1e-3).Message);
-            Assert.IsTrue(PeriodicTable.ValidateAverageMasses(1e-3).ValidationPassed);
+            Assert.AreEqual(ValidationResult.PassedAverageMassValidation, PeriodicTable.ValidateAverageMasses(1e-3).ThisValidationResult);
             // Nist database values in 2016 for Se isotope abundances are accurate within 1e-3, but not 1e-4
             Assert.AreEqual("Average mass of Se is 78.9593885570136 instead of 78.971", PeriodicTable.ValidateAverageMasses(1e-4).Message);
-            Assert.IsFalse(PeriodicTable.ValidateAverageMasses(1e-4).ValidationPassed);
+            Assert.AreEqual(ValidationResult.FailedAverageMassValidation, PeriodicTable.ValidateAverageMasses(1e-4).ThisValidationResult);
 
             Assert.AreEqual("Validation passed", PeriodicTable.ValidateAbundances(1e-4).Message);
-            Assert.IsTrue(PeriodicTable.ValidateAbundances(1e-4).ValidationPassed);
+            Assert.AreEqual(ValidationResult.PassedAbundanceValidation, PeriodicTable.ValidateAbundances(1e-4).ThisValidationResult);
             // On purpose put in wrong abundance for Zr, so abundance is not verified
             Assert.AreEqual("Total abundance of Zr is 0.9999 instead of 1", PeriodicTable.ValidateAbundances(1e-5).Message);
-            Assert.IsFalse(PeriodicTable.ValidateAbundances(1e-5).ValidationPassed);
+            Assert.AreEqual(ValidationResult.FailedAbundanceValidation, PeriodicTable.ValidateAbundances(1e-5).ThisValidationResult);
         }
 
         [Test]
@@ -1135,14 +1135,8 @@ namespace Test
 
 
             Assert.AreEqual("objectWithMass", Assert.Throws<ArgumentNullException>(() => { ok5.ToMZ(0); }).ParamName);
-            Assert.AreEqual("objectWithMass", Assert.Throws<ArgumentNullException>(() => { ok5.MassEquals(0); }).ParamName);
-            Assert.AreEqual("objectWithMass", Assert.Throws<ArgumentNullException>(() => { (0.0).MassEquals(ok5); }).ParamName);
 
-
-            IHasMass ok6 = null;
-            Assert.AreEqual("objectWithMass1", Assert.Throws<ArgumentNullException>(() => { ok5.MassEquals(ok6); }).ParamName);
             var ok7 = new PhysicalObjectWithChemicalFormula("C");
-            Assert.AreEqual("objectWithMass2", Assert.Throws<ArgumentNullException>(() => { ok7.MassEquals(ok6); }).ParamName);
 
 
         }
@@ -1155,6 +1149,18 @@ namespace Test
             ChemicalFormula formulaA = new ChemicalFormula("C{12}");
             formulaB.Add(formulaA);
             Assert.AreEqual("CC{12}", formulaB.Formula);
+        }
+
+
+
+        [Test]
+        public void NotEqual()
+        {
+            ChemicalFormula formulaB = new ChemicalFormula("COHSN");
+            ChemicalFormula formulaA = new ChemicalFormula("NSHOC");
+            Assert.AreEqual(formulaA, formulaB);
+            Assert.IsTrue(formulaA.MonoisotopicMass.MassEquals(formulaB.MonoisotopicMass));
+            Assert.IsFalse(formulaA.MonoisotopicMass.MassEquals(formulaB.MonoisotopicMass, 0));
         }
 
 
@@ -1177,5 +1183,13 @@ namespace Test
             Assert.IsTrue(formulaB.Equals(formulaB));
 
         }
+
+        [Test]
+        public void TestToChemicalFormula()
+        {
+            ChemicalFormula formulaB = ChemicalFormula.ToChemicalFormula("CO");
+            Assert.AreEqual(new ChemicalFormula("CO"), formulaB);
+        }
+
     }
 }

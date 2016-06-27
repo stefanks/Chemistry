@@ -15,16 +15,24 @@
 // You should have received a copy of the GNU Lesser General Public
 // License along with Chemistry Library. If not, see <http://www.gnu.org/licenses/>.
 
+
 namespace Chemistry
 {
+    public enum ValidationResult
+    {
+        PassedAbundanceValidation,
+        PassedAverageMassValidation,
+        FailedAbundanceValidation,
+        FailedAverageMassValidation,
+    }
     public class PeriodicTableValidationResult
     {
+        public ValidationResult ThisValidationResult { get; private set; }
         public string Message { get; private set; }
-        public bool ValidationPassed { get; private set; }
 
-        public PeriodicTableValidationResult(bool validationPassed, string message)
+        public PeriodicTableValidationResult(ValidationResult validationResult, string message)
         {
-            ValidationPassed = validationPassed;
+            ThisValidationResult = validationResult;
             Message = message;
         }
     }

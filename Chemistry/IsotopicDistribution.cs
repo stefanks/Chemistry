@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Chemistry
@@ -41,13 +42,36 @@ namespace Chemistry
     /// </remarks>
     public class IsotopicDistribution
     {
-        public double[] masses { get; private set; }
-        public double[] intensities { get; private set; }
+        private const double defaultFineResolution = 0.01;
+        private const double defaultMinProbability = 1e-200;
+        private const double defaultMolecularWeightResolution = 1e-12;
+        private double[] masses;
+        private double[] intensities;
 
-        public IsotopicDistribution(ChemicalFormula formula, double fineResolution = 0.01, double minProbability = 1e-200, double molecularWeightResolution = 1e-12)
+        public ReadOnlyCollection<double> Masses
         {
-            if (formula == null)
-                throw new ArgumentNullException("formula", "Cannot compute isotopic distribution for a null formula");
+            get { return new ReadOnlyCollection<double>(masses); }
+        }
+        public ReadOnlyCollection<double> Intensities
+        {
+            get { return new ReadOnlyCollection<double>(intensities); }
+        }
+
+
+        public IsotopicDistribution(ChemicalFormula formula) : this(ValidateFormulaForIsotopologueComputation(formula), defaultFineResolution, defaultMinProbability, defaultMolecularWeightResolution)
+        {
+        }
+
+        public IsotopicDistribution(ChemicalFormula formula, double fineResolution) : this(ValidateFormulaForIsotopologueComputation(formula), fineResolution, defaultMinProbability, defaultMolecularWeightResolution)
+        {
+        }
+        public IsotopicDistribution(ChemicalFormula formula, double fineResolution, double minProbability) : this(ValidateFormulaForIsotopologueComputation(formula), fineResolution, minProbability, defaultMolecularWeightResolution)
+        {
+        }
+
+        public IsotopicDistribution(ChemicalFormula formula, double fineResolution, double minProbability, double molecularWeightResolution)
+        {
+            ValidateFormulaForIsotopologueComputation(formula);
             double monoisotopicMass = formula.MonoisotopicMass;
             var a = GetNewFineAndMergeResolutions(monoisotopicMass, fineResolution);
             fineResolution = a.Item1;
@@ -90,8 +114,15 @@ namespace Chemistry
             foreach (var isotopeAndCount in formula.isotopes)
                 additionalMass += isotopeAndCount.Key.AtomicMass * isotopeAndCount.Value;
 
-            for (int i = 0; i < masses.Count(); i++)
+            for (int i = 0; i < Masses.Count(); i++)
                 masses[i] += additionalMass;
+        }
+
+        private static ChemicalFormula ValidateFormulaForIsotopologueComputation(ChemicalFormula formula)
+        {
+            if (formula == null)
+                throw new ArgumentNullException("formula", "Cannot compute isotopic distribution for a null formula");
+            return formula;
         }
 
         // Takes your guess for fine resolution, and messes it up
