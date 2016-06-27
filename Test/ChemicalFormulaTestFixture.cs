@@ -1118,37 +1118,37 @@ namespace Test
         {
             ChemicalFormula formulaA = new ChemicalFormula("CO");
             IHasChemicalFormula ok = null;
-            Assert.AreEqual("Cannot initialize chemical formula from a null formula\r\nParameter name: other", Assert.Throws<ArgumentNullException>(() => { new ChemicalFormula(ok); }).Message);
-            Assert.AreEqual("Cannot add null item to formula\r\nParameter name: item", Assert.Throws<ArgumentNullException>(() => { formulaA.Add(ok); }).Message);
+            Assert.AreEqual("other", Assert.Throws<ArgumentNullException>(() => { new ChemicalFormula(ok); }).ParamName);
+            Assert.AreEqual("item", Assert.Throws<ArgumentNullException>(() => { formulaA.Add(ok); }).ParamName);
             ChemicalFormula ok2 = null;
-            Assert.AreEqual("Cannot add null formula to formula\r\nParameter name: formula", Assert.Throws<ArgumentNullException>(() => { formulaA.Add(ok2); }).Message);
+            Assert.AreEqual("formula", Assert.Throws<ArgumentNullException>(() => { formulaA.Add(ok2); }).ParamName);
             Element ok3 = null;
-            Assert.AreEqual("Cannot add null element to formula\r\nParameter name: element", Assert.Throws<ArgumentNullException>(() => { formulaA.AddPrincipalIsotopesOf(ok3, 0); }).Message);
-            Assert.AreEqual("Cannot remove null item from formula\r\nParameter name: item", Assert.Throws<ArgumentNullException>(() => { formulaA.Remove(ok); }).Message);
-            Assert.AreEqual("Cannot remove null formula from formula\r\nParameter name: formula", Assert.Throws<ArgumentNullException>(() => { formulaA.Remove(ok2); }).Message);
-            Assert.AreEqual("Cannot check if is subset of null formula\r\nParameter name: formula", Assert.Throws<ArgumentNullException>(() => { formulaA.IsSubsetOf(ok2); }).Message);
-            Assert.AreEqual("Cannot check if is superset of null formula\r\nParameter name: formula", Assert.Throws<ArgumentNullException>(() => { formulaA.IsSupersetOf(ok2); }).Message);
-            Assert.AreEqual("Cannot count null elements in formula\r\nParameter name: element", Assert.Throws<ArgumentNullException>(() => { formulaA.CountWithIsotopes(ok3); }).Message);
-            Assert.AreEqual("Cannot count null elements in formula\r\nParameter name: element", Assert.Throws<ArgumentNullException>(() => { formulaA.CountSpecificIsotopes(ok3, 0); }).Message);
+            Assert.AreEqual("element", Assert.Throws<ArgumentNullException>(() => { formulaA.AddPrincipalIsotopesOf(ok3, 0); }).ParamName);
+            Assert.AreEqual("item", Assert.Throws<ArgumentNullException>(() => { formulaA.Remove(ok); }).ParamName);
+            Assert.AreEqual("formula", Assert.Throws<ArgumentNullException>(() => { formulaA.Remove(ok2); }).ParamName);
+            Assert.AreEqual("formula", Assert.Throws<ArgumentNullException>(() => { formulaA.IsSubsetOf(ok2); }).ParamName);
+            Assert.AreEqual("formula", Assert.Throws<ArgumentNullException>(() => { formulaA.IsSupersetOf(ok2); }).ParamName);
+            Assert.AreEqual("element", Assert.Throws<ArgumentNullException>(() => { formulaA.CountWithIsotopes(ok3); }).ParamName);
+            Assert.AreEqual("element", Assert.Throws<ArgumentNullException>(() => { formulaA.CountSpecificIsotopes(ok3, 0); }).ParamName);
             Assert.IsFalse(formulaA.Equals(ok2));
             IEnumerable<IHasChemicalFormula> ok4 = null;
-            Assert.AreEqual("Cannot combine a null collection of formulas\r\nParameter name: formulas", Assert.Throws<ArgumentNullException>(() => { ChemicalFormula.Combine(ok4); }).Message);
-            Assert.AreEqual("Cannot add a null element to periodic table\r\nParameter name: element", Assert.Throws<ArgumentNullException>(() => { PeriodicTable.Add(ok3); }).Message);
+            Assert.AreEqual("formulas", Assert.Throws<ArgumentNullException>(() => { ChemicalFormula.Combine(ok4); }).ParamName);
+            Assert.AreEqual("element", Assert.Throws<ArgumentNullException>(() => { PeriodicTable.Add(ok3); }).ParamName);
 
-            Assert.AreEqual("Cannot compute isotopic distribution for a null formula\r\nParameter name: formula", Assert.Throws<ArgumentNullException>(() => { new IsotopicDistribution(ok2); }).Message);
+            Assert.AreEqual("formula", Assert.Throws<ArgumentNullException>(() => { new IsotopicDistribution(ok2); }).ParamName);
 
             IHasMass ok5 = null;
 
 
-            Assert.AreEqual("Cannot compute an MZ value for a null object\r\nParameter name: objectWithMass", Assert.Throws<ArgumentNullException>(() => { ok5.ToMZ(0); }).Message);
-            Assert.AreEqual("Cannot compute mass for a null object\r\nParameter name: objectWithMass", Assert.Throws<ArgumentNullException>(() => { ok5.MassEquals(0); }).Message);
-            Assert.AreEqual("Cannot compute mass for a null object\r\nParameter name: objectWithMass", Assert.Throws<ArgumentNullException>(() => { (0.0).MassEquals(ok5); }).Message);
+            Assert.AreEqual("objectWithMass", Assert.Throws<ArgumentNullException>(() => { ok5.ToMZ(0); }).ParamName);
+            Assert.AreEqual("objectWithMass", Assert.Throws<ArgumentNullException>(() => { ok5.MassEquals(0); }).ParamName);
+            Assert.AreEqual("objectWithMass", Assert.Throws<ArgumentNullException>(() => { (0.0).MassEquals(ok5); }).ParamName);
 
 
             IHasMass ok6 = null;
-            Assert.AreEqual("Cannot compute mass for a null object\r\nParameter name: objectWithMass1", Assert.Throws<ArgumentNullException>(() => { ok5.MassEquals(ok6); }).Message);
+            Assert.AreEqual("objectWithMass1", Assert.Throws<ArgumentNullException>(() => { ok5.MassEquals(ok6); }).ParamName);
             var ok7 = new PhysicalObjectWithChemicalFormula("C");
-            Assert.AreEqual("Cannot compute mass for a null object\r\nParameter name: objectWithMass2", Assert.Throws<ArgumentNullException>(() => { ok7.MassEquals(ok6); }).Message);
+            Assert.AreEqual("objectWithMass2", Assert.Throws<ArgumentNullException>(() => { ok7.MassEquals(ok6); }).ParamName);
 
 
         }
