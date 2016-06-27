@@ -833,12 +833,6 @@ namespace Test
             Assert.AreEqual(formulaA, formulaB);
         }
 
-        [Test]
-        public void NewIHasChemicalFormula()
-        {
-            IHasChemicalFormula formulaA = new PhysicalObjectWithChemicalFormula("C2H3NO");
-            ChemicalFormula formulaB = new ChemicalFormula(formulaA);
-        }
 
         [Test]
         public void TotalProtons()
@@ -1118,7 +1112,6 @@ namespace Test
         {
             ChemicalFormula formulaA = new ChemicalFormula("CO");
             IHasChemicalFormula ok = null;
-            Assert.AreEqual("other", Assert.Throws<ArgumentNullException>(() => { new ChemicalFormula(ok); }).ParamName);
             Assert.AreEqual("item", Assert.Throws<ArgumentNullException>(() => { formulaA.Add(ok); }).ParamName);
             ChemicalFormula ok2 = null;
             Assert.AreEqual("formula", Assert.Throws<ArgumentNullException>(() => { formulaA.Add(ok2); }).ParamName);
