@@ -44,11 +44,6 @@ namespace Chemistry
         public double[] masses { get; private set; }
         public double[] intensities { get; private set; }
 
-        public IsotopicDistribution(IHasChemicalFormula obj, double fineResolution = 0.01, double minProbability = 1e-200, double molecularWeightResolution = 1e-12)
-            : this(obj == null ? null : obj.ThisChemicalFormula, fineResolution, minProbability, molecularWeightResolution)
-        {
-        }
-
         public IsotopicDistribution(ChemicalFormula formula, double fineResolution = 0.01, double minProbability = 1e-200, double molecularWeightResolution = 1e-12)
         {
             if (formula == null)

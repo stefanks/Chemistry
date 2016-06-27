@@ -1003,7 +1003,7 @@ namespace Test
             new IsotopicDistribution(formulaA, 0.1);
 
             PhysicalObjectWithChemicalFormula formulaB = new PhysicalObjectWithChemicalFormula("CO");
-            new IsotopicDistribution(formulaB, 1);
+            new IsotopicDistribution(formulaB.ThisChemicalFormula, 1);
 
 
         }
@@ -1115,6 +1115,7 @@ namespace Test
             Assert.AreEqual("item", Assert.Throws<ArgumentNullException>(() => { formulaA.Add(ok); }).ParamName);
             ChemicalFormula ok2 = null;
             Assert.AreEqual("formula", Assert.Throws<ArgumentNullException>(() => { formulaA.Add(ok2); }).ParamName);
+            Assert.AreEqual("other", Assert.Throws<ArgumentNullException>(() => { new ChemicalFormula(ok2); }).ParamName);
             Element ok3 = null;
             Assert.AreEqual("element", Assert.Throws<ArgumentNullException>(() => { formulaA.AddPrincipalIsotopesOf(ok3, 0); }).ParamName);
             Assert.AreEqual("item", Assert.Throws<ArgumentNullException>(() => { formulaA.Remove(ok); }).ParamName);
