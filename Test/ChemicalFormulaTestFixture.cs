@@ -977,16 +977,15 @@ namespace Test
 
             ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
 
-            var a = IsotopicDistribution.CalculateDistribution(formulaA);
+            var a = new IsotopicDistribution(formulaA);
 
-            Assert.True(formulaA.MonoisotopicMass.MassEquals(a.Item1[Array.IndexOf(a.Item2, a.Item2.Max())]));
+            Assert.True(formulaA.MonoisotopicMass.MassEquals(a.masses[Array.IndexOf(a.intensities, a.intensities.Max())]));
         }
 
         [Test]
         public void TestIsotopicDistribution2()
         {
-
-            IsotopicDistribution.CalculateDistribution("AlO{16}");
+            new IsotopicDistribution("AlO{16}");
         }
 
         [Test]
@@ -995,22 +994,22 @@ namespace Test
             ChemicalFormula formulaA = new ChemicalFormula("CO");
 
             // Distinguish between O and C isotope masses
-            var a = IsotopicDistribution.CalculateDistribution(formulaA, 0.0001);
-            Assert.AreEqual(6, a.Item1.Count());
+            var a = new IsotopicDistribution(formulaA, 0.0001);
+            Assert.AreEqual(6, a.masses.Count());
 
             // Do not distinguish between O and C isotope masses
-            IsotopicDistribution.CalculateDistribution(formulaA, 0.001);
+            new IsotopicDistribution(formulaA, 0.001);
 
 
             // Do not distinguish between O and C isotope masses
-            var b = IsotopicDistribution.CalculateDistribution(formulaA);
-            Assert.AreEqual(4, b.Item1.Count());
+            var b = new IsotopicDistribution(formulaA);
+            Assert.AreEqual(4, b.masses.Count());
 
 
-            IsotopicDistribution.CalculateDistribution(formulaA, 0.1);
+            new IsotopicDistribution(formulaA, 0.1);
 
             PhysicalObjectWithChemicalFormula formulaB = new PhysicalObjectWithChemicalFormula("CO");
-            IsotopicDistribution.CalculateDistribution(formulaB, 1);
+            new IsotopicDistribution(formulaB, 1);
 
 
         }
@@ -1020,7 +1019,7 @@ namespace Test
         {
 
             ChemicalFormula formula = (new ChemicalFormula("C500O50H250N50"));
-            IsotopicDistribution.CalculateDistribution(formula, 0.001, 1e-1, 1e-15);
+            new IsotopicDistribution(formula, 0.001, 1e-1, 1e-15);
             Console.WriteLine("");
         }
 
@@ -1028,7 +1027,7 @@ namespace Test
         public void catchProbStuff()
         {
             ChemicalFormula formula = (new ChemicalFormula("C50O50"));
-            IsotopicDistribution.CalculateDistribution(formula, 0.001, 1e-50, 1e-15);
+            new IsotopicDistribution(formula, 0.001, 1e-50, 1e-15);
         }
 
 
@@ -1036,17 +1035,17 @@ namespace Test
         public void i0j1()
         {
             ChemicalFormula formula = (new ChemicalFormula("C50O50"));
-            IsotopicDistribution.CalculateDistribution(formula, 0.01, 0.1);
+            new IsotopicDistribution(formula, 0.01, 0.1);
             //Console.WriteLine(String.Join(", ", masses));
             //Console.WriteLine(String.Join(", ", intensities));
 
 
-            IsotopicDistribution.CalculateDistribution(formula, 0.01, 0.5);
+            new IsotopicDistribution(formula, 0.01, 0.5);
             //Console.WriteLine(String.Join(", ", masses));
             //Console.WriteLine(String.Join(", ", intensities));
 
 
-            IsotopicDistribution.CalculateDistribution(formula, 0.01, 0.75);
+            new IsotopicDistribution(formula, 0.01, 0.75);
             //Console.WriteLine(String.Join(", ", masses));
             //Console.WriteLine(String.Join(", ", intensities));
         }
@@ -1058,9 +1057,9 @@ namespace Test
             ChemicalFormula formulaA = new ChemicalFormula("CO");
 
             // Only the principal isotopes have joint probability of 0.5! So one result when calcuating isotopic distribution
-            var a = IsotopicDistribution.CalculateDistribution(formulaA, 0.0001, 0.5);
-            Assert.AreEqual(1, a.Item1.Count());
-            Assert.IsTrue((PeriodicTable.GetElement("C").PrincipalIsotope.AtomicMass + PeriodicTable.GetElement("O").PrincipalIsotope.AtomicMass).MassEquals(a.Item1[0]));
+            var a = new IsotopicDistribution(formulaA, 0.0001, 0.5);
+            Assert.AreEqual(1, a.masses.Count());
+            Assert.IsTrue((PeriodicTable.GetElement("C").PrincipalIsotope.AtomicMass + PeriodicTable.GetElement("O").PrincipalIsotope.AtomicMass).MassEquals(a.masses[0]));
 
         }
 
@@ -1101,17 +1100,17 @@ namespace Test
         [Test]
         public void ValidatePeriodicTable()
         {
-            Assert.AreEqual("Validation passed", PeriodicTable.ValidateAverageMass(1e-3).Message);
-            Assert.IsTrue(PeriodicTable.ValidateAverageMass(1e-3).ValidationPassed);
+            Assert.AreEqual("Validation passed", PeriodicTable.ValidateAverageMasses(1e-3).Message);
+            Assert.IsTrue(PeriodicTable.ValidateAverageMasses(1e-3).ValidationPassed);
             // Nist database values in 2016 for Se isotope abundances are accurate within 1e-3, but not 1e-4
-            Assert.AreEqual("Average mass of Se is 78.9593885570136 instead of 78.971", PeriodicTable.ValidateAverageMass(1e-4).Message);
-            Assert.IsFalse(PeriodicTable.ValidateAverageMass(1e-4).ValidationPassed);
+            Assert.AreEqual("Average mass of Se is 78.9593885570136 instead of 78.971", PeriodicTable.ValidateAverageMasses(1e-4).Message);
+            Assert.IsFalse(PeriodicTable.ValidateAverageMasses(1e-4).ValidationPassed);
 
-            Assert.AreEqual("Validation passed", PeriodicTable.ValidateAbundance(1e-4).Message);
-            Assert.IsTrue(PeriodicTable.ValidateAbundance(1e-4).ValidationPassed);
+            Assert.AreEqual("Validation passed", PeriodicTable.ValidateAbundances(1e-4).Message);
+            Assert.IsTrue(PeriodicTable.ValidateAbundances(1e-4).ValidationPassed);
             // On purpose put in wrong abundance for Zr, so abundance is not verified
-            Assert.AreEqual("Total abundance of Zr is 0.9999 instead of 1", PeriodicTable.ValidateAbundance(1e-5).Message);
-            Assert.IsFalse(PeriodicTable.ValidateAbundance(1e-5).ValidationPassed);
+            Assert.AreEqual("Total abundance of Zr is 0.9999 instead of 1", PeriodicTable.ValidateAbundances(1e-5).Message);
+            Assert.IsFalse(PeriodicTable.ValidateAbundances(1e-5).ValidationPassed);
         }
 
         [Test]
@@ -1119,38 +1118,37 @@ namespace Test
         {
             ChemicalFormula formulaA = new ChemicalFormula("CO");
             IHasChemicalFormula ok = null;
-            Assert.Throws<ArgumentNullException>(() => { new ChemicalFormula(ok); }, "Cannot initialize chemical formula from a null formula");
-            Assert.Throws<ArgumentNullException>(() => { formulaA.Add(ok); }, "Cannot add null item to formula");
+            Assert.AreEqual("Cannot initialize chemical formula from a null formula\r\nParameter name: other", Assert.Throws<ArgumentNullException>(() => { new ChemicalFormula(ok); }).Message);
+            Assert.AreEqual("Cannot add null item to formula\r\nParameter name: item", Assert.Throws<ArgumentNullException>(() => { formulaA.Add(ok); }).Message);
             ChemicalFormula ok2 = null;
-            Assert.Throws<ArgumentNullException>(() => { formulaA.Add(ok2); }, "Cannot add null formula to formula");
+            Assert.AreEqual("Cannot add null formula to formula\r\nParameter name: formula", Assert.Throws<ArgumentNullException>(() => { formulaA.Add(ok2); }).Message);
             Element ok3 = null;
-            Assert.Throws<ArgumentNullException>(() => { formulaA.AddPrincipalIsotopesOf(ok3, 0); }, "Cannot add null element to formula");
-            Assert.Throws<ArgumentNullException>(() => { formulaA.Remove(ok); }, "Cannot remove null item from formula");
-            Assert.Throws<ArgumentNullException>(() => { formulaA.Remove(ok2); }, "Cannot remove null formula from formula");
-            Assert.Throws<ArgumentNullException>(() => { formulaA.IsSubsetOf(ok2); }, "Cannot check if is subset of null formula");
-            Assert.Throws<ArgumentNullException>(() => { formulaA.IsSupersetOf(ok2); }, "Cannot check if is superset of null formula");
-            Assert.Throws<ArgumentNullException>(() => { formulaA.CountWithIsotopes(ok3); }, "Cannot count null elements in formula");
-            Assert.Throws<ArgumentNullException>(() => { formulaA.CountSpecificIsotopes(ok3, 0); }, "Cannot count null elements in formula");
+            Assert.AreEqual("Cannot add null element to formula\r\nParameter name: element", Assert.Throws<ArgumentNullException>(() => { formulaA.AddPrincipalIsotopesOf(ok3, 0); }).Message);
+            Assert.AreEqual("Cannot remove null item from formula\r\nParameter name: item", Assert.Throws<ArgumentNullException>(() => { formulaA.Remove(ok); }).Message);
+            Assert.AreEqual("Cannot remove null formula from formula\r\nParameter name: formula", Assert.Throws<ArgumentNullException>(() => { formulaA.Remove(ok2); }).Message);
+            Assert.AreEqual("Cannot check if is subset of null formula\r\nParameter name: formula", Assert.Throws<ArgumentNullException>(() => { formulaA.IsSubsetOf(ok2); }).Message);
+            Assert.AreEqual("Cannot check if is superset of null formula\r\nParameter name: formula", Assert.Throws<ArgumentNullException>(() => { formulaA.IsSupersetOf(ok2); }).Message);
+            Assert.AreEqual("Cannot count null elements in formula\r\nParameter name: element", Assert.Throws<ArgumentNullException>(() => { formulaA.CountWithIsotopes(ok3); }).Message);
+            Assert.AreEqual("Cannot count null elements in formula\r\nParameter name: element", Assert.Throws<ArgumentNullException>(() => { formulaA.CountSpecificIsotopes(ok3, 0); }).Message);
             Assert.IsFalse(formulaA.Equals(ok2));
             IEnumerable<IHasChemicalFormula> ok4 = null;
-            Assert.Throws<ArgumentNullException>(() => { ChemicalFormula.Combine(ok4); }, "Cannot combine a null collection of formulas");
-            Assert.Throws<ArgumentNullException>(() => { PeriodicTable.Add(ok3); }, "Cannot add a null element to periodic table");
+            Assert.AreEqual("Cannot combine a null collection of formulas\r\nParameter name: formulas", Assert.Throws<ArgumentNullException>(() => { ChemicalFormula.Combine(ok4); }).Message);
+            Assert.AreEqual("Cannot add a null element to periodic table\r\nParameter name: element", Assert.Throws<ArgumentNullException>(() => { PeriodicTable.Add(ok3); }).Message);
 
-            Assert.Throws<ArgumentNullException>(() => { IsotopicDistribution.CalculateDistribution(ok); }, "Cannot compute isotopic distribution for a null object");
-            Assert.Throws<ArgumentNullException>(() => { IsotopicDistribution.CalculateDistribution(ok2); }, "Cannot compute isotopic distribution for a null formula");
+            Assert.AreEqual("Cannot compute isotopic distribution for a null formula\r\nParameter name: formula", Assert.Throws<ArgumentNullException>(() => { new IsotopicDistribution(ok2); }).Message);
 
             IHasMass ok5 = null;
 
 
-            Assert.Throws<ArgumentNullException>(() => { ok5.ToMZ(0); }, "Cannot compute an MZ value for a null object");
-            Assert.Throws<ArgumentNullException>(() => { ok5.MassEquals(0); }, "Cannot compute mass for a null object");
-            Assert.Throws<ArgumentNullException>(() => { (0.0).MassEquals(ok5); }, "Cannot compute mass for a null object");
+            Assert.AreEqual("Cannot compute an MZ value for a null object\r\nParameter name: objectWithMass", Assert.Throws<ArgumentNullException>(() => { ok5.ToMZ(0); }).Message);
+            Assert.AreEqual("Cannot compute mass for a null object\r\nParameter name: objectWithMass", Assert.Throws<ArgumentNullException>(() => { ok5.MassEquals(0); }).Message);
+            Assert.AreEqual("Cannot compute mass for a null object\r\nParameter name: objectWithMass", Assert.Throws<ArgumentNullException>(() => { (0.0).MassEquals(ok5); }).Message);
 
 
             IHasMass ok6 = null;
-            Assert.Throws<ArgumentNullException>(() => { ok5.MassEquals(ok6); }, "Cannot compute mass for a null object");
+            Assert.AreEqual("Cannot compute mass for a null object\r\nParameter name: objectWithMass1", Assert.Throws<ArgumentNullException>(() => { ok5.MassEquals(ok6); }).Message);
             var ok7 = new PhysicalObjectWithChemicalFormula("C");
-            Assert.Throws<ArgumentNullException>(() => { ok7.MassEquals(ok6); }, "Cannot compute mass for a null object");
+            Assert.AreEqual("Cannot compute mass for a null object\r\nParameter name: objectWithMass2", Assert.Throws<ArgumentNullException>(() => { ok7.MassEquals(ok6); }).Message);
 
 
         }

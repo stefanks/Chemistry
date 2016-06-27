@@ -71,7 +71,7 @@ namespace Chemistry
         /// <summary>
         /// Validates the periodic table with relative accuracy epsilon
         /// </summary>
-        public static PeriodicTableValidationResult ValidateAbundance(double epsilon)
+        public static PeriodicTableValidationResult ValidateAbundances(double epsilon)
         {
             foreach (var e in _elements)
             {
@@ -88,7 +88,7 @@ namespace Chemistry
             return new PeriodicTableValidationResult(true, "Validation passed");
         }
 
-        public static PeriodicTableValidationResult ValidateAverageMass(double epsilon)
+        public static PeriodicTableValidationResult ValidateAverageMasses(double epsilon)
         {
             foreach (var e in _elements)
             {
