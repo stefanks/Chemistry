@@ -53,7 +53,7 @@ namespace Chemistry
         /// </summary>
         /// <param name="item">The item of which a new chemical formula will be made from</param>
         public ChemicalFormula(IHasChemicalFormula item)
-            : this(item.ThisChemicalFormula)
+            : this(item == null ? null : item.ThisChemicalFormula)
         {
         }
 
@@ -63,6 +63,8 @@ namespace Chemistry
         /// <param name="other">The chemical formula to copy</param>
         public ChemicalFormula(ChemicalFormula other) : this()
         {
+            if (other == null)
+                throw new ArgumentNullException("other", "Cannot initialize chemical formula from a null formula");
             isotopes = new Dictionary<Isotope, int>(other.isotopes);
             elements = new Dictionary<Element, int>(other.elements);
         }
@@ -170,6 +172,20 @@ namespace Chemistry
             }
         }
 
+        /// <summary>
+        /// The ratio of the number of Carbon to Hydrogen in this chemical formula
+        /// </summary>
+        /// <returns></returns>
+        public double HydrogenCarbonRatio
+        {
+            get
+            {
+                int carbonCount = CountWithIsotopes("C");
+                int hydrogenCount = CountWithIsotopes("H");
+                return hydrogenCount / (double)carbonCount;
+            }
+        }
+
         #endregion Properties
 
         #region Add/Remove
@@ -192,6 +208,8 @@ namespace Chemistry
         /// <param name="item">The object that contains a chemical formula</param>
         public void Add(IHasChemicalFormula item)
         {
+            if (item == null)
+                throw new ArgumentNullException("item", "Cannot add null item to formula");
             Add(item.ThisChemicalFormula);
         }
 
@@ -201,6 +219,8 @@ namespace Chemistry
         /// <param name="formula">The chemical formula to add to this</param>
         public void Add(ChemicalFormula formula)
         {
+            if (formula == null)
+                throw new ArgumentNullException("formula", "Cannot add null formula to formula");
             foreach (var e in formula.elements)
             {
                 Add(e.Key, e.Value);
@@ -219,6 +239,8 @@ namespace Chemistry
         /// <param name="count">The number of the element to add</param>
         public void AddPrincipalIsotopesOf(Element element, int count)
         {
+            if (element == null)
+                throw new ArgumentNullException("element", "Cannot add null element to formula");
             Isotope isotope = element.PrincipalIsotope;
             Add(isotope, count);
         }
@@ -264,6 +286,8 @@ namespace Chemistry
         /// <param name="item">The object that contains a chemical formula</param>
         public void Remove(IHasChemicalFormula item)
         {
+            if (item == null)
+                throw new ArgumentNullException("item", "Cannot remove null item from formula");
             Remove(item.ThisChemicalFormula);
         }
 
@@ -273,6 +297,8 @@ namespace Chemistry
         /// <param name="formula">The chemical formula to remove</param>
         public void Remove(ChemicalFormula formula)
         {
+            if (formula == null)
+                throw new ArgumentNullException("formula", "Cannot remove null formula from formula");
             foreach (var e in formula.elements)
                 Remove(e.Key, e.Value);
             foreach (var i in formula.isotopes)
@@ -343,15 +369,6 @@ namespace Chemistry
 
         #region Count/Contains
 
-        /// <summary>
-        /// Checks if the isotope is present in this chemical formula
-        /// </summary>
-        /// <param name="isotope">The isotope to look for</param>
-        /// <returns>True if there is a non-negative number of the isotope in this formula</returns>
-        public bool ContainsSpecificIsotope(Isotope isotope)
-        {
-            return CountSpecificIsotopes(isotope) != 0;
-        }
 
         /// <summary>
         /// Checks if any isotope of the specified element is present in this chemical formula
@@ -365,6 +382,8 @@ namespace Chemistry
 
         public bool IsSubsetOf(ChemicalFormula formula)
         {
+            if (formula == null)
+                throw new ArgumentNullException("formula", "Cannot check if is subset of null formula");
             return formula.IsSupersetOf(this);
         }
 
@@ -377,6 +396,8 @@ namespace Chemistry
         /// <returns></returns>
         public bool IsSupersetOf(ChemicalFormula formula)
         {
+            if (formula == null)
+                throw new ArgumentNullException("formula", "Cannot check if is superset of null formula");
             foreach (var aa in formula.elements)
             {
                 if (!elements.ContainsKey(aa.Key) || aa.Value > elements[aa.Key])
@@ -393,6 +414,16 @@ namespace Chemistry
         public bool ContainsSpecificIsotope(Element element, int atomicNumber)
         {
             return CountSpecificIsotopes(element, atomicNumber) != 0;
+        }
+
+        /// <summary>
+        /// Checks if the isotope is present in this chemical formula
+        /// </summary>
+        /// <param name="isotope">The isotope to look for</param>
+        /// <returns>True if there is a non-negative number of the isotope in this formula</returns>
+        public bool ContainsSpecificIsotope(Isotope isotope)
+        {
+            return CountSpecificIsotopes(isotope) != 0;
         }
 
         /// <summary>
@@ -414,6 +445,8 @@ namespace Chemistry
         /// <returns>The total number of all the element isotopes in this chemical formula</returns>
         public int CountWithIsotopes(Element element)
         {
+            if (element == null)
+                throw new ArgumentNullException("element", "Cannot count null elements in formula");
             var isotopeCount = element.Isotopes.Sum(isotope => CountSpecificIsotopes(isotope));
             int ElementCount;
             return isotopeCount + (elements.TryGetValue(element, out ElementCount) ? ElementCount : 0);
@@ -421,22 +454,10 @@ namespace Chemistry
 
         public int CountSpecificIsotopes(Element element, int massNumber)
         {
+            if (element == null)
+                throw new ArgumentNullException("element", "Cannot count null elements in formula");
             Isotope isotope = element[massNumber];
             return CountSpecificIsotopes(isotope);
-        }
-
-
-        /// <summary>
-        /// Gets the ratio of the number of Carbon to Hydrogen in this chemical formula
-        /// </summary>
-        /// <returns></returns>
-        public double HydrogenCarbonRatio()
-        {
-            int carbonCount = CountWithIsotopes("C");
-
-            int hydrogenCount = CountWithIsotopes("H");
-
-            return hydrogenCount / (double)carbonCount;
         }
 
         #endregion Count/Contains
@@ -448,11 +469,11 @@ namespace Chemistry
 
         public bool Equals(ChemicalFormula other)
         {
+            if (other == null) return false;
             if (ReferenceEquals(this, other)) return true;
             if (!MonoisotopicMass.MassEquals(other.MonoisotopicMass))
                 return false;
-            // TODO: Might not actually need this! Verify
-            if (!IsSubsetOf(other) || !IsSupersetOf(other))
+            if (!AverageMass.MassEquals(other.AverageMass))
                 return false;
             return true;
         }
@@ -506,7 +527,6 @@ namespace Chemistry
         /// </summary>
         private string GetHillNotation()
         {
-            // TODO: Compare performance with StringBuilder
             string s = "";
 
             // Find carbon
@@ -577,51 +597,10 @@ namespace Chemistry
             return new ChemicalFormula(sequence);
         }
 
-        public static ChemicalFormula operator -(ChemicalFormula left, IHasChemicalFormula right)
-        {
-            ChemicalFormula newFormula = new ChemicalFormula(left);
-            newFormula.Remove(right);
-            return newFormula;
-        }
-
-        public static ChemicalFormula operator -(ChemicalFormula left, ChemicalFormula right)
-        {
-            ChemicalFormula newFormula = new ChemicalFormula(left);
-            newFormula.Remove(right);
-            return newFormula;
-        }
-
-        public static ChemicalFormula operator *(ChemicalFormula formula, int count)
-        {
-            ChemicalFormula newFormula = new ChemicalFormula();
-            foreach (var kk in formula.isotopes)
-                newFormula.Add(kk.Key, kk.Value * count);
-            foreach (var kk in formula.elements)
-                newFormula.Add(kk.Key, kk.Value * count);
-            return newFormula;
-        }
-
-        public static ChemicalFormula operator *(int count, ChemicalFormula formula)
-        {
-            return formula * count;
-        }
-
-        public static ChemicalFormula operator +(ChemicalFormula left, ChemicalFormula right)
-        {
-            ChemicalFormula newFormula = new ChemicalFormula(left);
-            newFormula.Add(right);
-            return newFormula;
-        }
-
-        public static ChemicalFormula operator +(ChemicalFormula left, IHasChemicalFormula right)
-        {
-            ChemicalFormula newFormula = new ChemicalFormula(left);
-            newFormula.Add(right);
-            return newFormula;
-        }
-
         public static ChemicalFormula Combine(IEnumerable<IHasChemicalFormula> formulas)
         {
+            if (formulas == null)
+                throw new ArgumentNullException("formulas", "Cannot combine a null collection of formulas");
             ChemicalFormula returnFormula = new ChemicalFormula();
             foreach (IHasChemicalFormula iformula in formulas)
                 returnFormula.Add(iformula);
@@ -630,7 +609,7 @@ namespace Chemistry
 
         #endregion
 
-        #region Private Statics
+        #region Regex
 
         /// <summary>
         /// A regular expression for matching chemical formulas such as: C2C{13}3H5NO5

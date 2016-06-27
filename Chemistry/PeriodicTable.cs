@@ -23,7 +23,7 @@ namespace Chemistry
 {
     public static class PeriodicTable
     {
-        // Two datastores storing same elements! Code automatically chooses the more efficient one
+        // Two datastores storing same elements! Need both for efficient access by both symbol and atomic number
 
         /// <summary>
         /// The internal dictionary housing elements, keyed by their unique atomic symbol
@@ -37,6 +37,8 @@ namespace Chemistry
 
         public static void Add(Element element)
         {
+            if (element == null)
+                throw new ArgumentNullException("element", "Cannot add a null element to periodic table");
             if (_elements.ContainsKey(element.AtomicSymbol))
                 throw new ArgumentException("Element with symbol " + element.AtomicSymbol + " already added!");
             if (_elementsArray[element.AtomicNumber] != null)
@@ -69,7 +71,7 @@ namespace Chemistry
         /// <summary>
         /// Validates the periodic table with relative accuracy epsilon
         /// </summary>
-        public static PeriodicTableValidationResult Validate(double epsilon, bool validateAverageMass = true)
+        public static PeriodicTableValidationResult ValidateAbundance(double epsilon)
         {
             foreach (var e in _elements)
             {
@@ -82,7 +84,22 @@ namespace Chemistry
                 }
                 if (Math.Abs(totalAbundance - 1) > epsilon)
                     return new PeriodicTableValidationResult(false, "Total abundance of " + e.Value + " is " + totalAbundance + " instead of 1");
-                if (validateAverageMass && Math.Abs(averageMass - e.Value.AverageMass) / e.Value.AverageMass > epsilon)
+            }
+            return new PeriodicTableValidationResult(true, "Validation passed");
+        }
+
+        public static PeriodicTableValidationResult ValidateAverageMass(double epsilon)
+        {
+            foreach (var e in _elements)
+            {
+                double totalAbundance = 0;
+                double averageMass = 0;
+                foreach (Isotope i in e.Value.Isotopes)
+                {
+                    totalAbundance += i.RelativeAbundance;
+                    averageMass += i.RelativeAbundance * i.AtomicMass;
+                }
+                if (Math.Abs(averageMass - e.Value.AverageMass) / e.Value.AverageMass > epsilon)
                     return new PeriodicTableValidationResult(false, "Average mass of " + e.Value + " is " + averageMass + " instead of " + e.Value.AverageMass);
             }
             return new PeriodicTableValidationResult(true, "Validation passed");

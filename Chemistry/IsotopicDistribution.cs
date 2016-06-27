@@ -46,14 +46,18 @@ namespace Chemistry
             Sum,
             BasePeak
         };
-        
+
         public static Tuple<double[], double[]> CalculateDistribution(IHasChemicalFormula obj, double fineResolution = 0.01, double minProbability = 1e-200, double molecularWeightResolution = 1e-12, Normalization normalization = Normalization.Sum)
         {
+            if (obj == null)
+                throw new ArgumentNullException("obj", "Cannot compute isotopic distribution for a null object");
             return CalculateDistribution(obj.ThisChemicalFormula, fineResolution, minProbability, molecularWeightResolution, normalization);
         }
 
         public static Tuple<double[], double[]> CalculateDistribution(ChemicalFormula formula, double fineResolution = 0.01, double minProbability = 1e-200, double molecularWeightResolution = 1e-12, Normalization normalization = Normalization.Sum)
         {
+            if (formula == null)
+                throw new ArgumentNullException("formula", "Cannot compute isotopic distribution for a null formula");
             double monoisotopicMass = formula.MonoisotopicMass;
             var a = GetNewFineAndMergeResolutions(monoisotopicMass, fineResolution);
             fineResolution = a.Item1;
@@ -67,8 +71,6 @@ namespace Chemistry
                 List<Composition> isotopeComposition = new List<Composition>();
                 foreach (Isotope isotope in elementAndCount.Key.Isotopes.OrderBy(iso => iso.AtomicMass))
                 {
-                    double probability = isotope.RelativeAbundance;
-
                     Composition c = new Composition
                     {
                         Atoms = count,
@@ -106,8 +108,6 @@ namespace Chemistry
             return new Tuple<double[], double[]>(masses, intensities);
         }
 
-
-
         // Takes your guess for fine resolution, and messes it up
         // If smaller than 1e-4, set to 1e-4
         // If smaller than 1e-3, set to 1e-3
@@ -115,9 +115,8 @@ namespace Chemistry
         // If between 1e-2 and 1, set to 1e-2, but merge fine resolution set to original fine resolution
         // If bigger than 1, set to 0.9
         // DIVIDE FINE RESOLUTION BY 2 AT THE END
-        private static Tuple<double, double> GetNewFineAndMergeResolutions(double monoisotopicMass, double _fineResolution)
+        private static Tuple<double, double> GetNewFineAndMergeResolutions(double monoisotopicMass, double fineResolution)
         {
-            double fineResolution = _fineResolution;
             double _mergeFineResolution;
             if (fineResolution >= 1.0)
             {
@@ -144,8 +143,8 @@ namespace Chemistry
                 _mergeFineResolution = fineResolution;
                 fineResolution = 1e-2;
             }
-            _fineResolution = fineResolution / 2.0;
-            return new Tuple<double, double>(_fineResolution, _mergeFineResolution);
+            fineResolution = fineResolution / 2.0;
+            return new Tuple<double, double>(fineResolution, _mergeFineResolution);
         }
 
         private static void CalculateFineGrain(List<List<Composition>> elementalComposition, Normalization normalization, out double[] masses, out double[] intensities, double _mwResolution, double _mergeFineResolution, double _fineResolution, double _fineMinProb)
@@ -164,9 +163,7 @@ namespace Chemistry
             {
                 totalProbability += polynomial.Probablity;
                 if (polynomial.Probablity > basePeak)
-                {
                     basePeak = polynomial.Probablity;
-                }
                 masses[i] = polynomial.Power * _mwResolution;
                 intensities[i] = polynomial.Probablity;
                 i++;
@@ -322,7 +319,6 @@ namespace Chemistry
             int i = tPolynomial.Count;
             int j = fPolynomial.Count;
 
-            ////Console.WriteLine("i = " + i + " j = " + j);
             if (i == 0 || j == 0)
                 return;
 
@@ -421,7 +417,6 @@ namespace Chemistry
 
         private static readonly double[] factorLnArray = new double[50003];
         private static int _factorLnTop = 1;
-
         private static double FactorLn(int n)
         {
 

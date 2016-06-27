@@ -25,39 +25,43 @@ namespace Chemistry
         /// <summary>
         /// The mass difference tolerance for having identical masses
         /// </summary>
-        public const double MassEqualityEpsilon = 1e-10;
+        private const double MassEqualityEpsilon = 1e-10;
 
         /// <summary>
         /// Calculates m/z value for a given mass assuming charge comes from losing or gaining protons
         /// </summary>
-        public static double ToMZ(this IHasMass mass, int charge)
+        public static double ToMZ(this IHasMass objectWithMass, int charge)
         {
-            return ToMZ(mass.MonoisotopicMass, charge);
+            if (objectWithMass == null)
+                throw new ArgumentNullException("objectWithMass", "Cannot compute an MZ value for a null object");
+            return ToMassToChargeRatio(objectWithMass.MonoisotopicMass, charge);
         }
 
         /// <summary>
         /// Calculates m/z value for a given mass assuming charge comes from losing or gaining protons
         /// </summary>
-        public static double ToMZ(this double mass, int charge)
+        public static double ToMassToChargeRatio(this double mass, int charge)
         {
             if (charge == 0)
                 throw new DivideByZeroException("Charge cannot be zero");
-            return mass / Math.Abs(charge) + Math.Sign(charge) * Constants.Proton;
+            return mass / Math.Abs(charge) + Math.Sign(charge) * Constants.ProtonMass;
         }
 
         /// <summary>
         /// Determines the original mass from an m/z value, assuming charge comes from a proton
         /// </summary>
-        public static double ToMass(this double MZ, int charge)
+        public static double ToMass(this double massToChargeRatio, int charge)
         {
             if (charge == 0)
                 throw new DivideByZeroException("Charge cannot be zero");
-            return Math.Abs(charge) * MZ - charge * Constants.Proton;
+            return Math.Abs(charge) * massToChargeRatio - charge * Constants.ProtonMass;
         }
 
-        public static bool MassEquals(this double mass1, IHasMass mass2, double epsilon = MassEqualityEpsilon)
+        public static bool MassEquals(this double mass, IHasMass objectWithMass, double epsilon = MassEqualityEpsilon)
         {
-            return Math.Abs(mass1 - mass2.MonoisotopicMass) < epsilon;
+            if (objectWithMass == null)
+                throw new ArgumentNullException("objectWithMass", "Cannot compute mass for a null object");
+            return Math.Abs(mass - objectWithMass.MonoisotopicMass) < epsilon;
         }
 
         public static bool MassEquals(this double mass1, double mass2, double epsilon = MassEqualityEpsilon)
@@ -65,14 +69,21 @@ namespace Chemistry
             return Math.Abs(mass1 - mass2) < epsilon;
         }
 
-        public static bool MassEquals(this IHasMass mass1, double mass2, double epsilon = MassEqualityEpsilon)
+        public static bool MassEquals(this IHasMass objectWithMass, double mass, double epsilon = MassEqualityEpsilon)
         {
-            return Math.Abs(mass1.MonoisotopicMass - mass2) < epsilon;
+            if (objectWithMass == null)
+                throw new ArgumentNullException("objectWithMass", "Cannot compute mass for a null object");
+            return Math.Abs(objectWithMass.MonoisotopicMass - mass) < epsilon;
         }
 
-        public static bool MassEquals(this IHasMass mass1, IHasMass mass2, double epsilon = MassEqualityEpsilon)
+        public static bool MassEquals(this IHasMass objectWithMass1, IHasMass objectWithMass2, double epsilon = MassEqualityEpsilon)
         {
-            return Math.Abs(mass1.MonoisotopicMass - mass2.MonoisotopicMass) < epsilon;
+            if (objectWithMass1 == null)
+                throw new ArgumentNullException("objectWithMass1", "Cannot compute mass for a null object");
+            if ( objectWithMass2 == null)
+                throw new ArgumentNullException("objectWithMass2", "Cannot compute mass for a null object");
+            return Math.Abs(objectWithMass1.MonoisotopicMass - objectWithMass2.MonoisotopicMass) < epsilon;
         }
+
     }
 }

@@ -1,0 +1,22 @@
+<Dictionary>
+  <Words>
+    <Unrecognized>
+    </Unrecognized>
+    <Recognized>
+      <Word>monoisotopic</Word>
+    </Recognized>
+    <Deprecated>
+      <Term PreferredAlternate=""></Term>
+    </Deprecated>
+    <Compound>
+      <Term CompoundAlternate=""></Term>
+    </Compound>
+    <DiscreteExceptions>
+      <Term></Term>
+    </DiscreteExceptions>
+  </Words>
+  <Acronyms>
+    <CasingExceptions>
+    </CasingExceptions>
+  </Acronyms>
+</Dictionary>
