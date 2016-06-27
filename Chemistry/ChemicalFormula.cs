@@ -49,15 +49,6 @@ namespace Chemistry
         }
 
         /// <summary>
-        /// Create an chemical formula from an item that contains a chemical formula
-        /// </summary>
-        /// <param name="item">The item of which a new chemical formula will be made from</param>
-        public ChemicalFormula(IHasChemicalFormula item)
-            : this(item == null ? null : item.ThisChemicalFormula)
-        {
-        }
-
-        /// <summary>
         /// Create a copy of a chemical formula from another chemical formula
         /// </summary>
         /// <param name="other">The chemical formula to copy</param>
