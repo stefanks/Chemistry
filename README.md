@@ -41,7 +41,7 @@ Elements (and isotopes) can be combined to create chemical formulas.
 Isotopic distribution of a chemical compound can be calculated from its chemical formula.
 ```csharp
             ChemicalFormula chemicalFormula = new ChemicalFormula("C2H3NO");
-            var distribution = dist.CalculateDistribuition(chemicalFormula);
+            IsotopicDistribution dist = new IsotopicDistribution(chemicalFormula);
 ```
 
 ## License
