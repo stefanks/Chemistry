@@ -19,10 +19,13 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
 namespace Chemistry
 {
-
+    /// <summary>
+    /// A static store of elements accessible by anyone
+    /// </summary>
     public static class PeriodicTable
     {
         // Two datastores storing same elements! Need both for efficient access by both symbol and atomic number
@@ -37,6 +40,9 @@ namespace Chemistry
         /// </summary>
         private static Element[] _elementsArray = new Element[Constants.MaximumNumberOfElementsAllowed];
 
+        /// <summary>
+        /// Populate the periodic table by calling this method
+        /// </summary>
         public static void Add(Element element)
         {
             if (element == null)
@@ -50,57 +56,43 @@ namespace Chemistry
         }
 
         /// <summary>
-        /// Returns the element corresponding to a given atomic symbol. Needs to be fast.
+        /// Fast method for getting an element by its atomic symbol
         /// </summary>
-        /// <param name="atomicSymbol"></param>
-        /// <returns></returns>
         public static Element GetElement(string atomicSymbol)
-
         {
             return _elements[atomicSymbol];
         }
 
         /// <summary>
-        /// Fast method of getting element by atomic number. Needs to be fast.
+        /// Fast method for getting an element by its atomic number
         /// </summary>
-        /// <param name="atomicNumber"></param>
-        /// <returns></returns>
         public static Element GetElement(int atomicNumber)
         {
             return _elementsArray[atomicNumber];
         }
 
         /// <summary>
-        /// Validates the periodic table with relative accuracy epsilon
+        /// Validates the abundances in the periodic table
         /// </summary>
         public static PeriodicTableValidationResult ValidateAbundances(double epsilon)
         {
             foreach (var e in _elements)
             {
-                double totalAbundance = 0;
-                double averageMass = 0;
-                foreach (Isotope i in e.Value.Isotopes)
-                {
-                    totalAbundance += i.RelativeAbundance;
-                    averageMass += i.RelativeAbundance * i.AtomicMass;
-                }
+                double totalAbundance = e.Value.Isotopes.Select(b => b.RelativeAbundance).Sum();
                 if (Math.Abs(totalAbundance - 1) > epsilon)
                     return new PeriodicTableValidationResult(ValidationResult.FailedAbundanceValidation, string.Format(CultureInfo.InvariantCulture, StringResources.AbundancesNotValidated, e.Value, totalAbundance));
             }
             return new PeriodicTableValidationResult(ValidationResult.PassedAbundanceValidation, StringResources.ValidationPassed);
         }
 
+        /// <summary>
+        /// Validates the average masses in the periodic table
+        /// </summary>
         public static PeriodicTableValidationResult ValidateAverageMasses(double epsilon)
         {
             foreach (var e in _elements)
             {
-                double totalAbundance = 0;
-                double averageMass = 0;
-                foreach (Isotope i in e.Value.Isotopes)
-                {
-                    totalAbundance += i.RelativeAbundance;
-                    averageMass += i.RelativeAbundance * i.AtomicMass;
-                }
+                double averageMass = e.Value.Isotopes.Select(b => b.RelativeAbundance * b.AtomicMass).Sum();
                 if (Math.Abs(averageMass - e.Value.AverageMass) / e.Value.AverageMass > epsilon)
                     return new PeriodicTableValidationResult(ValidationResult.FailedAverageMassValidation, string.Format(CultureInfo.InvariantCulture, StringResources.MassesNotValidated, e.Value, averageMass, e.Value.AverageMass));
             }

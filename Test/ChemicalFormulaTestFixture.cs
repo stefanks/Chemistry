@@ -1004,8 +1004,6 @@ namespace Test
 
             PhysicalObjectWithChemicalFormula formulaB = new PhysicalObjectWithChemicalFormula("CO");
             new IsotopicDistribution(formulaB.ThisChemicalFormula, 1);
-
-
         }
 
         [Test]
@@ -1023,8 +1021,7 @@ namespace Test
             ChemicalFormula formula = (new ChemicalFormula("C50O50"));
             new IsotopicDistribution(formula, 0.001, 1e-50, 1e-15);
         }
-
-
+        
         [Test]
         public void i0j1()
         {

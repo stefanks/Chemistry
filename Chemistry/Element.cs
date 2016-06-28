@@ -130,14 +130,10 @@ namespace Chemistry
             IsotopesByMassNumber[massNumber] = isotope;
             int ok = 0;
             while (IsotopesInOrderTheyWereAdded[ok] != null)
-            {
                 ok++;
-            }
             IsotopesInOrderTheyWereAdded[ok] = isotope;
             if (PrincipalIsotope == null || (abundance > PrincipalIsotope.RelativeAbundance))
-            {
                 PrincipalIsotope = isotope;
-            }
         }
 
         /// <summary>
