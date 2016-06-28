@@ -1,0 +1,35 @@
+At compile time, date and time:
+Tue 06/28/2016 17:54:50.75 
+
+
+At compile time, git show was:
+518232a71c0e2907771109276df8776edd4ebee8
+
+
+At compile time, git status was:
+On branch local
+Your branch is ahead of 'origin/local' by 1 commit.
+  (use "git push" to publish your local commits)
+nothing to commit, working directory clean
+
+
+Starting benchmark BenchmarkFormula
+Time for getting formulas: 00:00:00.0247283
+Benchmark BenchmarkFormula finished
+
+Starting benchmark BenchmarkFormula2
+Time for creating and getting formulas: 00:00:02.9080590
+Benchmark BenchmarkFormula2 finished
+
+Starting benchmark BenchmarkTimeGettingElementFromPeriodicTable
+Time for getting by atomic number: 00:00:00.0749059
+Time for getting by atomic symbol: 00:00:02.5061276
+Benchmark BenchmarkTimeGettingElementFromPeriodicTable finished
+
+Starting benchmark BenchmarkGettingIsotopes
+Time for getting isotopes1: 00:00:00.8044318 a = 60000000
+Benchmark BenchmarkGettingIsotopes finished
+
+Starting benchmark BenchmarkIsotopicDistribution
+Time for generating isotopic distributions: 00:00:11.3062623 a = Chemistry.ChemicalFormula
+Benchmark BenchmarkIsotopicDistribution finished
