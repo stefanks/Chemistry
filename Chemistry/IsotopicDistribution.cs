@@ -28,6 +28,7 @@ namespace Chemistry
     /// </summary>
     /// <remarks>
     /// C# version by Derek Bailey 2014
+    /// Modified by Stefan Solntsev 2016
     ///
     /// This is a port of software written in C++ and detailed in the following publication:
     ///
@@ -45,6 +46,7 @@ namespace Chemistry
         private const double defaultFineResolution = 0.01;
         private const double defaultMinProbability = 1e-200;
         private const double defaultMolecularWeightResolution = 1e-12;
+
         private double[] masses;
         private double[] intensities;
 
@@ -56,7 +58,6 @@ namespace Chemistry
         {
             get { return new ReadOnlyCollection<double>(intensities); }
         }
-
 
         public IsotopicDistribution(ChemicalFormula formula) : this(ValidateFormulaForIsotopologueComputation(formula), defaultFineResolution, defaultMinProbability, defaultMolecularWeightResolution)
         {
@@ -78,7 +79,7 @@ namespace Chemistry
             double _mergeFineResolution = a.Item2;
             List<List<Composition>> elementalComposition = new List<List<Composition>>();
 
-            // Get all the unique elements THAT MIGHT HAVE ISOTOPES of the formula
+            // Get all the unique elements that might have isotopes
             foreach (var elementAndCount in formula.elements)
             {
                 int count = elementAndCount.Value;
@@ -125,43 +126,49 @@ namespace Chemistry
             return formula;
         }
 
-        // Takes your guess for fine resolution, and messes it up
-        // If smaller than 1e-4, set to 1e-4
-        // If smaller than 1e-3, set to 1e-3
-        // If smaller than 1e-2, set to 1e-2
-        // If between 1e-2 and 1, set to 1e-2, but merge fine resolution set to original fine resolution
-        // If bigger than 1, set to 0.9
-        // DIVIDE FINE RESOLUTION BY 2 AT THE END
+        /// <summary>
+        /// Calculates the fineResolution and mergeFineResolution parameters
+        /// </summary>
+        /// <remarks>
+        /// Takes your guess for fine resolution, and messes it up
+        /// If smaller than 1e-4, set to 1e-4
+        /// If smaller than 1e-3, set to 1e-3
+        /// If smaller than 1e-2, set to 1e-2
+        /// If between 1e-2 and 1, set to 1e-2, but merge fine resolution set to original fine resolution
+        /// If bigger than 1, set to 0.9
+        /// DIVIDE FINE RESOLUTION BY 2 AT THE END
+        /// </remarks>
+        /// <returns>Tuple of fineResolution and mergeFineResolution</returns>
         private static Tuple<double, double> GetNewFineAndMergeResolutions(double monoisotopicMass, double fineResolution)
         {
-            double _mergeFineResolution;
+            double mergeFineResolution;
             if (fineResolution >= 1.0)
             {
-                _mergeFineResolution = 1.0 - 0.022;
+                mergeFineResolution = 1.0 - 0.022;
                 fineResolution = 0.9;
             }
             else if (fineResolution <= 1e-4 && monoisotopicMass < 1e5)
             {
                 fineResolution = 1e-4;
-                _mergeFineResolution = fineResolution;
+                mergeFineResolution = fineResolution;
             }
             else if (fineResolution <= 1e-3 && monoisotopicMass < 1e6)
             {
                 fineResolution = 1e-3;
-                _mergeFineResolution = fineResolution;
+                mergeFineResolution = fineResolution;
             }
             else if (fineResolution <= 1e-2 && monoisotopicMass < 2e6)
             {
                 fineResolution = 1e-2;
-                _mergeFineResolution = fineResolution;
+                mergeFineResolution = fineResolution;
             }
             else
             {
-                _mergeFineResolution = fineResolution;
+                mergeFineResolution = fineResolution;
                 fineResolution = 1e-2;
             }
             fineResolution = fineResolution / 2.0;
-            return new Tuple<double, double>(fineResolution, _mergeFineResolution);
+            return new Tuple<double, double>(fineResolution, mergeFineResolution);
         }
 
         private void CalculateFineGrain(List<List<Composition>> elementalComposition, double _mwResolution, double _mergeFineResolution, double _fineResolution, double _fineMinProb)
@@ -223,9 +230,7 @@ namespace Chemistry
                             tPolynomial[j] = new Polynomial();
                         }
                         else
-                        {
                             break;
-                        }
                     }
 
                     tPolynomial[i] = new Polynomial { Power = tempPolynomial.Power / tempPolynomial.Probablity, Probablity = tempPolynomial.Probablity };
@@ -247,16 +252,12 @@ namespace Chemistry
             int k = 0;
 
             foreach (List<Composition> composition in elementalComposition)
-            {
                 if (composition.Count > 0)
                     n++;
-            }
 
             List<List<Polynomial>> fPolynomial = new List<List<Polynomial>>();
             for (int i = 0; i < n; i++)
-            {
                 fPolynomial.Add(new List<Polynomial>());
-            }
 
             for (k = 0; k < n; k++)
             {
@@ -316,9 +317,7 @@ namespace Chemistry
 
             List<Polynomial> fgidPolynomial = new List<Polynomial>();
             for (k = 1; k < n; k++)
-            {
                 MultiplyFineFinalPolynomial(tPolynomial, fPolynomial[k], fgidPolynomial, _fineResolution, _mwResolution, _fineMinProb);
-            }
 
             return tPolynomial;
         }
@@ -343,9 +342,7 @@ namespace Chemistry
             {
                 j = maxIndex - fgidPolynomial.Count;
                 for (i = 0; i <= j; i++)
-                {
                     fgidPolynomial.Add(new Polynomial());
-                }
             }
 
             for (int t = 0; t < tPolynomial.Count; t++)
@@ -377,9 +374,7 @@ namespace Chemistry
                         j++;
                     }
                     else
-                    {
                         tPolynomial.Add(new Polynomial { Power = fgidPolynomial[i].Power / fgidPolynomial[i].Probablity, Probablity = fgidPolynomial[i].Probablity });
-                    }
                 }
 
                 fgidPolynomial[i] = new Polynomial();
@@ -394,9 +389,7 @@ namespace Chemistry
             for (indices[index] = mins[index]; indices[index] <= maxs[index]; indices[index]++)
             {
                 if (index < mins.Length - 1)
-                {
                     MultipleFinePolynomialRecursiveHelper(mins, maxs, indices, index + 1, fPolynomial, elementalComposition, atoms, minProb, maxValue);
-                }
                 else
                 {
                     int l = atoms - indices.Sum();
@@ -425,7 +418,9 @@ namespace Chemistry
         }
 
         private static readonly double[] factorLnArray = new double[50003];
+
         private static int _factorLnTop = 1;
+
         private static double FactorLn(int n)
         {
 
@@ -442,7 +437,7 @@ namespace Chemistry
             }
             return factorLnArray[n];
         }
-        
+
         private class Composition
         {
             public double Power;
