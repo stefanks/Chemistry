@@ -1,30 +1,41 @@
 At compile time, date and time:
-Mon 06/27/2016 10:45:25.66 
+Mon 06/27/2016 20:29:04.88 
 
 
 At compile time, git show was:
-9353e3bd816bcf8d3b529bf5f27a9cb3fd49a24f
+c858ab90b75a6527ca45983a3363112e2c38644e
 
 
 At compile time, git status was:
 On branch local
-Your branch is up-to-date with 'origin/local'.
-nothing to commit, working directory clean
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+	modified:   ../../../Benchmark.txt
+	modified:   ../../Program.cs
+	modified:   ../../../Chemistry/IsotopicDistribution.cs
+
+no changes added to commit (use "git add" and/or "git commit -a")
 
 
 Starting benchmark BenchmarkFormula
-Time for getting formulas: 00:00:00.0212547
+Time for getting formulas: 00:00:00.0229780
 Benchmark BenchmarkFormula finished
 
 Starting benchmark BenchmarkFormula2
-Time for creating and getting formulas: 00:00:02.8020365
+Time for creating and getting formulas: 00:00:02.8735825
 Benchmark BenchmarkFormula2 finished
 
 Starting benchmark BenchmarkTimeGettingElementFromPeriodicTable
-Time for getting by atomic number: 00:00:00.0760554
-Time for getting by atomic symbol: 00:00:02.4803923
+Time for getting by atomic number: 00:00:00.0708996
+Time for getting by atomic symbol: 00:00:02.4602669
 Benchmark BenchmarkTimeGettingElementFromPeriodicTable finished
 
 Starting benchmark BenchmarkGettingIsotopes
-Time for getting isotopes1: 00:00:00.8138063 a = 60000000
+Time for getting isotopes1: 00:00:00.8355366 a = 60000000
 Benchmark BenchmarkGettingIsotopes finished
+
+Starting benchmark BenchmarkIsotopicDistribution
+Time for generating isotopic distributions: 00:00:11.1072099 a = Chemistry.ChemicalFormula
+Benchmark BenchmarkIsotopicDistribution finished

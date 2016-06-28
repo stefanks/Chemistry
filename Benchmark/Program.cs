@@ -83,7 +83,30 @@ namespace Benchmark
                 BenchmarkTimeGettingElementFromPeriodicTable(file);
                 file.WriteLine("");
                 BenchmarkGettingIsotopes(file);
+                file.WriteLine("");
+                BenchmarkIsotopicDistribution(file);
             }
+        }
+
+        private static void BenchmarkIsotopicDistribution(StreamWriter file)
+        {
+            file.WriteLine("Starting benchmark BenchmarkIsotopicDistribution");
+
+            int numRepetitions = 100;
+
+            Stopwatch stopWatch = new Stopwatch();
+
+            var a = new ChemicalFormula("H100C100N100O100S100");
+            double b = 0;
+            stopWatch.Restart();
+            for (int i = 0; i < numRepetitions; i++)
+            {
+                b += new IsotopicDistribution(a).Intensities.First();
+            }
+            stopWatch.Stop();
+            file.WriteLine("Time for generating isotopic distributions: " + stopWatch.Elapsed + " a = " + a);
+
+            file.WriteLine("Benchmark BenchmarkIsotopicDistribution finished");
         }
 
         private static void PopulatePeriodicTable()
@@ -228,7 +251,7 @@ namespace Benchmark
             stopWatch.Restart();
             for (int i = 0; i < numRepetitions; i++)
             {
-                var a = PeriodicTable.GetElement(Constants.HydrogenAtomicNumber);
+                var a = PeriodicTable.GetElement(1);
                 var b = a.Protons + a.AverageMass + 4;
             }
             stopWatch.Stop();
