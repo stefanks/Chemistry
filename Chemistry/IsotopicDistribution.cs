@@ -442,8 +442,7 @@ namespace Chemistry
             }
             return factorLnArray[n];
         }
-
-        // TODO: Benchmark class vs struct here...
+        
         private class Composition
         {
             public double Power;
