@@ -443,6 +443,7 @@ namespace Chemistry
             return factorLnArray[n];
         }
 
+        // TODO: Benchmark class vs struct here...
         private class Composition
         {
             public double Power;
@@ -452,6 +453,7 @@ namespace Chemistry
             public int Atoms;
         }
 
+        // TODO: Benchmark class vs struct here...
         private struct Polynomial
         {
             public double Power;
