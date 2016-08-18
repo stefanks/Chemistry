@@ -14,22 +14,22 @@ nothing to commit, working directory clean
 
 
 Starting benchmark BenchmarkFormula
-Time for getting formulas: 00:00:00.0247283
+Time for getting formulas: 00:00:00.0215483
 Benchmark BenchmarkFormula finished
 
 Starting benchmark BenchmarkFormula2
-Time for creating and getting formulas: 00:00:02.9080590
+Time for creating and getting formulas: 00:00:02.6857415
 Benchmark BenchmarkFormula2 finished
 
 Starting benchmark BenchmarkTimeGettingElementFromPeriodicTable
-Time for getting by atomic number: 00:00:00.0749059
-Time for getting by atomic symbol: 00:00:02.5061276
+Time for getting by atomic number: 00:00:00.0709752
+Time for getting by atomic symbol: 00:00:02.4588420
 Benchmark BenchmarkTimeGettingElementFromPeriodicTable finished
 
 Starting benchmark BenchmarkGettingIsotopes
-Time for getting isotopes1: 00:00:00.8044318 a = 60000000
+Time for getting isotopes1: 00:00:00.8258271 a = 60000000
 Benchmark BenchmarkGettingIsotopes finished
 
 Starting benchmark BenchmarkIsotopicDistribution
-Time for generating isotopic distributions: 00:00:11.3062623 a = Chemistry.ChemicalFormula
+Time for generating isotopic distributions: 00:00:10.9945171 a = Chemistry.ChemicalFormula
 Benchmark BenchmarkIsotopicDistribution finished

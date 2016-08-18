@@ -43,11 +43,9 @@ namespace Test
         }
     }
 
-
     [TestFixture]
     public class MassTestFixture
     {
-
         [Test]
         public void MassToMzToMass()
         {
@@ -83,7 +81,6 @@ namespace Test
         [Test]
         public void MzToMassPostitiveCharge()
         {
-
             double a = 524.3;
             Assert.AreEqual(1046.5854470662418, a.ToMass(2));
         }
@@ -102,6 +99,5 @@ namespace Test
             var ex = Assert.Throws<DivideByZeroException>(() => a.ToMass(0));
             Assert.That(ex.Message, Is.EqualTo("Charge cannot be zero"));
         }
-
     }
 }

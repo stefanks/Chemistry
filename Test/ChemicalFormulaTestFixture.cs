@@ -1,18 +1,18 @@
 ﻿// Copyright 2012, 2013, 2014 Derek J. Bailey
 // Modified work copyright 2016 Stefan Solntsev
-// 
+//
 // This file (ChemicalFormulaTestFixture.cs) is part of Chemistry Library.
-// 
+//
 // Chemistry Library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published
 // by the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // Chemistry Library is distributed in the hope that it will be useful, but WITHOUT
 // ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
 // FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public
 // License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public
 // License along with Chemistry Library. If not, see <http://www.gnu.org/licenses/>
 
@@ -27,7 +27,7 @@ namespace Test
     [TestFixture]
     public class ChemicalFormulaTestFixture
     {
-        class PhysicalObjectWithChemicalFormula : IHasChemicalFormula
+        private class PhysicalObjectWithChemicalFormula : IHasChemicalFormula
         {
             public PhysicalObjectWithChemicalFormula(string v)
             {
@@ -48,7 +48,6 @@ namespace Test
             }
         }
 
-
         [OneTimeSetUp]
         public void SetUp()
         {
@@ -62,12 +61,10 @@ namespace Test
             elementC.AddIsotope(12, 12, 0.9893);
             elementC.AddIsotope(13, 13.00335483507, 0.0107);
 
-
             var elementN = new Element("N", 7, 14.006855);
             PeriodicTable.Add(elementN);
             elementN.AddIsotope(15, 15.00010889888, 0.00364);
             elementN.AddIsotope(14, 14.00307400443, 0.99636);
-
 
             var elementO = new Element("O", 8, 15.9994);
             PeriodicTable.Add(elementO);
@@ -112,11 +109,10 @@ namespace Test
             elementSe.AddIsotope(80, 79.9165218, 0.4961);
             elementSe.AddIsotope(82, 81.9166995, 0.0873);
 
-            // Wrong average mass, for checking some chemical formula hashing 
+            // Wrong average mass, for checking some chemical formula hashing
             var elementAl = new Element("Al", 13, 26.98153853);
             PeriodicTable.Add(elementAl);
             elementAl.AddIsotope(27, 26.98153853, 1);
-
 
             var elementZr = new Element("Zr", 40, 91.224);
             PeriodicTable.Add(elementZr);
@@ -136,7 +132,6 @@ namespace Test
             {
                 al.AddIsotope(27, 28, 1);
             }, "Isotope with mass number " + 28 + " already exists");
-
         }
 
         [Test]
@@ -248,8 +243,6 @@ namespace Test
             Assert.AreEqual(formulaA, formulaB);
         }
 
-
-
         [Test]
         public void AddELementByAtomicNumber()
         {
@@ -261,14 +254,12 @@ namespace Test
             Assert.AreEqual(formulaA, formulaB);
         }
 
-
         [Test]
         public void AddNonExistentSymbolToFormula()
         {
             ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
 
             Assert.Throws<KeyNotFoundException>(() => { formulaA.AddPrincipalIsotopesOf("Faa", 1); });
-
         }
 
         [Test]
@@ -276,7 +267,6 @@ namespace Test
         {
             Assert.Throws<KeyNotFoundException>(() => { var formulaA = new ChemicalFormula("Q"); });
         }
-
 
         [Test]
         public void AddZeroElementToFormula()
@@ -355,7 +345,6 @@ namespace Test
 
             Assert.AreEqual(formulaA, formulaB);
         }
-
 
         [Test]
         public void CopyConstructorReferenceInequality()
@@ -532,7 +521,6 @@ namespace Test
             Assert.AreEqual("C2C{13}-2H3NO", formulaA.Formula);
         }
 
-
         [Test]
         public void ImplicitConstructor()
         {
@@ -542,13 +530,11 @@ namespace Test
             Assert.AreEqual(formulaA, formulaB);
         }
 
-
         [Test]
         public void BadFormula()
         {
             Assert.Throws<FormatException>(() => { var formulaA = new ChemicalFormula("!@#$"); }, "Input string for chemical formula was in an incorrect format");
         }
-
 
         [Test]
         public void InvalidChemicalElement()
@@ -561,7 +547,6 @@ namespace Test
         {
             Assert.IsNull(PeriodicTable.GetElement("C")[100]);
         }
-
 
         [Test]
         public void NumberOfAtoms()
@@ -639,7 +624,6 @@ namespace Test
             Assert.AreEqual(formulaA, formulaB);
         }
 
-
         [Test]
         public void EqualsFalse()
         {
@@ -662,7 +646,6 @@ namespace Test
 
             Assert.AreEqual(formulaA, formulaB);
         }
-
 
         [Test]
         public void IsSuperSetOf()
@@ -739,16 +722,13 @@ namespace Test
             Assert.AreEqual(formulaA, formulaC);
         }
 
-
         [Test]
         public void ContainsSpecificIsotope()
         {
             ChemicalFormula formulaA = new ChemicalFormula("C2H5NOO{16}");
 
             Assert.IsTrue(formulaA.ContainsSpecificIsotope(PeriodicTable.GetElement("O")[16]));
-
         }
-
 
         [Test]
         public void ContainsIsotopesOf()
@@ -833,7 +813,6 @@ namespace Test
             Assert.AreEqual(formulaA, formulaB);
         }
 
-
         [Test]
         public void TotalProtons()
         {
@@ -910,7 +889,6 @@ namespace Test
             Assert.IsTrue(formulaA.ContainsIsotopesOf(PeriodicTable.GetElement("C")));
         }
 
-
         [Test]
         public void TestReplaceIsotopes()
         {
@@ -956,7 +934,6 @@ namespace Test
             Assert.IsFalse(formulaB.IsSupersetOf(formulaA));
         }
 
-
         [Test]
         public void ChemicalForulaMyTest()
         {
@@ -968,7 +945,6 @@ namespace Test
         [Test]
         public void TestIsotopicDistribution()
         {
-
             ChemicalFormula formulaA = new ChemicalFormula("C2H3NO");
 
             var a = new IsotopicDistribution(formulaA);
@@ -994,11 +970,9 @@ namespace Test
             // Do not distinguish between O and C isotope masses
             new IsotopicDistribution(formulaA, 0.001);
 
-
             // Do not distinguish between O and C isotope masses
             var b = new IsotopicDistribution(formulaA);
             Assert.AreEqual(4, b.Masses.Count());
-
 
             new IsotopicDistribution(formulaA, 0.1);
 
@@ -1009,7 +983,6 @@ namespace Test
         [Test]
         public void CatchIsotopicDistributionStuff()
         {
-
             ChemicalFormula formula = (new ChemicalFormula("C500O50H250N50"));
             new IsotopicDistribution(formula, 0.001, 1e-1, 1e-15);
             Console.WriteLine("");
@@ -1021,7 +994,7 @@ namespace Test
             ChemicalFormula formula = (new ChemicalFormula("C50O50"));
             new IsotopicDistribution(formula, 0.001, 1e-50, 1e-15);
         }
-        
+
         [Test]
         public void i0j1()
         {
@@ -1030,17 +1003,14 @@ namespace Test
             //Console.WriteLine(String.Join(", ", masses));
             //Console.WriteLine(String.Join(", ", intensities));
 
-
             new IsotopicDistribution(formula, 0.01, 0.5);
             //Console.WriteLine(String.Join(", ", masses));
             //Console.WriteLine(String.Join(", ", intensities));
-
 
             new IsotopicDistribution(formula, 0.01, 0.75);
             //Console.WriteLine(String.Join(", ", masses));
             //Console.WriteLine(String.Join(", ", intensities));
         }
-
 
         [Test]
         public void ThresholdProbability()
@@ -1051,9 +1021,7 @@ namespace Test
             var a = new IsotopicDistribution(formulaA, 0.0001, 0.5);
             Assert.AreEqual(1, a.Masses.Count());
             Assert.IsTrue((PeriodicTable.GetElement("C").PrincipalIsotope.AtomicMass + PeriodicTable.GetElement("O").PrincipalIsotope.AtomicMass).MassEquals(a.Masses[0]));
-
         }
-
 
         [Test]
         public void TestAnotherFormula()
@@ -1061,7 +1029,6 @@ namespace Test
             ChemicalFormula formulaA = new ChemicalFormula("H{1}CC{13}2H3NO{16}");
             Assert.AreEqual("CC{13}2H3H{1}NO{16}", formulaA.Formula);
         }
-
 
         [Test]
         public void NeutronCount()
@@ -1130,25 +1097,19 @@ namespace Test
 
             IHasMass ok5 = null;
 
-
             Assert.AreEqual("objectWithMass", Assert.Throws<ArgumentNullException>(() => { ok5.ToMZ(0); }).ParamName);
 
             var ok7 = new PhysicalObjectWithChemicalFormula("C");
-
-
         }
 
         [Test]
         public void TestAddChemicalFormula()
         {
-
             ChemicalFormula formulaB = new ChemicalFormula("C");
             ChemicalFormula formulaA = new ChemicalFormula("C{12}");
             formulaB.Add(formulaA);
             Assert.AreEqual("CC{12}", formulaB.Formula);
         }
-
-
 
         [Test]
         public void NotEqual()
@@ -1160,17 +1121,14 @@ namespace Test
             Assert.IsFalse(formulaA.MonoisotopicMass.MassEquals(formulaB.MonoisotopicMass, 0));
         }
 
-
         [Test]
         public void TestRemoveObjectFromChemicalFormula()
         {
-
             ChemicalFormula formulaB = new ChemicalFormula("CO");
             var ok = new PhysicalObjectWithChemicalFormula("C");
             formulaB.Remove(ok);
 
             Assert.AreEqual("O", formulaB.Formula);
-
         }
 
         [Test]
@@ -1178,7 +1136,6 @@ namespace Test
         {
             ChemicalFormula formulaB = new ChemicalFormula("CO");
             Assert.IsTrue(formulaB.Equals(formulaB));
-
         }
 
         [Test]
@@ -1187,6 +1144,5 @@ namespace Test
             ChemicalFormula formulaB = ChemicalFormula.ToChemicalFormula("CO");
             Assert.AreEqual(new ChemicalFormula("CO"), formulaB);
         }
-
     }
 }

@@ -1,18 +1,18 @@
 ﻿// Copyright 2012, 2013, 2014 Derek J. Bailey
 // Modified work copyright 2016 Stefan Solntsev
-// 
+//
 // This file (ChemicalFormula.cs) is part of Chemistry Library.
-// 
+//
 // Chemistry Library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published
 // by the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // Chemistry Library is distributed in the hope that it will be useful, but WITHOUT
 // ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
 // FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public
 // License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public
 // License along with Chemistry Library. If not, see <http://www.gnu.org/licenses/>.
 
@@ -29,7 +29,6 @@ namespace Chemistry
     /// </summary>
     public sealed class ChemicalFormula : IEquatable<ChemicalFormula>
     {
-
         // Main data stores, the isotopes and elements
 
         internal Dictionary<Isotope, int> isotopes { get; private set; }
@@ -63,7 +62,6 @@ namespace Chemistry
             isotopes = new Dictionary<Isotope, int>();
             elements = new Dictionary<Element, int>();
         }
-
 
         #endregion Constructors
 
@@ -130,6 +128,7 @@ namespace Chemistry
         }
 
         private string _formula = null;
+
         /// <summary>
         /// Gets the string representation (Hill Notation) of this chemical formula
         /// </summary>
@@ -355,7 +354,6 @@ namespace Chemistry
 
         #region Count/Contains
 
-
         /// <summary>
         /// Checks if any isotope of the specified element is present in this chemical formula
         /// </summary>
@@ -513,7 +511,6 @@ namespace Chemistry
             if (elements.ContainsKey(PeriodicTable.GetElement(Constants.CarbonAtomicNumber)))
                 s += "C" + (elements[PeriodicTable.GetElement(Constants.CarbonAtomicNumber)] == 1 ? "" : "" + elements[PeriodicTable.GetElement(Constants.CarbonAtomicNumber)]);
 
-
             // Find carbon isotopes
             foreach (var i in PeriodicTable.GetElement(Constants.CarbonAtomicNumber).Isotopes)
                 if (isotopes.ContainsKey(i))
@@ -574,7 +571,7 @@ namespace Chemistry
             return returnFormula;
         }
 
-        #endregion
+        #endregion Public Statics
 
         #region Regex
 
@@ -594,7 +591,6 @@ namespace Chemistry
         /// </summary>
         private static readonly Regex ValidateFormulaRegex = new Regex("^(" + FormulaRegex + ")+$", RegexOptions.Compiled);
 
-        #endregion Statics
-
+        #endregion Regex
     }
 }

@@ -1,18 +1,18 @@
 ﻿// Copyright 2012, 2013, 2014 Derek J. Bailey
 // Modified work copyright 2016 Stefan Solntsev
-// 
+//
 // This file (ChemicalFormulaTestFixture.cs) is part of Chemistry Library.
-// 
+//
 // Chemistry Library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published
 // by the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // Chemistry Library is distributed in the hope that it will be useful, but WITHOUT
 // ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
 // FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public
 // License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public
 // License along with Chemistry Library. If not, see <http://www.gnu.org/licenses/>
 
@@ -25,7 +25,6 @@ namespace Test
     [TestFixture]
     public class ElementsAndIsotopesTest
     {
-
         [Test]
         public void AddIsotopeWithExistingMassNumber()
         {
@@ -36,8 +35,6 @@ namespace Test
             Assert.AreEqual("C{13}", isotope.ToString());
             Assert.AreEqual(6, isotope.Protons);
             Assert.AreEqual(7, isotope.Neutrons);
-
-
         }
 
         [Test]
@@ -46,7 +43,7 @@ namespace Test
             var elementC = new Element("GGG", 66, 12.0106);
             PeriodicTable.Add(elementC);
             var elementC1 = new Element("GGG", 66, 12.0106);
-            Assert.Throws<ArgumentException>(()=> { PeriodicTable.Add(elementC1); }, "Element with symbol GGG already added!");
+            Assert.Throws<ArgumentException>(() => { PeriodicTable.Add(elementC1); }, "Element with symbol GGG already added!");
             var elementC2 = new Element("GGG2", 66, 12.0106);
             Assert.Throws<ArgumentException>(() => { PeriodicTable.Add(elementC2); }, "Element with atomic number 66 already added!");
         }
