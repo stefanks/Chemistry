@@ -6,9 +6,9 @@ using System.Reflection;
 
 namespace Benchmark
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             string gitStatus = string.Empty;
             Stream stream = null;
@@ -121,12 +121,10 @@ namespace Benchmark
             elementC.AddIsotope(12, 12, 0.9893);
             elementC.AddIsotope(13, 13.00335483507, 0.0107);
 
-
             var elementN = new Element("N", 7, 14.006855);
             PeriodicTable.Add(elementN);
             elementN.AddIsotope(15, 15.00010889888, 0.00364);
             elementN.AddIsotope(14, 14.00307400443, 0.99636);
-
 
             var elementO = new Element("O", 8, 15.9994);
             PeriodicTable.Add(elementO);
@@ -171,7 +169,6 @@ namespace Benchmark
             elementSe.AddIsotope(80, 79.9165218, 0.4961);
             elementSe.AddIsotope(82, 81.9166995, 0.0873);
 
-
             var elementZr = new Element("Zr", 40, 91.224);
             PeriodicTable.Add(elementZr);
             elementZr.AddIsotope(90, 89.9046977, 0.5145);
@@ -197,7 +194,6 @@ namespace Benchmark
             stopWatch.Stop();
             file.WriteLine("Time for getting isotopes1: " + stopWatch.Elapsed + " a = " + a);
 
-
             file.WriteLine("Benchmark BenchmarkGettingIsotopes finished");
         }
 
@@ -220,6 +216,7 @@ namespace Benchmark
 
             file.WriteLine("Benchmark BenchmarkFormula finished");
         }
+
         private static void BenchmarkFormula2(StreamWriter file)
         {
             file.WriteLine("Starting benchmark BenchmarkFormula2");
@@ -267,7 +264,6 @@ namespace Benchmark
             file.WriteLine("Time for getting by atomic symbol: " + stopWatch.Elapsed);
 
             file.WriteLine("Benchmark BenchmarkTimeGettingElementFromPeriodicTable finished");
-
         }
     }
 }

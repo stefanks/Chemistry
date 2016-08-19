@@ -1,18 +1,18 @@
 ﻿// Copyright 2012, 2013, 2014 Derek J. Bailey
 // Modified work copyright 2016 Stefan Solntsev
-// 
+//
 // This file (IsotopicDistribution.cs) is part of Chemistry Library.
-// 
+//
 // Chemistry Library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published
 // by the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // Chemistry Library is distributed in the hope that it will be useful, but WITHOUT
 // ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
 // FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public
 // License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public
 // License along with Chemistry Library. If not, see <http://www.gnu.org/licenses/>.
 
@@ -38,8 +38,8 @@ namespace Chemistry
     /// DOI: 10.1007/s13361-013-0733-7
     ///
     /// Please cite that publication if using these algorithms in your own publications.
-    /// 
-    /// Only calculates the fine grained distribution. 
+    ///
+    /// Only calculates the fine grained distribution.
     /// </remarks>
     public class IsotopicDistribution
     {
@@ -54,6 +54,7 @@ namespace Chemistry
         {
             get { return new ReadOnlyCollection<double>(masses); }
         }
+
         public ReadOnlyCollection<double> Intensities
         {
             get { return new ReadOnlyCollection<double>(intensities); }
@@ -66,6 +67,7 @@ namespace Chemistry
         public IsotopicDistribution(ChemicalFormula formula, double fineResolution) : this(ValidateFormulaForIsotopologueComputation(formula), fineResolution, defaultMinProbability, defaultMolecularWeightResolution)
         {
         }
+
         public IsotopicDistribution(ChemicalFormula formula, double fineResolution, double minProbability) : this(ValidateFormulaForIsotopologueComputation(formula), fineResolution, minProbability, defaultMolecularWeightResolution)
         {
         }
@@ -141,34 +143,7 @@ namespace Chemistry
         /// <returns>Tuple of fineResolution and mergeFineResolution</returns>
         private static Tuple<double, double> GetNewFineAndMergeResolutions(double monoisotopicMass, double fineResolution)
         {
-            double mergeFineResolution;
-            if (fineResolution >= 1.0)
-            {
-                mergeFineResolution = 1.0 - 0.022;
-                fineResolution = 0.9;
-            }
-            else if (fineResolution <= 1e-4 && monoisotopicMass < 1e5)
-            {
-                fineResolution = 1e-4;
-                mergeFineResolution = fineResolution;
-            }
-            else if (fineResolution <= 1e-3 && monoisotopicMass < 1e6)
-            {
-                fineResolution = 1e-3;
-                mergeFineResolution = fineResolution;
-            }
-            else if (fineResolution <= 1e-2 && monoisotopicMass < 2e6)
-            {
-                fineResolution = 1e-2;
-                mergeFineResolution = fineResolution;
-            }
-            else
-            {
-                mergeFineResolution = fineResolution;
-                fineResolution = 1e-2;
-            }
-            fineResolution = fineResolution / 2.0;
-            return new Tuple<double, double>(fineResolution, mergeFineResolution);
+            return new Tuple<double, double>(fineResolution / 2.0, fineResolution);
         }
 
         private void CalculateFineGrain(List<List<Composition>> elementalComposition, double _mwResolution, double _mergeFineResolution, double _fineResolution, double _fineMinProb)
@@ -423,7 +398,6 @@ namespace Chemistry
 
         private static double FactorLn(int n)
         {
-
             if (n <= 1)
                 return 0;
 
