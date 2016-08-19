@@ -143,34 +143,7 @@ namespace Chemistry
         /// <returns>Tuple of fineResolution and mergeFineResolution</returns>
         private static Tuple<double, double> GetNewFineAndMergeResolutions(double monoisotopicMass, double fineResolution)
         {
-            double mergeFineResolution;
-            if (fineResolution >= 1.0)
-            {
-                mergeFineResolution = 1.0 - 0.022;
-                fineResolution = 0.9;
-            }
-            else if (fineResolution <= 1e-4 && monoisotopicMass < 1e5)
-            {
-                fineResolution = 1e-4;
-                mergeFineResolution = fineResolution;
-            }
-            else if (fineResolution <= 1e-3 && monoisotopicMass < 1e6)
-            {
-                fineResolution = 1e-3;
-                mergeFineResolution = fineResolution;
-            }
-            else if (fineResolution <= 1e-2 && monoisotopicMass < 2e6)
-            {
-                fineResolution = 1e-2;
-                mergeFineResolution = fineResolution;
-            }
-            else
-            {
-                mergeFineResolution = fineResolution;
-                fineResolution = 1e-2;
-            }
-            fineResolution = fineResolution / 2.0;
-            return new Tuple<double, double>(fineResolution, mergeFineResolution);
+            return new Tuple<double, double>(fineResolution / 2.0, fineResolution);
         }
 
         private void CalculateFineGrain(List<List<Composition>> elementalComposition, double _mwResolution, double _mergeFineResolution, double _fineResolution, double _fineMinProb)

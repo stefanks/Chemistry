@@ -1144,5 +1144,21 @@ namespace Test
             ChemicalFormula formulaB = ChemicalFormula.ToChemicalFormula("CO");
             Assert.AreEqual(new ChemicalFormula("CO"), formulaB);
         }
+
+
+
+        [Test]
+        public void IsoTest()
+        {
+            ChemicalFormula formula = new ChemicalFormula("C5H8NO");
+            
+            IsotopicDistribution d = new IsotopicDistribution(formula, Math.Pow(2, -20));
+
+            Assert.AreEqual(324, d.Intensities.Count);
+            
+            d = new IsotopicDistribution(formula, Math.Pow(2, -1));
+
+            Assert.AreEqual(17, d.Intensities.Count);
+        }
     }
 }
